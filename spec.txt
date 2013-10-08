@@ -25,10 +25,12 @@ int find_connection_of_client(id, conection);
 
 int count_mac_of_message(data, private_key, output);
 
-Client connection server connection CA
+Client connection server connection CA connection client2client
 
 
 int prepare_aes_enc(aes_context);
+
+int aes_encrypt_decrypt(data, key, iv, out)
 
 int RSA_decryt_and_verify(byte data, private_key * p_key, public_key * c_key, byte out)
 
