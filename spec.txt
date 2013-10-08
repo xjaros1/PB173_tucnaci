@@ -1,0 +1,47 @@
+Třídy connection
+
+server -> client
+client -> client
+client -> CA
+client -> server
+
+CA -> client
+Abstract class
+
+CA connection to client
+get key from user
+sent key to client on request
+
+int RSA_decryt_and_verify(byte data, private_key * p_key, public_key * c_key, byte out)
+
+int RSA_chek_new_key(data, private_key)
+
+int RSA_encrypt_and_mac(data, prviate_key, public_key, data_out)
+
+
+Server connection to client
+
+int find_connection_of_client(id, conection);
+
+int count_mac_of_message(data, private_key, output);
+
+Client connection server connection CA
+
+
+int prepare_aes_enc(aes_context);
+
+int RSA_decryt_and_verify(byte data, private_key * p_key, public_key * c_key, byte out)
+
+int RSA_chek_new_key(data, private_key)
+
+int RSA_encrypt_and_mac(data, prviate_key, public_key, data_out)
+
+
+
+
+
+
+
+
+
+
