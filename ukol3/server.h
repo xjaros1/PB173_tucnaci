@@ -9,7 +9,7 @@
 #define	SERVERCONNECTION_H
 
 
-class ServerConnection
+class Connection2Client
 {
 public:
     
