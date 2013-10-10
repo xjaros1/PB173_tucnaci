@@ -1,4 +1,34 @@
 TODO
 Vytvořit nějaký moc krásný epos na téma: Ve jménu Snowdena bojujeme náš kryptografický boj proti sovětským agentům z KGB/GRU a proti zlovůli molochu NSA.
 
+Projekt do PB173 - Bezpecna videokonferenci architektura
+coz je jen kryci nazev pro vytvoreni neprustrelne aplikace typu Skype/Hangout... pro Edwarda Snowdena, aby mohl pokracovat ve vynaseni vsech spatnosti na zlosyny z NSA.
 
+Motivace:
+Jak uz bylo naznaceno, dnes je clovek odposlouchavan vsude. Co si programator sam nenapise, to nema nezabezpecene. A pokud se jako programatori mame domluvit na hacknuti cele NSA,
+musime se domlouvat na sifrovanem kanalu bez moznosti odposlechu ze strany NSA.
+Za vedlejsi cile se da povazovat cviceni implementace kryptografickych metod v "praxi" (ve vlastnim kodu C/C++) a rozvinuti schopnosti spoluprace na vetsim projektu v kolektivu.
+
+Pouzite technologie:
+C/C++ s knihovnou PolarSSL, v nasem pripade vetsinove C++, ale jelikoz je PolarSSL psana v C, tak sekce kolem sifrovani budou smesici C a C++.
+Dalse planujeme pouzit knihovny pro praci se sockety/HTTPS, knihovnu pro vlakna a udalosti. Pro zpracovani obrazu a zvuku vyuzijeme doporucene knihovny ze cviceni.
+Konkretneji ke kryptografii: pro zajisteni duvernosti, integrity i soukromi vyuzijeme sifrovaciho schematu encrypt-then-mac v podobe otevrene implementace Galois/Counter Mode (GCM),
+ktera je dostupna v PolarSSL. Jako hashovaci funkci budeme pouzivat SHA-512, symetrickou sifrovaci funkci bude AES v jiz zminenem modu GCM a pro ustanoveni komunikace pouzijeme asymetricke
+kryptografii v podobe RSA
+
+Nas navrh pristup:
+Projekt ma mit 3 hlavni tridy:
+Certifikacni autorita (CA) - overuje uzivatele a vystavuje certifikaty
+Klient - chce komunikovat s jinym klientem, k cemuz vyuziva sluzeb CA a serveru
+Videokonferencni server - registruje klenty, udrzuje jejich seznam a
+    vyrizuje zajmy o ustanoveni komunikace
+Mezi temito tridami probiha ruzna komunikace. Server od uzivatele prijima zasifrovane
+zpravy o registraci nebo zajmu o komunikaci s jinym klientem. Server si s CA vymenuje
+verejne klice uzivatele, aby mohl vratit klientovi vratit informace k ustanoveni komunikace.
+Pokud se klient registruje, pak je serverem odkazan na CA, ktere preda verejny klic.
+Komunikace klient - klient probiha pomoci symetricke kryptografie. Pro potreby prenosu
+videa pouzivame proudove sifry.
+
+
+Nase API:
+Viz hlavickove soubory na GitHubu vcetne dokumentace
