@@ -6,11 +6,13 @@ CONFIG -= qt
 SOURCES += main.cpp \
     client.cpp \
     server.cpp \
-    ca.cpp
+    ca.cpp \
+    connection.cpp
 
 HEADERS += \
     client.h \
     config.h \
     server.h \
-    ca.h
+    ca.h \
+    connection.h
 

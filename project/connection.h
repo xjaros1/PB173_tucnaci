@@ -38,7 +38,7 @@ class Connection
 public:
 
     /**
-     * @brief initConnection
+     * @brief initConnection Starts connection
      * @param e
      * @return
      */
