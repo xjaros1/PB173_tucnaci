@@ -1,0 +1,3 @@
+% Návrh API videokonferenční aplikace
+% Tučňáčí kolektiv
+% 15.10.2013
