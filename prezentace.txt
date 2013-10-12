@@ -1,3 +1,57 @@
 % Návrh API videokonferenční aplikace
-% Tučňáčí kolektiv
+% Tučňáčí kolektiv - Miroslav Jaroš, Karel Kubíček, Lukáš Němec
 % 15.10.2013
+
+# Motivace
+
+1. použití kryptografie v praxi
+2. týmová práce na větším projektu
+3. vytvoření bezpečného komunikačního kanálu pro odboj proti NSA
+
+----
+
+# Použite technologie
+
+> * C/C++ s knihovnou PolarSSL
+1. encrypt-then-mac - AES-Galois/Counter Mode (GCM)
+2. SHA-512
+3. RSA
+> * knihovna pro práci se sockety nebo HTTPS 
+> * knihovna pro přehrání videa a zvuku
+
+----
+
+# Rozbor na dílčí části
+1. certifikační autorita (CA)
+2. server
+3. klient
+
+----
+
+# Certifikační autorita (CA)
+1. ověřování a distribuce klíčů
+2. příjem certifikátů od nových klientů
+3. asymetrická komunikace s klientem
+
+----
+
+# Server
+1. registrace klienta
+2. seznam klientů
+3. ustanovení komunikace
+
+----
+
+# Klient
+> * klient inicializuje připojení
+1. požadavek po serveru
+2. získání klíče od CA
+3. navázání komunikace a výměna klíče
+4. symetrická kryptografie pro komunikaci
+> * klient přijímá požadavek na komunikaci
+1. server posílá požadavek
+2. CA dodá certifikát k veřejnému klíči inicializátora
+
+----
+
+# otázky?
