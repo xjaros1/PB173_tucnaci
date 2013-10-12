@@ -11,26 +11,26 @@ z NSA.
 Motivace:
 
 Jak uz bylo naznačeno, dnes je človek odposloucháván všude. Co si programátor 
-sam nenapiše, to nemá zabezpečené. A pokud se jako programátoři mame domluvit na 
-hacknuti cele NSA,
-musíme se domlouvat na šifrovanem kanálu bez možnosti odposlechu ze strany NSA.
-Za vedlejší cíle se dá považovat cvičeni implementace kryptografických metod v 
-"praxi" (ve vlastním kódu C/C++) a rozvinuti schopnosti spolupráce na většim 
+sam nenapíše, to nemá zabezpečené. A pokud se jako programátoři mame domluvit na 
+hacknutí cele NSA,
+musíme se domlouvat na šifrovaném kanálu bez možnosti odposlechu ze strany NSA.
+Za vedlejší cíle se dá považovat cvičení implementace kryptografických metod v 
+"praxi" (ve vlastním kódu C/C++) a rozvinutí schopností spolupráce na většim 
 projektu v kolektivu.
 
 Použite technologie:
-C/C++ s knihovnou PolarSSL, v nasem připade vetšinově C++, ale jelikož je 
-PolarSSL psána v C, tak sekce kolem šifrovani nemohou používat mechanismy C++ 
+C/C++ s knihovnou PolarSSL, v našem případě většinově C++, ale jelikož je 
+PolarSSL psána v C, tak sekce kolem šifrování nemohou používat mechanismy C++ 
 (např. použití pole znaků místo objektu typu String).
-Dále planujeme použít knihovny pro praci se sockety/HTTPS, knihovnu pro vlákna a 
+Dále plánujeme použít knihovny pro praci se sockety/HTTPS, knihovnu pro vlákna a 
 události. Pro zpracování obrazu a zvuku využijeme doporučené knihovny ze 
 cvičení.
 
-Konkrétneji ke kryptografii: pro zajištení důvěrnosti, integrity i soukromí 
-využijeme šifrovacího schématu encrypt-then-mac v podobe otevřené implementace 
+Konkrétněji ke kryptografii: pro zajištení důvěrnosti, integrity i soukromí 
+využijeme šifrovacího schématu encrypt-then-mac v podobě otevřené implementace 
 Galois/Counter Mode (GCM),
 která je dostupná v PolarSSL. Jako hashovaci funkci budeme používat SHA-512, 
-symetrickou šifrovaci funkcí bude AES v již zmíněném módu GCM a pro ustanovení 
+symetrickou šifrovací funkcí bude AES v již zmíněném módu GCM a pro ustanovení 
 komunikace použijeme asymetrické
 kryptografie v podobě RSA.
 
@@ -43,14 +43,14 @@ distribuci certifikátů veřejných klíčů
 potřebných pro navázání asymetricky šifrované komunikace mezi klienty. 
 Certifikační autorita přijímá certifikáty od nově příchozích klientů, a na 
 žádost vydává veřejné certifikáty klientů. Pro komunikaci s CA je zřízen jeden 
-pár veřejného a  soukromého klíče, kerý je používán CA. Veřejný klíč je pro 
+pár veřejného a soukromého klíče, kerý je používán CA. Veřejný klíč je pro 
 klienta známý. Komunikace je ustavena klientem, který po CA požaduje ověření 
 veřejného klíče jiného klienta. Na tento dotaz CA odpovídá dohledáním 
 příslušného veřejného klíče ve své databázi a odesláním certifikátu tohoto 
 klíče.
 
 Server je komponentou zaštiťující ustanovení komunikace mezi klienty. Komunikace 
-probíhá pomocí jedsnosměrně šifrované komunikace od klienta k serveru. Server 
+probíhá pomocí jednosměrně šifrované komunikace od klienta k serveru. Server 
 přijímá od klienta požadavky na přihlášení do systému a odesílá ostatním 
 připojeným klientům jeho dostupnost. Následně očekává požadavky na spojení. 
 Nakonec po odpojení odešle všem klientům požadavek na smazání klienta.
@@ -62,15 +62,15 @@ klienta zdrojovému a označí oba klienty za nedostupné. Pokud některý z kli
 ukončí komunikaci odešle tuto informaci serveru a ten označí oba klienty za 
 dostupné.
 
-Komponenta klient zajiťuje rozhraní pro přímou komunikaci dvou klientů, navázání 
-komunikace a získávání veřejných klíčůnvystupujících v komunikaci. Klient se 
-přpojí k serveru a přijme seznam připojených klientů.
+Komponenta klient zajišťuje rozhraní pro přímou komunikaci dvou klientů, navázání 
+komunikace a získávání veřejných klíčů vystupujících v komunikaci. Klient se 
+připojí k serveru a přijme seznam připojených klientů.
 
     a)  Klient požaduje připojení ke klientovi:
         Iniciální klient (IK) si vyžádá od CA veřejný klíč cílového klienta (CK) 
 a zašle serveru požadavek na spojení. Po kladné odpovědi serveru a přijetí 
 komunikačních údajů o CK. Následně navazuje komunikaci s CK. Odešle požadavek 
-spoelečně s náhodně vygenerovaným klíčem a inicializačním vektorem pro 
+společně s náhodně vygenerovaným klíčem a inicializačním vektorem pro 
 symetrickou kryptografii zašifrovaný a podepsaný pomocí asymetrické kryptografie 
 k CK. Pokud CK odpoví kladně, přijme a zpracuje symetrický klíč a inicializační 
 vektor pro komunikaci od CK a IK je schopen pomocí
