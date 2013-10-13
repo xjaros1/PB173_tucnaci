@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
-  <meta name="author" content="Tučňáčí kolektiv" />
+  <meta name="author" content="Tučňáčí kolektiv - Miroslav Jaroš, Karel Kubíček, Lukáš Němec" />
   <title>Návrh API videokonferenční aplikace</title>
   <style type="text/css">code{white-space: pre;}</style>
 <style>
@@ -79,11 +79,81 @@
 <body>
 <section>
   <h1 class="title">Návrh API videokonferenční aplikace</h1>
-  <h2 class="author">Tučňáčí kolektiv</h2>
+  <h2 class="author">Tučňáčí kolektiv - Miroslav Jaroš, Karel Kubíček, Lukáš Němec</h2>
   <h3 class="date">15.10.2013</h3>
 </section>
-<section class="slide level6">
-
+<section id="motivace" class="slide level1">
+<h1>Motivace</h1>
+<ol class="incremental" type="1">
+<li>použití kryptografie v praxi</li>
+<li>týmová práce na větším projektu</li>
+<li>vytvoření bezpečného komunikačního kanálu pro odboj proti NSA</li>
+</ol>
+</section>
+<section id="použite-technologie" class="slide level1">
+<h1>Použite technologie</h1>
+<blockquote>
+<ul class="incremental">
+<li>C/C++ s knihovnou PolarSSL</li>
+</ul>
+<ol class="incremental" type="1">
+<li>encrypt-then-mac - AES-Galois/Counter Mode (GCM)</li>
+<li>SHA-512</li>
+<li>RSA</li>
+</ol>
+<ul class="incremental">
+<li>knihovna pro práci se sockety nebo HTTPS</li>
+<li>knihovna pro přehrání videa a zvuku</li>
+</ul>
+</blockquote>
+</section>
+<section id="rozbor-na-dílčí-části" class="slide level1">
+<h1>Rozbor na dílčí části</h1>
+<ol class="incremental" type="1">
+<li>certifikační autorita (CA)</li>
+<li>server</li>
+<li>klient</li>
+</ol>
+</section>
+<section id="certifikační-autorita-ca" class="slide level1">
+<h1>Certifikační autorita (CA)</h1>
+<ol class="incremental" type="1">
+<li>ověřování a distribuce klíčů</li>
+<li>příjem certifikátů od nových klientů</li>
+<li>asymetrická komunikace s klientem</li>
+</ol>
+</section>
+<section id="server" class="slide level1">
+<h1>Server</h1>
+<ol class="incremental" type="1">
+<li>registrace klienta</li>
+<li>seznam klientů</li>
+<li>ustanovení komunikace</li>
+</ol>
+</section>
+<section id="klient" class="slide level1">
+<h1>Klient</h1>
+<blockquote>
+<ul class="incremental">
+<li>klient inicializuje připojení</li>
+</ul>
+<ol class="incremental" type="1">
+<li>požadavek po serveru</li>
+<li>získání klíče od CA</li>
+<li>navázání komunikace a výměna klíče</li>
+<li>symetrická kryptografie pro komunikaci</li>
+</ol>
+<ul class="incremental">
+<li>klient přijímá požadavek na komunikaci</li>
+</ul>
+<ol class="incremental" type="1">
+<li>server posílá požadavek</li>
+<li>CA dodá certifikát k veřejnému klíči inicializátora</li>
+</ol>
+</blockquote>
+</section>
+<section id="otázky" class="slide level1">
+<h1>otázky?</h1>
 </section>
 <!-- {{{{ dzslides core
 #
