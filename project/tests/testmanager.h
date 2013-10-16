@@ -22,7 +22,7 @@ namespace tests {
     class TestCase {
     public:
 
-        virtual ~TestCase();
+        virtual ~TestCase() {}
         /**
          * \brief Abstract method which runs all tests of component.
          * 

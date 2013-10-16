@@ -1,6 +1,6 @@
 #include "testmanager.h"
 #include <iostream>
-
+#include "connectiontest.h"
 using namespace std;
 
 
@@ -22,8 +22,10 @@ TestManager::~TestManager()
 void TestManager::prepare()
 {
     //Add here new offsprings of TestCase
-    //F.E. tests.add(new ConnectionTest());
+    //F.E. tests.push_back(new ConnectionTest());
     //these objects are dealocated in destructor
+
+    tests.push_back(new ConnectionTest());
 }
 int tests_run;
 void TestManager::startTesting()
