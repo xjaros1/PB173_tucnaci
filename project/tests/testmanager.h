@@ -10,7 +10,7 @@
 #include "minunit.h"
 #include <list>
 
-int tests_run;
+
 
 namespace tests {
 
@@ -22,13 +22,13 @@ namespace tests {
     class TestCase {
     public:
 
-        virtual ~TestCase() = 0;
+        virtual ~TestCase();
         /**
          * \brief Abstract method which runs all tests of component.
          * 
          * @return NULL iff all tests were succesfull else the error message.
          */
-        const char * runTests() = 0;
+        virtual const char * runTests() = 0;
     };
 
     /**
@@ -39,7 +39,7 @@ namespace tests {
     class TestManager {
     public:
 
-        ~TestManager(){}
+        ~TestManager();
 
         /**
          * \brief In this method will be intoduced All testCase offsprings
