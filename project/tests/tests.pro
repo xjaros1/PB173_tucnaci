@@ -6,7 +6,9 @@ CONFIG -= qt
 SOURCES += main.cpp \
     testmanager.cpp
 
+
 HEADERS += \
     testmanager.h \
     minunit.h
+
 
