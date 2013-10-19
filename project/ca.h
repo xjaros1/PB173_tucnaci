@@ -1,10 +1,12 @@
 #include "config.h"
+#include "connection.h"
 #include <polarssl/rsa.h>
 
 #ifndef CA_H
 #define CA_H
 
 class CA
+        : public Entity
 {
 public:
     CA();

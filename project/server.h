@@ -1,10 +1,12 @@
 #include "config.h"
+#include "connection.h"
 #include <polarssl/rsa.h>
 
 #ifndef SERVER_H
 #define SERVER_H
 
 class Server
+        : public Entity
 {
 public:
     Server();
@@ -26,9 +28,8 @@ public:
      */
     int rsaSign(const rsa_context* senderPrivKey, const char* input,const int inputLength, char* output, const int outputLength);
 
+    //add methods to manage active client database
 
-    //+out parameter connection
-    int findConnectionToClient();
 };
 
 #endif // SERVER_H

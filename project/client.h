@@ -1,4 +1,6 @@
 #include "config.h"
+#include "connection.h"
+
 #include <polarssl/rsa.h>
 #include <polarssl/aes.h>
 
@@ -7,6 +9,7 @@
 
 
 class Client
+        : public Entity
 {
 public:
     Client();
@@ -79,23 +82,11 @@ public:
     int aesDecryptAndVerify(const aes_context* ctx, const char* input, const int inputLength, char* output,
                             const int outputLength, const char* mac, const int macLength);
 
-    //add connection as parameters
-
-    //send where is client
-    int initializeServerConnection();
-
-    //send pubkey
-    int initializeCAConnection();
-
-    //RSA exchange of session key
-    int initializeClientConnection();
-
-    //send data to other clients (voice stream)
-    int sendDataTo(char* data, int dataLength);
-
 private:
     rsa_context* pubkeyCA;
     rsa_context* pubkeySerever;
+    Connection connectionServer;
+    Connection connectionCA;
 };
 
 #endif // CLIENT_H
