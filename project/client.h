@@ -85,8 +85,8 @@ public:
 private:
     rsa_context* pubkeyCA;
     rsa_context* pubkeySerever;
-    Connection connectionServer;
-    Connection connectionCA;
+    Connection* connectionServer;
+    Connection* connectionCA;
 };
 
 #endif // CLIENT_H
