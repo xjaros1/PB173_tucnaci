@@ -51,6 +51,14 @@ public:
      */
     int connectToClient(char* login);
 
+    /**
+     * @brief logout
+     * @param clientsConnection
+     * @param cxa
+     * @return errno
+     */
+    int logout(Connection* clientsConnection, rsa_context* cxa);
+
 private:
     class registeredClient {
     public:
