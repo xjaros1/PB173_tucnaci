@@ -4,6 +4,8 @@
 namespace tests
 {
 
+int tests_run;
+
 ClientTest::~ClientTest()
 {
     for(std::list<Client*>::iterator it = allocated.begin(); it != allocated.end();)

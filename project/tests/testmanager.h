@@ -14,6 +14,15 @@
 
 namespace tests {
 
+
+    class NotImplementedException : public std::exception
+    {
+        virtual const char* what() const throw()
+        {
+            return "This method is not implemented yet";
+        }
+    };
+
     /**
      * \brief Abstract class for Test representation
      *        All tests of one component should be methods of 

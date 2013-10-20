@@ -11,13 +11,6 @@ namespace tests{
 class ClientTest
         : public TestCase
 {
-    class NotImplementedException : public std::exception
-    {
-        virtual const char* what() const throw()
-        {
-            return "This method is not implemented yet";
-        }
-    };
 
     class ClientMock
             : public Client
