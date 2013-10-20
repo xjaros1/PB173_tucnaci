@@ -28,8 +28,42 @@ public:
      */
     int rsaSign(const rsa_context* senderPrivKey, const char* input,const int inputLength, char* output, const int outputLength);
 
-    //add methods to manage active client database
+    /**
+     * @brief registerNewClient
+     * @param[in] login
+     * @param[in] clientsConnection
+     * @param[in] cxa
+     * @return errno
+     */
+    int registerNewClient(char* login, Connection* clientsConnection, rsa_context* cxa);
 
+    /**
+     * @brief getListOfClients
+     * @param output
+     * @return errno
+     */
+    int getListOfClients(char* output);
+
+    /**
+     * @brief connectToClient
+     * @param login
+     * @return errno
+     */
+    int connectToClient(char* login);
+
+private:
+    class registeredClient {
+    public:
+        registeredClient();
+        ~registeredClient();
+    private:
+        char* login;
+        Connection* clientsConnection;
+        rsa_context* cxa;
+        bool isReady;
+        //thread
+    };
+    std::list<registeredClient*> registeredClients;
 };
 
 #endif // SERVER_H
