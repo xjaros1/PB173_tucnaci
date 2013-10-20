@@ -8,9 +8,11 @@ SOURCES += main.cpp \
     connectiontest.cpp \
     catests.cpp
 
+
 HEADERS += \
     testmanager.h \
     minunit.h \
     connectiontest.h \
     catests.h
+
 

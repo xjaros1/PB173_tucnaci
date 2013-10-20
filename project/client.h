@@ -39,7 +39,7 @@ public:
      * @return errno
      */
     int rsaEncryptAndSign(const rsa_context* receiverPubKey,const rsa_context* senderPrivKey,
-                            const char* input,const int inputLength, char* output, const int outputLength);
+                            const char* input,const int inputLength, char* output, int* outputLength);
 
     /**
      * @brief rsaDecryptAndVerify
@@ -52,7 +52,7 @@ public:
      * @return result of signature verification
      */
     int rsaDecryptAndVerify(const rsa_context* receiverPrivKey,const rsa_context* senderPubKey,
-                            const char* input, const int inputLength, char* output, const int outputLength);
+                            const char* input, const int inputLength, char* output, int* outputLength);
 
     /**
      * @brief aesEncryptAndMac
@@ -66,7 +66,7 @@ public:
      * @return errno
      */
     int aesEncryptAndMac(const aes_context* ctx, const char* input, const int inputLength, char* output,
-                         const int outputLength, char* mac, const int macLength);
+                         int* outputLength, char* mac, const int macLength);
 
     /**
      * @brief aesDecryptAndVerify
@@ -80,7 +80,7 @@ public:
      * @return result of mac verification
      */
     int aesDecryptAndVerify(const aes_context* ctx, const char* input, const int inputLength, char* output,
-                            const int outputLength, const char* mac, const int macLength);
+                            int* outputLength, const char* mac, const int macLength);
 
 private:
     rsa_context* pubkeyCA;
