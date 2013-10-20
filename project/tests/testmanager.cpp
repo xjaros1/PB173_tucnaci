@@ -1,6 +1,7 @@
 #include "testmanager.h"
 #include <iostream>
 #include "connectiontest.h"
+#include "clienttest.h"
 using namespace std;
 
 
@@ -26,6 +27,7 @@ void TestManager::prepare()
     //these objects are dealocated in destructor
 
     tests.push_back(new ConnectionTest());
+    tests.push_back(new ClientTest());
 }
 int tests_run;
 void TestManager::startTesting()
