@@ -1,6 +1,7 @@
 #include "testmanager.h"
 #include <iostream>
 #include "connectiontest.h"
+#include "catests.h"
 #include "clienttest.h"
 using namespace std;
 
@@ -30,6 +31,7 @@ namespace tests {
 
         tests.push_back(new ConnectionTest());
         tests.push_back(new ClientTest());
+        tests.push_back(new CATests());
     }
 
     void TestManager::startTesting()
