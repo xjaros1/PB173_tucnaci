@@ -5,11 +5,13 @@
 #ifndef CA_H
 #define CA_H
 
-class CA
+class CertificationAuthority
         : public Entity
 {
 public:
-    CA();
+    CertificationAuthority();
+
+
 
     /**
      * @brief RSA_encrypt_and_mac
@@ -43,6 +45,8 @@ public:
      * @return
      */
     int addNewClient(rsa_context* pubkey);
+
+
 };
 
 #endif // CA_H
