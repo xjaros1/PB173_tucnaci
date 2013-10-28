@@ -1,6 +1,7 @@
 #include "config.h"
 #include "connection.h"
 #include <polarssl/rsa.h>
+#include <list>
 
 #ifndef SERVER_H
 #define SERVER_H

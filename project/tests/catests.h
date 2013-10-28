@@ -2,28 +2,44 @@
 #define CATESTS_H
 
 #include <map>
+#include <list>
 #include "testmanager.h"
 #include "../ca.h"
+#include "../connection.h"
+#include "../client.h"
 namespace tests{
 
 
 
 
-class CATests : public TestCase
+class CATests :
+        public TestCase
 {
 
 private:
 
     class TestVector;
+    class MockCA;
+
+
 
     void prepare();
 
 public:
+
+
     CATests();
 
-    virtual char * runTests();
+    virtual ~CATests();
+
+    char * runTests();
 
 private:
+
+
+    std::map<std::string, TestVector> vectors;
+    std::list<Client*> allocated;
+
 
     char* testEncryptAndSignCorrect();
 
@@ -42,6 +58,8 @@ private:
     char* testAddNewClientIncorrect();
 
     char* testAddNewClientNullPointer();
+
+    int testCaseDecryptInc(std::string type);
 
 
 
@@ -63,9 +81,20 @@ private:
 
         char * getExpectedOutputDec();
 
+        size_t getLengthInput();
+
+        size_t getLengthOutput();
+
     };
 
-    std::map<std::string, TestVector> vectors;
+    class MockCA: public CertificationAuthority
+    {
+    public:
+
+        void changeAttributes(/** Will be changed */);
+    };
+
+
 };
 
 

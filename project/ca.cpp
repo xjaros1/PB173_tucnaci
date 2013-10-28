@@ -1,5 +1,5 @@
 #include "ca.h"
 
-CA::CA()
+CertificationAuthority::CertificationAuthority()
 {
 }

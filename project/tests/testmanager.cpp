@@ -1,6 +1,7 @@
 #include "testmanager.h"
 #include <iostream>
 #include "connectiontest.h"
+#include "catests.h"
 #include "clienttest.h"
 using namespace std;
 
@@ -8,40 +9,43 @@ using namespace std;
 
 namespace tests {
 
-TestManager::~TestManager()
-{
+    int tests_run;
 
-    for(list<TestCase*>::iterator it = tests.begin(); it != tests.end();)
+    TestManager::~TestManager()
     {
-        TestCase * t = *it;
-        it = tests.erase(it);
-        delete t;
 
+        for(list<TestCase*>::iterator it = tests.begin(); it != tests.end();)
+        {
+            TestCase * t = *it;
+            it = tests.erase(it);
+            delete t;
+
+        }
     }
-}
 
-void TestManager::prepare()
-{
-    //Add here new offsprings of TestCase
-    //F.E. tests.push_back(new ConnectionTest());
-    //these objects are dealocated in destructor
-
-    tests.push_back(new ConnectionTest());
-    tests.push_back(new ClientTest());
-}
-int tests_run;
-void TestManager::startTesting()
-{
-    const char * result = NULL;
-    for(list<TestCase*>::iterator it = tests.begin(); it != tests.end(); ++it)
+    void TestManager::prepare()
     {
-        result = (*it)->runTests();
-        if(result == NULL) continue;
-        cerr << "The test no. " << tests_run << " failed: " << result <<endl;
-        break;
+        //Add here new offsprings of TestCase
+        //F.E. tests.push_back(new ConnectionTest());
+        //these objects are dealocated in destructor
+
+        tests.push_back(new ConnectionTest());
+        tests.push_back(new ClientTest());
+        tests.push_back(new CATests());
     }
-    cout << "Number of passed tests: " << tests_run << endl;
-    cout << "Result of testing: " << ((result==NULL)? "fine" : "failed") << endl;
-}
+
+    void TestManager::startTesting()
+    {
+        const char * result = NULL;
+        for(list<TestCase*>::iterator it = tests.begin(); it != tests.end(); ++it)
+        {
+            result = (*it)->runTests();
+            if(result == NULL) continue;
+            cerr << "The test no. " << tests_run << " failed: " << result <<endl;
+            break;
+        }
+        cout << "Number of passed tests: " << tests_run << endl;
+        cout << "Result of testing: " << ((result==NULL)? "fine" : "failed") << endl;
+    }
 
 }

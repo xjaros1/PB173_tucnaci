@@ -6,11 +6,13 @@
 
 typedef enum
 {
-    SERVER, CLIENT, CA
+    SERVER, CLIENT, CertificationAuthority
 }TypeOfEntity;
 
 class Entity
 {
+public:
+    virtual ~Entity() = 0;
     /**
      * @brief getDestinationPlace
      * @return the identificator for used connection type
