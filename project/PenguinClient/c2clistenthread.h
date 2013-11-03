@@ -2,6 +2,8 @@
 #define C2CLISTENTHREAD_H
 
 #include <QThread>
+#include <QMutex>
+#include <QtNetwork>
 
 class C2CListenThread : public QThread
 {
@@ -21,6 +23,12 @@ public slots:
 private:
     QString hostName;
     quint16 port;
+    QMutex mutex;
+    bool quit;
+    QUdpSocket* socket;
+    QWaitCondition cond;
+
+    int decryptDatagram(char* in, char* out, int length);
 };
 
 #endif // C2CLISTENTHREAD_H

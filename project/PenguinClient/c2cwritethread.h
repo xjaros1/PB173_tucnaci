@@ -2,6 +2,8 @@
 #define C2CWRITETHREAD_H
 
 #include <QThread>
+#include <QMutex>
+#include <QtNetwork>
 
 class C2CWriteThread : public QThread
 {
@@ -21,6 +23,10 @@ public slots:
 private:
     QString hostName;
     quint16 port;
+    QMutex mutex;
+    bool quit;
+    QUdpSocket* socket;
+    QTimer  timer1;
 };
 
 #endif // C2CWRITETHREAD_H
