@@ -15,4 +15,10 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    c2clistenthread.cpp \
+    c2cwritethread.cpp
+
+HEADERS += \
+    c2clistenthread.h \
+    c2cwritethread.h
