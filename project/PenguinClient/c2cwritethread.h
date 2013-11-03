@@ -21,6 +21,9 @@ signals:
 public slots:
     
 private:
+    int encryptDatagram(char* in, char* out, int length);
+    void fillRandom(char* data, int size);
+
     QString hostName;
     quint16 port;
     QMutex mutex;

@@ -31,12 +31,14 @@ void C2CListenThread::run(){
     socket->connectToHost( QHostAddress(serverName), serverPort);
     socket->waitForConnected(1000);
     while (!quit) {
+        //receive data
         if(socket->hasPendingDatagrams()){
             qint64 pendingSize = socket->pendingDatagramSize();
             char data[pendingSize];
             socket->readDatagram(data, pendingSize, 0, 0);
             decryptDatagram(data, data, pendingSize);
 
+            //process data
             std::cout << data;
         }
     }
