@@ -10,6 +10,7 @@ ConnectionTest::~ConnectionTest()
 {
     for(std::list<Connection*>::iterator it = allocated.begin(); it != allocated.end();)
     {
+
         Connection * c = *it;
         it = allocated.erase(it);
         delete c;

@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     testmanager.cpp \
     connectiontest.cpp \
     catests.cpp \
-    clienttest.cpp
+    clienttest.cpp \
+    servertest.cpp
 
 
 HEADERS += \
@@ -15,6 +16,7 @@ HEADERS += \
     minunit.h \
     connectiontest.h \
     catests.h \
-    clienttest.h
+    clienttest.h \
+    servertest.h
 
 
