@@ -1,5 +1,8 @@
 #include "clientserverthread.h"
 
+namespace PenguinClient
+{
+
 ClientServerThread::ClientServerThread(QObject *parent)
     : QThread(parent), quit(false)
 {
@@ -21,8 +24,6 @@ void ClientServerThread::initThread(const QString &serverIPAdress,
     clientSocket.connectToHost(serverIPAdress, serverListenPort);
     if (!isRunning())
         start();
-    //else
-        //cond.wakeOne();
 
 }
 
@@ -62,8 +63,9 @@ void ClientServerThread::requestListOfClients() {
     QString readedData;
     quint16 messageType;
     readData(readedData, messageType);
-    //parse
-
+    if(messageType == SEND_CLIENT_LIST_TO_CLIENT) {
+        emit clientList(readedData);
+    }
 }
 
 void ClientServerThread::encyptData(QDataStream &output, QString input) {
@@ -99,18 +101,20 @@ void ClientServerThread::run() {
         }
 
         if(dataType == SEND_CLIENT_LIST_TO_CLIENT) {
-
+            emit clientList(readedData);
         }
         if(dataType == SEND_INCOMMING_CALL_TO_CLIENT) {
-
+            emit incommingCall(readedData);
+            /*response on incomming call:
+             *pustis C2Clisten vlakno
+             * a pote co bezi tak muze pustit to druhe C2CWrite,
+             * obema predas parametry pro základni spojeni
+             */
         }
         if(dataType == END_OF_CALL_TO_CLIENT) {
-
+            emit endOfCall(readedData);
         }
 
-        //if ping, response
-        //if client list - parse and show
-        //if incoming call - response
         sleep(REFRESH_RATE);
 
     }
@@ -155,6 +159,6 @@ void ClientServerThread::readData(QString &output, quint16 &messageType) {
     }
 
     decryptData(read, output, messageType);
-    //parse data
-    //emit recieveData(readedData);
 }
+
+}//end of namespace PenguinClient

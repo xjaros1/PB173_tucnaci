@@ -17,9 +17,8 @@
 #include <QWaitCondition>
 #include <QtNetwork>
 
-class Message {
-
-};
+namespace PenguinClient
+{
 
 class ClientServerThread : public QThread
 {
@@ -37,23 +36,22 @@ private:
     QString serverIPAdress;
     quint16 serverListenPort;
     QString login;
-    //quint16 clientSendPort;
-    //quint16 clientListenPort;
     bool quit;
+
     void initCommunication();
     void encyptData(QDataStream &output, QString input);
     void decryptData(QDataStream &input, QString &output,quint16 &messageType);
     void readData(QString &input, quint16 &messageType);
     void ping();
-    //void writeData(QDataStream &output);
-    //QMutex mutex;
-    //QWaitCondition cond;
 signals:
-    //void incommingCommunication();
+    void clientList(QString &notParsedClientList);
+    void incommingCall(QString &notParsedClientList);
+    void endOfCall(QString &notParsedClientList);
     void error(int socketError, const QString &message);
-    //void recieveData(QString readedData);
 
 
 };
+
+}//namespace PenguinClient
 
 #endif // CLIENTSERVERTHREAD_H
