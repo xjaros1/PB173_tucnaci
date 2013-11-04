@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core
-
+QT       += network
 QT       -= gui
 
 TARGET = PenguinServer
@@ -15,4 +15,16 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    serverthread.cpp \
+    clientsmanager.cpp \
+    serverlistener.cpp \
+    connectedclient.cpp \
+    sharedlist.cpp
+
+HEADERS += \
+    serverthread.h \
+    clientsmanager.h \
+    serverlistener.h \
+    connectedclient.h \
+    sharedlist.h
