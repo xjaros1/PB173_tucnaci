@@ -21,6 +21,17 @@ void C2CWriteThread::startOutput(const QString &hostName, const quint16 port){
 }
 
 void C2CWriteThread::run(){
+    tcpSocket = new QTcpSocket(this);
+    tcpSocket->abort();
+    tcpSocket->connectToHost(hostName, port);
+    char data[1024];
+    for (int i = 0; i < 1024; i++){
+        fillRandom(data, 1024);
+        tcpSocket->write(data, 1024);
+    }
+
+
+    /*
     mutex.lock();
     QString serverName = hostName;
     quint16 serverPort = port;
@@ -40,6 +51,7 @@ void C2CWriteThread::run(){
             quit = true;
         }
     }
+    */
 }
 
 int C2CWriteThread::encryptDatagram(char* in, char* out, int length){

@@ -26,10 +26,13 @@ private:
 
     QString hostName;
     quint16 port;
+
     QMutex mutex;
     bool quit;
     QUdpSocket* socket;
     QTimer  timer1;
+
+    QTcpSocket* tcpSocket;
 };
 
 #endif // C2CWRITETHREAD_H
