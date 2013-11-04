@@ -1,9 +1,14 @@
 #ifndef CLIENTSERVERTHREAD_H
 #define CLIENTSERVERTHREAD_H
 
-#define SEND_LOGIN 0
-#define REQUEST_CLIENT_LIST 1
-#define REQUEST_CALL_TO_CLIENT 2
+#define PING 0
+#define OK 1
+#define SEND_LOGIN_TO_SERVER 2
+#define REQUEST_CLIENT_LIST_FROM_SERVER 3
+#define REQUEST_CALL_TO_CLIENT_FROM_SERVER 4
+#define SEND_CLIENT_LIST_TO_CLIENT 5
+#define SEND_INCOMMING_CALL_TO_CLIENT 6
+#define END_OF_CALL_TO_CLIENT 7
 
 #define REFRESH_RATE 10000
 
@@ -36,8 +41,10 @@ private:
     //quint16 clientListenPort;
     bool quit;
     void initCommunication();
-    void encyptData(QDataStream &block);
-    void readData(QDataStream &input);
+    void encyptData(QDataStream &output, QString input);
+    void decryptData(QDataStream &input, QString &output,quint16 &messageType);
+    void readData(QString &input, quint16 &messageType);
+    void ping();
     //void writeData(QDataStream &output);
     //QMutex mutex;
     //QWaitCondition cond;
