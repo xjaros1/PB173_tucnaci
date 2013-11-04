@@ -1,7 +1,8 @@
 
 
 #include "c2cwritethread.h"
-
+namespace PenguinClient
+{
 C2CWriteThread::C2CWriteThread(QObject *parent) :
     QThread(parent), quit(false)
 {
@@ -65,4 +66,5 @@ void C2CWriteThread::fillRandom(char* data, int size){
     for (int i = 0; i < size; i++){
         data[i] = (char) (rand() % ('z' - '0' + 1) + '0');
     }
+}
 }

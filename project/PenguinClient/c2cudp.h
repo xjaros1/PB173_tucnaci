@@ -1,6 +1,7 @@
 #ifndef C2CUDP_H
 #define C2CUDP_H
-
+namespace PenguinClient
+{
 class C2CUdpListen
 {
 public:
@@ -13,5 +14,5 @@ class C2CUdpWrite
 public:
     C2CUdpWrite();
 };
-
+}
 #endif // C2CUDP_H

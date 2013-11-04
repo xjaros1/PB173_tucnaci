@@ -1,5 +1,6 @@
 #include "c2ctcp.h"
-
+namespace PenguinClient
+{
 C2CTcpListen::C2CTcpListen(qintptr , QObject *){
 
 }
@@ -41,4 +42,5 @@ void C2CTcpListen::disconnected()
 
 C2CTcpWrite::C2CTcpWrite(){
 
+}
 }

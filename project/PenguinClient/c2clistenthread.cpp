@@ -4,7 +4,8 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
-
+namespace PenguinClient
+{
 C2CListenThread::C2CListenThread(QObject *parent) :
     QThread(parent), quit(false)
 {
@@ -90,4 +91,4 @@ ListenServer::ListenServer(QObject *parent):
     QTcpServer(parent)
 {
 }
-
+}
