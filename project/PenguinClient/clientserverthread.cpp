@@ -38,7 +38,7 @@ void ClientServerThread::initCommunication() {
     out << (quint16)(block.size() - sizeof(quint16));
     encyptData(out);
 
-    clientSocket.write(out);
+    clientSocket.write(block);
 }
 
 void ClientServerThread::requestListOfClients() {
@@ -48,7 +48,7 @@ void ClientServerThread::requestListOfClients() {
     out << (quint16) REQUEST_CLIENT_LIST;
     encyptData(out);
 
-    clientSocket.write(out);
+    clientSocket.write(block);
 
     QDataStream readedData;
     readData(readedData);
@@ -91,7 +91,7 @@ void ClientServerThread::readData(QDataStream &output) {
     }
 
     quint16 blockSize;
-    output(&clientSocket);
+    output.setDevice(&clientSocket);
     output.setVersion(QDataStream::Qt_5_1);
     output >> blockSize;
     //read data of blockSize*n
