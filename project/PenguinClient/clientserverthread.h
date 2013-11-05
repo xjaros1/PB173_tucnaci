@@ -1,6 +1,7 @@
 #ifndef CLIENTSERVERTHREAD_H
 #define CLIENTSERVERTHREAD_H
 
+#define ERROR_SERVER_RESPONSE 666
 #define PING 0
 #define OK 1
 #define SEND_LOGIN_TO_SERVER 2
@@ -10,7 +11,7 @@
 #define SEND_INCOMMING_CALL_TO_CLIENT 6
 #define END_OF_CALL_TO_CLIENT 7
 
-#define REFRESH_RATE 10000
+#define REFRESH_RATE 10
 
 #include <QThread>
 #include <QMutex>
@@ -24,12 +25,13 @@ class ClientServerThread : public QThread
 {
     Q_OBJECT //macro for all signals and so...
 public:
-    ClientServerThread(QObject *parent);
+    ClientServerThread(QObject *parent = 0);
     ~ClientServerThread();
     void initThread(const QString &serverIPAdress, quint16 serverListenPort,
                     QString login);
     void requestListOfClients();
     void requestToCallChoosenClient(quint16 clientID);
+    void disconnect();
     void run();
 private:
     QTcpSocket clientSocket;
