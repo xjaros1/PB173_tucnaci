@@ -1,10 +1,12 @@
 #ifndef SERVERTHREAD_H
 #define SERVERTHREAD_H
 
-#include <QObject>
-#include <QThread>
+
+
 #include <QTcpSocket>
 #include <QMutex>
+
+#include <QThread>
 
 #include "connectedclient.h"
 #include "sharedlist.h"
@@ -20,8 +22,20 @@ public:
 
     ~ServerThread() {}
 
+    void run();
+
+private:
+
+    void initialize();
+
+    void sendError(QString);
+
+    void requestCall(const QString &);
+
 signals:
 
+    void error(QTcpSocket::SocketError err);
+    void error();
 public slots:
 
     void distributeClients(QString list);
@@ -32,10 +46,20 @@ public slots:
 
     void connectionDenied();
 
+    void readyRead();
+
+    void disconnected();
+
+
+
 private:
-    QTcpSocket s;
+    QTcpSocket *s;
+
+    qintptr socketDescriptor;
 
     SharedList * list;
+
+    bool isInitialized;
 
 };
 

@@ -17,6 +17,9 @@ void ServerListener::incomingConnection(qintptr handle)
     ServerThread * thread = new ServerThread(handle, list, this);
 
     connect(thread, SIGNAL(finished()), thread, SLOT(deletelater()));
+
+    thread->start();
+
 }
 
 }//namespace PenguinServer

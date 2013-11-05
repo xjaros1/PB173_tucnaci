@@ -27,4 +27,5 @@ HEADERS += \
     clientsmanager.h \
     serverlistener.h \
     connectedclient.h \
-    sharedlist.h
+    sharedlist.h \
+    config.h

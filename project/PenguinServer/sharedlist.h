@@ -19,7 +19,7 @@ public:
 
     void callAllClients();
 
-    ConnectedClient* getClient(const QString & name);
+    void callClient(const QString & destName, const QString & srcName);
 
 
 

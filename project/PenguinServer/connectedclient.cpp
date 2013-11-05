@@ -1,26 +1,31 @@
 #include "connectedclient.h"
 
+#include "serverthread.h"
+
+
+
 namespace PenguinServer
 {
 
-ConnectedClient::ConnectedClient(ServerThread *t)
+ConnectedClient::ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, QObject *parent):
+    QObject(parent), ipaddress(ipAddr), port(port), name(name)
 {
-
+    connect(this, SIGNAL(sendUpdatedList(QString)), (ServerThread*) parent, SLOT(distributeClients(QString)));
 }
 
-bool ConnectedClient::operator ==(const ConnectedClient& lhs)
+bool ConnectedClient::operator ==(const ConnectedClient& lhs) const
 {
-    mutex.lock();
+
     bool res = ipaddress==lhs.getIpAddr() || name == lhs.getName();
-    mutex.unlock();
+
     return res;
 }
 
-bool ConnectedClient::operator !=(const ConnectedClient& lhs)
+bool ConnectedClient::operator !=(const ConnectedClient& lhs) const
 {
-    mutex.lock();
+
     bool res = (*this == lhs);
-    mutex.unlock();
+
     return !res;
 }
 
