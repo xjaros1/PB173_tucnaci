@@ -5,7 +5,8 @@
 #include <QMutex>
 #include <QtNetwork>
 #include <QTcpServer>
-
+namespace PenguinClient
+{
 class ListenServer : public QTcpServer
 {
     Q_OBJECT
@@ -50,6 +51,6 @@ private:
     int decryptDatagram(char* in, char* out, int length);
 };
 
-
+}
 
 #endif // C2CLISTENTHREAD_H

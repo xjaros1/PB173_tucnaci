@@ -4,7 +4,8 @@
 #include <QThread>
 #include <QMutex>
 #include <QtNetwork>
-
+namespace PenguinClient
+{
 class C2CWriteThread : public QThread
 {
     Q_OBJECT
@@ -34,5 +35,5 @@ private:
 
     QTcpSocket* tcpSocket;
 };
-
+}
 #endif // C2CWRITETHREAD_H

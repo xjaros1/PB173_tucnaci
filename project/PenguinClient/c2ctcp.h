@@ -2,7 +2,8 @@
 #define C2CTCP_H
 #include <QThread>
 #include <QTcpSocket>
-
+namespace PenguinClient
+{
 class C2CTcpListen : public QThread
 {
     Q_OBJECT
@@ -28,5 +29,5 @@ class C2CTcpWrite : public QThread
 public:
     C2CTcpWrite();
 };
-
+}
 #endif // C2CTCP_H

@@ -89,13 +89,16 @@ void ClientServerThread::run() {
 
 
     while(!quit) {
-        requestListOfClients();
 
         //recieve data
         QString readedData;
         quint16 dataType;
         readData(readedData, dataType);
 
+        if(dataType == ERROR_SERVER_RESPONSE) {
+            emit error(clientSocket.error(), clientSocket.errorString());
+            //should be another error message, but now I use this
+        }
         if(dataType == PING) {
             ping();
         }
@@ -114,9 +117,6 @@ void ClientServerThread::run() {
         if(dataType == END_OF_CALL_TO_CLIENT) {
             emit endOfCall(readedData);
         }
-
-        sleep(REFRESH_RATE);
-
     }
 
 }
