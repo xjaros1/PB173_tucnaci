@@ -64,6 +64,9 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     mainLayout->addWidget(logoutButton, 6, 0);
     mainLayout->addWidget(quitButton, 7, 0);
 
+    setLayout(mainLayout);
+
+
     setWindowTitle(tr("Penguin Client"));
     serverIpEdit->setFocus();
 }
