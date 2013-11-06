@@ -1,8 +1,12 @@
 #include <QCoreApplication>
 
+#include "clientbackgroundmanager.h"
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication app(argc, argv);
 
-    return a.exec();
+    PenguinClient::ClientBackgroundManager myClient;
+    myClient.show();
+    return app.exec();
 }

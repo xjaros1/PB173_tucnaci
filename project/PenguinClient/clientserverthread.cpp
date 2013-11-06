@@ -161,4 +161,17 @@ void ClientServerThread::readData(QString &output, quint16 &messageType) {
     decryptData(read, output, messageType);
 }
 
+void ClientServerThread::disconnect() {
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_1);
+
+    QString input = QString("%l").arg(10,0,LOGOUT_TO_SERVER);
+    encyptData(out, input);
+
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    clientSocket.write(block);
+}
 }//end of namespace PenguinClient

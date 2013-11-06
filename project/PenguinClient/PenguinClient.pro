@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core
-QT       += network
+QT       += network widgets
 QT       -= gui
 
 TARGET = PenguinClient
@@ -20,11 +20,13 @@ SOURCES += main.cpp \
     c2cwritethread.cpp \
     clientserverthread.cpp \
     c2cudp.cpp \
-    c2ctcp.cpp
+    c2ctcp.cpp \
+    clientbackgroundmanager.cpp
 
 HEADERS += \
     c2clistenthread.h \
     c2cwritethread.h \
     clientserverthread.h \
     c2cudp.h \
-    c2ctcp.h
+    c2ctcp.h \
+    clientbackgroundmanager.h
