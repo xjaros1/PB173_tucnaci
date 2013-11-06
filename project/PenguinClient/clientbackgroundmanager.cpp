@@ -27,8 +27,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel = new QLabel(tr("Seznam online klientu"));
     listHeaderlabel->setEnabled(false);
 
-    //clientListArea = new QScrollArea();
-    clientListArea.setEnabled(false);
+    clientListArea = new QScrollArea();
 
     logoutButton = new QPushButton(tr("Logout"));
     logoutButton->setDefault(true);
