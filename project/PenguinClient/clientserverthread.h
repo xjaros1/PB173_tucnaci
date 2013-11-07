@@ -9,8 +9,10 @@
 #define REQUEST_CALL_TO_CLIENT_FROM_SERVER 4
 #define SEND_CLIENT_LIST_TO_CLIENT 5
 #define SEND_INCOMMING_CALL_TO_CLIENT 6
+#define DENY_INCOMMING_CALL_TO_SERVER 10
 #define END_OF_CALL_TO_CLIENT 7
-#define LOGOUT_TO_SERVER 8
+#define END_OF_CALL_FROM_CLIENT 8
+#define LOGOUT_TO_SERVER 9
 
 #define REFRESH_RATE 10
 
@@ -32,6 +34,8 @@ public:
                     QString login);
     void requestListOfClients();
     void requestToCallChoosenClient(quint16 clientID);
+    void denyIncommingCall();
+    void sendEndOfCall();
     void disconnect();
     void run();
 private:
@@ -51,6 +55,7 @@ signals:
     void incommingCall(QString &notParsedClientList);
     void endOfCall(QString &notParsedClientList);
     void error(int socketError, const QString &message);
+    void callClient(QString clientLogin);
 
 
 };

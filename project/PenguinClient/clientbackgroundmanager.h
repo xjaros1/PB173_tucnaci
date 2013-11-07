@@ -28,8 +28,9 @@ public:
 
 private:
     ClientServerThread myClient2ServerThread;
-    C2CListenThread myClient2ClientListenThread;
-    C2CWriteThread myClient2ClientWriteThread;
+    C2CListenThread *myClient2ClientListenThread;
+    C2CWriteThread *myClient2ClientWriteThread;
+    QTcpServer *listenerServer;
     QList<QString> myClientList;
     QString login;
 
@@ -44,18 +45,23 @@ private:
     QPushButton *submitButton;
     //main window
     QLabel *listHeaderlabel;
-    QScrollArea clientListArea;
-    QList<QLabel> clientListLabels;
-    QList<QPushButton> clientListButtons;
+    QScrollArea *clientListArea;
+    QVBoxLayout *insideArea;
+    QList<QLabel*> clientListLabels;
+    QList<QPushButton*> clientListButtons;
+    /*test*/QPushButton *magicButton;
+    /*test*/QPushButton *fooButton;
     QPushButton *logoutButton;
     QPushButton *quitButton;
 
+signals:
 
 private slots:
     void init();
+    void callClient(QString name);
     void displayClientList(QString &notParsedClientList);
-    void incommingCall(QString &notParsedClientList);
-    void endOfCall(QString &notParsedClientList);
+    void incommingCall(QString &notParsedClientData);
+    void incomingEndOfCall();
     void displayError(int socketError, const QString &message);
     void enableSubmitButton();
     void logout();
