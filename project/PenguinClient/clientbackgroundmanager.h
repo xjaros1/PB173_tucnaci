@@ -47,7 +47,7 @@ private:
     QLabel *listHeaderlabel;
     QScrollArea *clientListArea;
     QVBoxLayout *insideArea;
-    QList<QLabel*> clientListLabels;
+    QWidget *widget;
     QList<QPushButton*> clientListButtons;
     /*test*/QPushButton *magicButton;
     /*test*/QPushButton *fooButton;
@@ -58,9 +58,9 @@ signals:
 
 private slots:
     void init();
-    void callClient(QString name);
-    void displayClientList(QString &notParsedClientList);
-    void incommingCall(QString &notParsedClientData);
+    void callClient();
+    void displayClientList(/*const QString &notParsedClientData*/);
+    void incommingCall(/*const QString &notParsedClientData*/);
     void incomingEndOfCall();
     void displayError(int socketError, const QString &message);
     void enableSubmitButton();

@@ -12,9 +12,9 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     serverPortLabel = new QLabel(tr("&Server port:"));
     loginLabel = new QLabel(tr("&Login:"));
 
-    serverIpEdit = new QLineEdit;
-    serverPortEdit = new QLineEdit;
-    loginEdit = new QLineEdit;
+    serverIpEdit = new QLineEdit(tr("127.0.0.1"));
+    serverPortEdit = new QLineEdit(tr("1234"));
+    loginEdit = new QLineEdit(tr("karlos"));
 
     serverIpLabel->setBuddy(serverIpEdit);
     serverPortLabel->setBuddy(serverPortEdit);
@@ -27,22 +27,24 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel = new QLabel(tr("Seznam online klientu"));
     listHeaderlabel->setEnabled(false);
 
-    clientListArea = new QScrollArea();
+    //clientListArea = new QScrollArea();
+    //widget = new QWidget(/*clientListArea*/);
     insideArea = new QVBoxLayout();
+    //clientListArea->setWidget(widget);
 
     /*test*/magicButton = new QPushButton(tr("Show magic"));
-    /*test*/magicButton->setDefault(true);
+    /*test*/magicButton->setDefault(false);
     /*test*/magicButton->setEnabled(true);
     /*test*/fooButton = new QPushButton(tr("Foo bar"));
-    /*test*/fooButton->setDefault(true);
+    /*test*/fooButton->setDefault(false);
     /*test*/fooButton->setEnabled(true);
 
     logoutButton = new QPushButton(tr("Logout"));
-    logoutButton->setDefault(true);
+    logoutButton->setDefault(false);
     logoutButton->setEnabled(false);
 
     quitButton = new QPushButton(tr("Quit"));
-    quitButton->setDefault(true);
+    quitButton->setDefault(false);
     quitButton->setEnabled(false);
 
     connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
@@ -56,8 +58,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
     connect(logoutButton, SIGNAL(clicked()), this, SLOT(logout()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    /*test*/connect(magicButton, SIGNAL(clicked()), this, SLOT(displayClientList(login)));
-    /*test*/connect(fooButton, SIGNAL(clicked()), this, SLOT(incommingCall(login)));
+    /*test*/connect(magicButton, SIGNAL(clicked()), this, SLOT(displayClientList()));
+    /*test*/connect(fooButton, SIGNAL(clicked()), this, SLOT(incommingCall()));
 
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -70,7 +72,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     mainLayout->addWidget(submitButton, 3, 0);
 
     mainLayout->addWidget(listHeaderlabel, 4, 0);
-    //mainLayout->addWidget(clientListArea, 5, 0);
+    mainLayout->addLayout(insideArea, 5, 0);
     mainLayout->addWidget(logoutButton, 6, 0);
     mainLayout->addWidget(quitButton, 7, 0);
     /*test*/mainLayout->addWidget(magicButton, 8, 0);
@@ -106,32 +108,65 @@ void ClientBackgroundManager::enableSubmitButton() {
     submitButton->setEnabled(enable);
 }
 
-void ClientBackgroundManager::displayClientList(QString &notParsedClientList) {
+void ClientBackgroundManager::displayClientList(/*const QString &notParsedClientList*/) {
     //parse data
-    /*test*/notParsedClientList = "karel\n filip";
-    QStringList list = notParsedClientList.split("\n");
+    /*test*/QString mockListString = "karel\nlukas\nmiroslav";
+    /*test*/QStringList list = mockListString.split("\n");
     QString str;
+    /*test*/qDebug() << "JSEM ZDE";
     foreach(str, list) {
-        QLabel* clientItemLabel = new QLabel(str);
-        clientListLabels.push_back(clientItemLabel);
+        qDebug() << str;
         QPushButton* clientCallButton = new QPushButton(str);
         clientCallButton->setVisible(true);
-        connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient(str)));
+        clientCallButton->setObjectName(str);
+        connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
-        insideArea->addWidget(clientItemLabel);
         insideArea->addWidget(clientCallButton);
     }
-    /*test*/
-    /*test*/
-    /*test*/
-
 }
 
-void ClientBackgroundManager::callClient(QString name) {
+void ClientBackgroundManager::callClient() {
+    listenerServer = new QTcpServer(this);
+    if (!listenerServer->listen()) {
+        QMessageBox::critical(this, tr("Penguin client"),
+                              tr("Unable to start the listener server: %1.")
+                              .arg(listenerServer->errorString()));
+        close();
 
+    }
+    //copy of fortune server solution - I think choose local adress would be better, but I dont
+    //know howto do it
+    QString ipAddress;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+            ipAddressesList.at(i).toIPv4Address()) {
+            ipAddress = ipAddressesList.at(i).toString();
+            break;
+        }
+    }
+    // if we did not find one, use IPv4 localhost
+    if (ipAddress.isEmpty())
+        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+    //we have IP
+
+    myClient2ClientListenThread = new C2CListenThread();
+    myClient2ClientListenThread->startListener(ipAddress, listenerServer->serverPort());
+
+    QObject* sendedFrom = sender();
+    QMessageBox msgBox;
+    msgBox.setText("Calling to" + sendedFrom->objectName());
+    msgBox.setStandardButtons(QMessageBox::Cancel);
+    msgBox.exec();
+    if(QMessageBox::Save) {
+        myClient2ServerThread.sendEndOfCall();
+    }
+    //emit(sendedFrom->objectName()) to clientserver thread to init communication
 }
 
-void ClientBackgroundManager::incommingCall(QString &notParsedClientData) {
+void ClientBackgroundManager::incommingCall(/*const QString &notParsedClientData*/) {
+    /*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     QStringList list = notParsedClientData.split(" ");
 
     //graphic
