@@ -47,6 +47,19 @@ void ClientServerThread::initCommunication() {
     clientSocket.write(block);
 }
 
+void ClientServerThread::ping() {
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_1);
+
+    out << (quint16) PING;
+
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    clientSocket.write(block);
+}
+
 void ClientServerThread::requestListOfClients() {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
@@ -66,6 +79,74 @@ void ClientServerThread::requestListOfClients() {
     if(messageType == SEND_CLIENT_LIST_TO_CLIENT) {
         emit clientList(readedData);
     }
+}
+
+void ClientServerThread::denyIncommingCall() {
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_1);
+
+    QString input = QString("%l").arg(10,0,DENY_INCOMMING_CALL_TO_SERVER);
+    encyptData(out, input);
+
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    clientSocket.write(block);
+}
+
+void ClientServerThread::sendEndOfCall() {
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_1);
+
+    QString input = QString("%l").arg(10,0,END_OF_CALL_FROM_CLIENT);
+    encyptData(out, input);
+
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    clientSocket.write(block);
+}
+
+void ClientServerThread::disconnect() {
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_1);
+
+    QString input = QString("%l").arg(10,0,LOGOUT_TO_SERVER);
+    encyptData(out, input);
+
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    clientSocket.write(block);
+}
+
+void ClientServerThread::readData(QString &output, quint16 &messageType) {
+    const int Timeout = 5 * 1000;
+
+    //are data ready?
+    while (clientSocket.bytesAvailable() < (int)sizeof(quint16)) {
+        if (!clientSocket.waitForReadyRead(Timeout)) {
+            emit error(clientSocket.error(), clientSocket.errorString());
+            return;
+        }
+    }
+
+    quint16 blockSize;
+    QDataStream read(&clientSocket);
+    read.setVersion(QDataStream::Qt_5_1);
+    read >> blockSize;
+    //read data of blockSize*n
+    while (clientSocket.bytesAvailable() < blockSize) {
+        if (!clientSocket.waitForReadyRead(Timeout)) {
+            emit error(clientSocket.error(), clientSocket.errorString());
+            return;
+        }
+    }
+
+    decryptData(read, output, messageType);
 }
 
 void ClientServerThread::encyptData(QDataStream &output, QString input) {
@@ -119,59 +200,5 @@ void ClientServerThread::run() {
         }
     }
 
-}
-
-void ClientServerThread::ping() {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_1);
-
-    out << (quint16) PING;
-
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
-
-    clientSocket.write(block);
-}
-
-
-void ClientServerThread::readData(QString &output, quint16 &messageType) {
-    const int Timeout = 5 * 1000;
-
-    //are data ready?
-    while (clientSocket.bytesAvailable() < (int)sizeof(quint16)) {
-        if (!clientSocket.waitForReadyRead(Timeout)) {
-            emit error(clientSocket.error(), clientSocket.errorString());
-            return;
-        }
-    }
-
-    quint16 blockSize;
-    QDataStream read(&clientSocket);
-    read.setVersion(QDataStream::Qt_5_1);
-    read >> blockSize;
-    //read data of blockSize*n
-    while (clientSocket.bytesAvailable() < blockSize) {
-        if (!clientSocket.waitForReadyRead(Timeout)) {
-            emit error(clientSocket.error(), clientSocket.errorString());
-            return;
-        }
-    }
-
-    decryptData(read, output, messageType);
-}
-
-void ClientServerThread::disconnect() {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_1);
-
-    QString input = QString("%l").arg(10,0,LOGOUT_TO_SERVER);
-    encyptData(out, input);
-
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
-
-    clientSocket.write(block);
 }
 }//end of namespace PenguinClient
