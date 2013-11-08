@@ -71,7 +71,7 @@ void ServerThread::initialize()
         sendError("The connection already exists M'kay");
         emit error(s->error());
     }
-
+    this->name = name;
     list->callAllClients();
 
 
@@ -118,7 +118,54 @@ void ServerThread::readyRead()
 
 void ServerThread::disconnected()
 {
+    list->removeClient(name);
+    s->deleteLater();
+    exit(0);
+}
 
+void ServerThread::connectionDenied(ConnectedClient *cli)
+{
+    QString name = cli->getName();
+    QByteArray block;
+    QDataStream str(&block, QIODevice::WriteOnly);
+    str << (qint16) 0;
+    str << (qint16) SEND_DENIED_RESPONSE_TO_COMMUNICATION
+           << name;
+    str.device()->seek(0);
+    str << (qint16) (block.size() - sizeof(qint16));
+    s->write(block);
+}
+
+void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
+{
+
+    QString name = cli->getName();
+    QHostAddress address = cli->getIpAddr();
+    qint16 port = cli->getPort();
+
+    QByteArray block;
+    QDataStream str(&block, QIODevice::WriteOnly);
+    str << (qint16) 0;
+    str << reason
+        << name << " " << address << " " <<  port;
+    str.device()->seek(0);
+    str << (qint16) (block.size() - sizeof(qint16));
+    s->write(block);
+}
+
+void ServerThread::askNewConnection(ConnectedClient * cli)
+{
+    sendAClient(SEND_INCOMMING_CALL_TO_CLIENT,cli);
+}
+
+void ServerThread::connectionOnSuccess(ConnectedClient *cli)
+{
+    sendAClient(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION, cli);
+}
+
+void ServerThread::distributeClients(QByteArray list)
+{
+    s->write(list);
 }
 
 }// namespace PenguinServer

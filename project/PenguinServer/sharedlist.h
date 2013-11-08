@@ -3,13 +3,16 @@
 
 #include <QMutex>
 #include <QList>
+#include <QMap>
 #include "connectedclient.h"
+#include "serverthread.h"
 
 namespace PenguinServer
 {
 
-class SharedList
+class SharedList: public QObject
 {
+    Q_OBJECT
 public:
     SharedList();
 
@@ -19,12 +22,12 @@ public:
 
     void callAllClients();
 
-    void callClient(const QString & destName, const QString & srcName);
+    void callClient(const QString & destName, ServerThread * srcThread);
 
 
 
 private:
-    QList<ConnectedClient*> clients;
+    QMap<QString, ConnectedClient*> clients;
     QMutex mutex;
 };
 

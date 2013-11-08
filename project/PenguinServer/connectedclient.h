@@ -15,21 +15,25 @@ class ConnectedClient : QObject
 public:
     ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, QObject * parent =0);
 
-    ConnectedClient(const ConnectedClient&);
 
-    QString getName() const;
 
-    qint16 getPort() const;
+    QString getName();
 
-    QHostAddress getIpAddr() const;
+    qint16 getPort();
 
-    bool operator ==(const ConnectedClient & l) const;
+    QHostAddress getIpAddr() ;
 
-    bool operator !=(const ConnectedClient & l) const;
+    void lock();
+
+    void unlock();
+
+    bool operator ==(const ConnectedClient & l);
+
+    bool operator !=(const ConnectedClient & l);
 
 signals:
 
-    void sendUpdatedList(QString s);
+    void sendUpdatedList(QDataStream s);
 
     void callWithData(QDataStream q);
 
