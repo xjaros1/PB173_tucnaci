@@ -8,7 +8,8 @@ namespace PenguinServer
 {
 
 ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, QObject *parent) :
-    QThread(parent), s(), socketDescriptor(socketDescriptor), list(list), isInitialized(false)
+    QThread(), s(), socketDescriptor(socketDescriptor), list(list),
+    pending(0), available(true), isInitialized(false)
 {
 
 
@@ -23,7 +24,7 @@ void ServerThread::run()
     }
 
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
-    connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
     exec();
 
@@ -43,6 +44,7 @@ void ServerThread::sendError(QString str)
     s->disconnectFromHost();
     s->waitForDisconnected();
 
+
 }
 
 void ServerThread::initialize()
@@ -59,12 +61,15 @@ void ServerThread::initialize()
     {
         sendError("The Connection is bad Mkay. You should try it again M'Kay");
         emit error(s->error());
+        s->deleteLater();
+        emit disconnected();
+        return;
     }
     QString name;
     str >> name;
 
     ConnectedClient * c = new ConnectedClient(s->peerAddress(), name,
-                                              s->peerPort(), this);
+                                              s->peerPort());
 
     if(!list->addClient(c))
     {
@@ -106,11 +111,12 @@ void ServerThread::readyRead()
         return requestCall(data);
     case REQUEST_CLIENT_LIST_FROM_SERVER:
         return sendError("The List will be sent M'kay");
+
     case END_OF_CALL_TO_CLIENT:
     case ERROR_SERVER_RESPONSE:
-        sendError("Only me can communicate on port 666 MUHEHEHE");
+        return sendError("Only me can communicate on port 666 MUHEHEHE");
     default:
-        sendError("Unrecognized messsage type M'kay");
+        return sendError("Unrecognized messsage type M'kay");
     }
 
 
@@ -121,6 +127,7 @@ void ServerThread::disconnected()
     list->removeClient(name);
     s->deleteLater();
     exit(0);
+
 }
 
 void ServerThread::connectionDenied(ConnectedClient *cli)
@@ -163,9 +170,22 @@ void ServerThread::connectionOnSuccess(ConnectedClient *cli)
     sendAClient(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION, cli);
 }
 
-void ServerThread::distributeClients(QByteArray list)
+void ServerThread::distributeClients(QList<QString> list)
 {
-    s->write(list);
+    QList<QString>::Iterator it;
+
+    QByteArray block;
+    QDataStream str(&block, QIODevice::WriteOnly);
+    str << (qint16) 0;
+    for(it = list.begin(); it != list.end(); it++)
+    {
+        if(*it == name) continue;
+        str << *it << " ";
+
+    }
+    str.device()->seek(0);
+    str << (qint16) (block.size() - sizeof(qint16));
+    s->write(block);
 }
 
 }// namespace PenguinServer

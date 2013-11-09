@@ -4,18 +4,19 @@
 
 #include <QMutex>
 #include <QtNetwork>
-
+#include <QDataStream>
+#include "serverthread.h"
 namespace PenguinServer
 {
-class ServerThread;
 
-class ConnectedClient : QObject
+
+class ConnectedClient : public QObject
 {
     Q_OBJECT
 public:
     ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, QObject * parent =0);
 
-
+    virtual ~ConnectedClient() { }
 
     QString getName();
 
@@ -23,19 +24,20 @@ public:
 
     QHostAddress getIpAddr() ;
 
-    void lock();
+    void callRequest(int, ConnectedClient*);
 
-    void unlock();
-
-    bool operator ==(const ConnectedClient & l);
-
-    bool operator !=(const ConnectedClient & l);
 
 signals:
 
-    void sendUpdatedList(QDataStream s);
+    void sendUpdatedList(QList<QString> s);
 
-    void callWithData(QDataStream q);
+
+
+    void requestConnection(ConnectedClient*);
+
+    void denyConnection(ConnectedClient*);
+
+    void allowConnection(ConnectedClient*);
 
 private:
 

@@ -6,6 +6,7 @@ namespace PenguinServer
 ServerListener::ServerListener(QObject *parent) :
     QTcpServer(parent)
 {
+    list = new SharedList;
     if(!this->listen(QHostAddress::Any, 27173))
     {
 
@@ -14,7 +15,7 @@ ServerListener::ServerListener(QObject *parent) :
 
 void ServerListener::incomingConnection(qintptr handle)
 {
-    ServerThread * thread = new ServerThread(handle, list, this);
+    ServerThread * thread = new ServerThread(handle, list);
 
     connect(thread, SIGNAL(finished()), thread, SLOT(deletelater()));
 

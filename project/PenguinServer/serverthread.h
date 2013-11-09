@@ -15,6 +15,7 @@ namespace PenguinServer
 {
 
 class SharedList;
+class ConnectedClient;
 
 class ServerThread : public QThread
 {
@@ -35,6 +36,8 @@ private:
     void requestCall(const QString &);
 
     void sendAClient(qint16 reason, ConnectedClient*);
+    
+    void ConnectionGranted();
 
 signals:
 
@@ -42,7 +45,7 @@ signals:
     void error();
 public slots:
 
-    void distributeClients(QByteArray list);
+    void distributeClients(QList<QString> list);
 
     void askNewConnection(ConnectedClient*);
 
@@ -63,9 +66,17 @@ private:
 
     SharedList * list;
 
-    QString name;
+    
+    
+    ConnectedClient* pending;
+    
+    bool available;
 
     bool isInitialized;
+
+    QString name;
+    
+
 
 };
 

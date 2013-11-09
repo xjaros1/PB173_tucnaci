@@ -1,14 +1,18 @@
 #ifndef SHAREDLIST_H
 #define SHAREDLIST_H
 
-#include <QMutex>
-#include <QList>
-#include <QMap>
 #include "connectedclient.h"
 #include "serverthread.h"
 
+#include <QMutex>
+#include <QList>
+#include <QMap>
+
+
 namespace PenguinServer
 {
+
+class ConnectedClient;
 
 class SharedList: public QObject
 {
@@ -22,7 +26,7 @@ public:
 
     void callAllClients();
 
-    void callClient(const QString & destName, ServerThread * srcThread);
+    void callClient(const QString & destName, const QString & srcName);
 
 
 

@@ -5,7 +5,7 @@ namespace PenguinServer
 
 
 
-SharedList::SharedList()
+SharedList::SharedList(): QObject(), mutex()
 {
 }
 
@@ -30,6 +30,22 @@ bool SharedList::removeClient(const QString & tR)
     mutex.unlock();
     if(k==0) return false;
     return true;
+
+
+}
+
+void SharedList::callAllClients()
+{
+    mutex.lock();
+    QList<QString> toSent = clients.keys();
+    QMap<QString, ConnectedClient*>::Iterator it;
+    for(it = clients.begin(); it!= clients.end(); it++)
+    {
+        ConnectedClient * c = *it;
+        emit c->sendUpdatedList(toSent);
+    }
+
+    mutex.unlock();
 
 
 }
