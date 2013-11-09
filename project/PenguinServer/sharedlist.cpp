@@ -1,5 +1,5 @@
 #include "sharedlist.h"
-
+#include "config.h"
 namespace PenguinServer
 {
 
@@ -46,6 +46,15 @@ void SharedList::callAllClients()
     }
 
     mutex.unlock();
+
+
+}
+
+void SharedList::callClient(const QString &destName, const QString &srcName)
+{
+    if(!clients.contains(destName)) return;
+    ConnectedClient* c = clients[destName];
+    c->callRequest(REQUEST_CALL_TO_CLIENT_FROM_SERVER, clients[srcName]);
 
 
 }

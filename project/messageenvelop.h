@@ -11,9 +11,11 @@
 #define SEND_INCOMMING_CALL_TO_CLIENT 6
 
 #define END_OF_CALL_TO_CLIENT 7
+#define END_OF_CALL_FROM_CLIENT 8
+#define LOGOUT_TO_SERVER 9
 
-#define SEND_SUCCESS_RESPONSE_TO_COMMUNICATION 8
-#define SEND_DENIED_RESPONSE_TO_COMMUNICATION 9
+#define SEND_SUCCESS_RESPONSE_TO_COMMUNICATION 10
+#define SEND_DENIED_RESPONSE_TO_COMMUNICATION 11
 #define ERROR_SERVER_RESPONSE 666
 
 #define CLIENT_PEARL_HARBOR_PORT 71241
@@ -51,6 +53,8 @@ class MessageEnvelop
 
 public:
 
+    MessageEnvelop(qint16 reason = 0);
+
     /**
      * @brief operator <<
      * @return
@@ -81,7 +85,7 @@ public:
     QList<QString> getList() const;
 
     /**
-     * @brief getName
+     * @brief getNamea
      * @return
      */
     QString getName() const;
@@ -90,7 +94,7 @@ public:
      * @brief getRequestType
      * @return
      */
-    qint8 getRequestType() const;
+    qint16 getRequestType() const;
 
     /**
      * @brief setAddr
@@ -121,12 +125,13 @@ public:
 
 private:
 
+    qint16 messageType;
     QHostAddress addr;
     qint16 port;
     QList<QString> clients;
     QString name;
 
-    qint16 messageType;
+
 
 
 

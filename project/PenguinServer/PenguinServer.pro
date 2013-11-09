@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     clientsmanager.cpp \
     serverlistener.cpp \
     connectedclient.cpp \
-    sharedlist.cpp
+    sharedlist.cpp \
+    ../messageenvelop.cpp
 
 HEADERS += \
     serverthread.h \
