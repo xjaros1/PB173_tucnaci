@@ -29,4 +29,5 @@ HEADERS += \
     clientserverthread.h \
     c2cudp.h \
     c2ctcp.h \
-    clientbackgroundmanager.h
+    clientbackgroundmanager.h \
+    ../messageenvelop.h
