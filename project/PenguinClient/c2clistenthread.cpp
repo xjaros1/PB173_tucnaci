@@ -1,5 +1,6 @@
 #include "c2clistenthread.h"
 #include "c2ctcp.h"
+#include "./../messageenvelop.h"
 #include <iostream>
 #include <QThread>
 #include <QTcpSocket>
@@ -18,7 +19,7 @@ C2CListenThread::~C2CListenThread(){
 void C2CListenThread::startListener(const QString &hostName){
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
-    this->port = port;
+
     if (!isRunning()){
         start();
     } else {
@@ -28,7 +29,7 @@ void C2CListenThread::startListener(const QString &hostName){
 
 void C2CListenThread::run(){
 
-    server.startServer(hostName, port);
+    server.startServer(hostName);
 
     exec();
 }
@@ -56,10 +57,10 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QString &hostName, const quint16 port)
+void ListenServer::startServer(const QString &hostName)
 {
 
-    if(!this->listen(QHostAddress(hostName), port))
+    if(!this->listen(QHostAddress(hostName), CLIENT_PEARL_HARBOR_PORT))
     {
         std::cerr << "Could not start server";
     }
