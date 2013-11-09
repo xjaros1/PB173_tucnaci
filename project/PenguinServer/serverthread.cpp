@@ -107,7 +107,7 @@ void ServerThread::readyRead()
     case OK:
         return;
     case REQUEST_CALL_TO_CLIENT_FROM_SERVER:
-        return requestCall(data);
+        return requestCall(e.getName());
     case REQUEST_CLIENT_LIST_FROM_SERVER:
         return sendError("The List will be sent M'kay");
 

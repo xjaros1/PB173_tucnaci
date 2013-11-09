@@ -1,7 +1,7 @@
 #include "messageenvelop.h"
 
-MessageEnvelop::MessageEnvelop():
-    messageType(0), addr(), port(0), clients(), name()
+MessageEnvelop::MessageEnvelop(qint16 reason):
+    messageType(reason), addr(), port(0), clients(), name()
 {
 
 }

@@ -51,7 +51,7 @@ class MessageEnvelop
 
 public:
 
-    MessageEnvelop();
+    MessageEnvelop(qint16 reason = 0);
 
     /**
      * @brief operator <<
