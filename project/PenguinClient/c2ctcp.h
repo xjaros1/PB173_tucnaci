@@ -23,11 +23,12 @@ private:
     QTcpSocket *socket;
     qintptr socketDescriptor;
 };
-
+/*
 class C2CTcpWrite : public QThread
 {
 public:
     C2CTcpWrite();
 };
+*/
 }
 #endif // C2CTCP_H

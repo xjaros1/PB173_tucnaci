@@ -21,15 +21,9 @@ void C2CTcpListen::run(){
 }
 
 void C2CTcpListen::readyRead()
-{
-    // get the information
-    QByteArray Data = socket->readAll();
-    //socket->write(Data);
-    // will write on server side window
-    qDebug() << " Data in: " << Data;
-
-    //socket->write("Data received\n");
-
+{    
+    QByteArray Data = socket->readAll();    
+    qDebug() << " Data in: " << Data;    
 }
 
 void C2CTcpListen::disconnected()
@@ -39,8 +33,10 @@ void C2CTcpListen::disconnected()
 }
 
 
-
+/*
 C2CTcpWrite::C2CTcpWrite(){
 
 }
+*/
 }
+

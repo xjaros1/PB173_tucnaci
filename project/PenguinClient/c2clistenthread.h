@@ -5,6 +5,9 @@
 #include <QMutex>
 #include <QtNetwork>
 #include <QTcpServer>
+
+//take socketDescriptor and
+
 namespace PenguinClient
 {
 class ListenServer : public QTcpServer
@@ -29,7 +32,7 @@ public:
     explicit C2CListenThread(QObject *parent = 0);
     ~C2CListenThread();
 
-    void startListener(const QString &hostName, const quint16 port);
+    void startListener(const QString &hostName);
     void run();
 
 
