@@ -51,6 +51,8 @@ class MessageEnvelop
 
 public:
 
+    MessageEnvelop();
+
     /**
      * @brief operator <<
      * @return
@@ -81,7 +83,7 @@ public:
     QList<QString> getList() const;
 
     /**
-     * @brief getName
+     * @brief getNamea
      * @return
      */
     QString getName() const;
@@ -90,7 +92,7 @@ public:
      * @brief getRequestType
      * @return
      */
-    qint8 getRequestType() const;
+    qint16 getRequestType() const;
 
     /**
      * @brief setAddr
@@ -121,12 +123,13 @@ public:
 
 private:
 
+    qint16 messageType;
     QHostAddress addr;
     qint16 port;
     QList<QString> clients;
     QString name;
 
-    qint16 messageType;
+
 
 
 
