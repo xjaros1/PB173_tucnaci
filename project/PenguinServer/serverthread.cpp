@@ -2,7 +2,7 @@
 
 #include <QDataStream>
 
-#include "config.h"
+#include "../messageenvelop.h"
 
 namespace PenguinServer
 {
@@ -34,12 +34,12 @@ void ServerThread::sendError(QString str)
 {
     QByteArray bl;
     QDataStream outStr(&bl, QIODevice::WriteOnly);
-    outStr.setVersion(QDataStream::Qt_5_1);
-    outStr << (qint16) 0;
-    outStr << (qint16) ERROR_SERVER_RESPONSE;
-    outStr << str;
-    outStr.device()->seek(0);
-    outStr << (qint16) (bl.size() - sizeof(qint16));
+
+    MessageEnvelop e(ERROR_SERVER_RESPONSE);
+    e.setName(str);
+
+    outStr << e;
+
     s->write(bl);
     s->disconnectFromHost();
     s->waitForDisconnected();
@@ -49,15 +49,14 @@ void ServerThread::sendError(QString str)
 
 void ServerThread::initialize()
 {
-    quint16 blockSize;
-    quint16 request;
-
+    isInitialized = true;
+    MessageEnvelop e;
     QDataStream str(s);
 
-    str >> blockSize;
+    str >> e;
 
-    str >> request;
-    if(request != SEND_LOGIN_TO_SERVER)
+
+    if(e.getRequestType() != SEND_LOGIN_TO_SERVER)
     {
         sendError("The Connection is bad Mkay. You should try it again M'Kay");
         emit error(s->error());
@@ -65,10 +64,10 @@ void ServerThread::initialize()
         emit disconnected();
         return;
     }
-    QString name;
-    str >> name;
 
-    ConnectedClient * c = new ConnectedClient(s->peerAddress(), name,
+
+
+    ConnectedClient * c = new ConnectedClient(s->peerAddress(), e.getName(),
                                               s->peerPort());
 
     if(!list->addClient(c))
@@ -76,7 +75,7 @@ void ServerThread::initialize()
         sendError("The connection already exists M'kay");
         emit error(s->error());
     }
-    this->name = name;
+    this->name = e.getName();
     list->callAllClients();
 
 
@@ -85,7 +84,7 @@ void ServerThread::initialize()
 
 void ServerThread::requestCall(const QString & login)
 {
-
+    list->callClient(login, name);
 }
 
 void ServerThread::readyRead()
@@ -97,11 +96,11 @@ void ServerThread::readyRead()
     }
 
     QDataStream input(s);
-    qint16 dataSize, messageType;
-    QString data;
 
-    input >> dataSize >> messageType >> data;
-    switch (messageType)
+    MessageEnvelop e;
+    input >> e;
+
+    switch (e.getRequestType())
     {
     case SEND_LOGIN_TO_SERVER:
     case PING:
@@ -135,28 +134,38 @@ void ServerThread::connectionDenied(ConnectedClient *cli)
     QString name = cli->getName();
     QByteArray block;
     QDataStream str(&block, QIODevice::WriteOnly);
-    str << (qint16) 0;
-    str << (qint16) SEND_DENIED_RESPONSE_TO_COMMUNICATION
-           << name;
-    str.device()->seek(0);
-    str << (qint16) (block.size() - sizeof(qint16));
+
+    MessageEnvelop e(SEND_DENIED_RESPONSE_TO_COMMUNICATION);
+    e.setName(name);
+
+    str << e;
+
     s->write(block);
 }
 
 void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
 {
 
-    QString name = cli->getName();
-    QHostAddress address = cli->getIpAddr();
-    qint16 port = cli->getPort();
+//    QString name = cli->getName();
+//    QHostAddress address = cli->getIpAddr();
+//    qint16 port = cli->getPort();
 
     QByteArray block;
     QDataStream str(&block, QIODevice::WriteOnly);
-    str << (qint16) 0;
-    str << reason
-        << name << " " << address << " " <<  port;
-    str.device()->seek(0);
-    str << (qint16) (block.size() - sizeof(qint16));
+
+    MessageEnvelop e(reason);
+    e.setAddr(cli->getIpAddr());
+    e.setName(cli->getName());
+    e.setPort(cli->getPort());
+
+//    str << (qint16) 0;
+//    str << reason
+//        << name << " " << address << " " <<  port;
+//    str.device()->seek(0);
+//    str << (qint16) (block.size() - sizeof(qint16));
+
+    str << e;
+
     s->write(block);
 }
 
@@ -172,19 +181,25 @@ void ServerThread::connectionOnSuccess(ConnectedClient *cli)
 
 void ServerThread::distributeClients(QList<QString> list)
 {
-    QList<QString>::Iterator it;
+//    QList<QString>::Iterator it;
 
     QByteArray block;
     QDataStream str(&block, QIODevice::WriteOnly);
-    str << (qint16) 0;
-    for(it = list.begin(); it != list.end(); it++)
-    {
-        if(*it == name) continue;
-        str << *it << " ";
+//    str << (qint16) 0;
+//    for(it = list.begin(); it != list.end(); it++)
+//    {
+//        if(*it == name) continue;
+//        str << *it << " ";
 
-    }
-    str.device()->seek(0);
-    str << (qint16) (block.size() - sizeof(qint16));
+//    }
+//    str.device()->seek(0);
+//    str << (qint16) (block.size() - sizeof(qint16));
+
+    MessageEnvelop e(SEND_CLIENT_LIST_TO_CLIENT);
+    e.setClients(list);
+
+    str << e;
+
     s->write(block);
 }
 
