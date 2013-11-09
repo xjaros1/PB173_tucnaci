@@ -29,7 +29,7 @@ void C2CTcpListen::readyRead()
     MessageEnvelop e;
     stream >> e;
     QList<QString> list = e.getList();
-    foreach(QString& item , list){
+    foreach(QString item , list){
         std::cout << item.toStdString();
     }
 }
