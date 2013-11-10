@@ -17,7 +17,7 @@ void C2CTcpListen::run(){
         return;
     }
 
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::AutoConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
     exec();

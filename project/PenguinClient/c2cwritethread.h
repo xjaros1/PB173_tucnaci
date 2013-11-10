@@ -14,7 +14,7 @@ public:
     explicit C2CWriteThread(QObject *parent = 0);
     ~C2CWriteThread();
 
-    void startOutput(const QString &hostName, const quint16 port);
+    void startOutput(const QHostAddress &hostName, const quint16 port);
     void run();
 
 signals:
@@ -26,7 +26,7 @@ private:
     int encryptDatagram(char* in, char* out, int length);
     std::string random_string( size_t length );
 
-    QString hostName;
+    QHostAddress hostName;
     quint16 port;
 
     QMutex mutex;

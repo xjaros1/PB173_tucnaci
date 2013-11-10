@@ -12,7 +12,7 @@ C2CWriteThread::~C2CWriteThread(){
 
 }
 
-void C2CWriteThread::startOutput(const QString &hostName, const quint16 port){
+void C2CWriteThread::startOutput(const QHostAddress &hostName, const quint16 port){
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
     this->port = port;

@@ -1,11 +1,28 @@
 #ifndef C2CUDP_H
 #define C2CUDP_H
+#include <QUdpSocket>
+#include <QByteArray>
+#include <QMutex>
+#include <QThread>
+
+/*
 namespace PenguinClient
 {
-class C2CUdpListen
+class C2CUdpListen : public QThread
 {
-public:
-    C2CUdpListen();
+    Q_OBJECT
+
+public:    
+    explicit C2CUdpListen(qintptr ID, QObject *parent);
+
+    void run();
+      void error(QUdpSocket::SocketError socketerror);
+public slots:
+      void readyRead();
+      void disconnected();
+private :
+      QUdpSocket *socket;
+      qintptr socketDescriptor;
 };
 
 
@@ -14,5 +31,17 @@ class C2CUdpWrite
 public:
     C2CUdpWrite();
 };
+
+class CryptUpd {
+
+public:
+
+private:
+    QByteArray counters;
+    QMutex arrayMutex;
+
+};
+
 }
+*/
 #endif // C2CUDP_H

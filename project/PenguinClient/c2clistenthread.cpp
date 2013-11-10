@@ -16,7 +16,7 @@ C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QString &hostName){
+void C2CListenThread::startListener(const QHostAddress &hostName){
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
 
@@ -57,7 +57,7 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QString &hostName)
+void ListenServer::startServer(const QHostAddress &hostName)
 {
 
     if(!this->listen(QHostAddress(hostName), CLIENT_PEARL_HARBOR_PORT))
