@@ -24,7 +24,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel = new QLabel(tr("Seznam online klientu"));
     listHeaderlabel->setEnabled(false);
 
-    insideArea = new QVBoxLayout();
+    myNewWidget = new QWidget();
+    insideArea = new QVBoxLayout(myNewWidget);
 
     logoutButton = new QPushButton(tr("Logout"));
     logoutButton->setDefault(false);
@@ -66,9 +67,9 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     mainLayout->addWidget(submitButton, 2, 0);
 
     mainLayout->addWidget(listHeaderlabel, 3, 0);
-    mainLayout->addLayout(insideArea, 4, 0);
-    mainLayout->addWidget(logoutButton, 5, 0);
-    mainLayout->addWidget(quitButton, 6, 0);
+    mainLayout->addWidget(myNewWidget, 4, 0);
+    mainLayout->addWidget(logoutButton, 6, 0);
+    mainLayout->addWidget(quitButton, 6, 1);
 
     setLayout(mainLayout);
 
@@ -112,11 +113,11 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     foreach(str, list) {
         qDebug() << "Showing client " << str;
         QPushButton* clientCallButton = new QPushButton(str);
+        insideArea->addWidget(clientCallButton);
         clientCallButton->setVisible(true);
         clientCallButton->setObjectName(str);
         connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
-        insideArea->addWidget(clientCallButton);
     }
 }
 
@@ -147,13 +148,12 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
 
     //GUI
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Prichozi hovor od " + name,
-                                      "Prichozi hovor od " + name + "Answer?",
+    reply = QMessageBox::question(this, "Hovor s " + name,
+                                      "Chcete navazat hovor s hovor " + name + " Answer?",
                                       QMessageBox::Yes|QMessageBox::No);
     if(reply) { //answer
-        /*TODO:
-         *predat lukemu IP
-         **/
+        MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+        emit sendDataToServer(sendData);
 
         myClient2ClientListenThread = new C2CListenThread();
         myClient2ClientListenThread->startListener(IP);
@@ -172,7 +172,6 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
             if(QMessageBox::Save) {
                 MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
                 emit sendDataToServer(sendData);
-                //myClient2ServerThread.sendMessageToServer(sendData);
             }
         }
 

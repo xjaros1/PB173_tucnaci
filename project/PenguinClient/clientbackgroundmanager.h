@@ -44,6 +44,7 @@ private:
     //main window
     QLabel *listHeaderlabel;
     QVBoxLayout *insideArea;
+    QWidget *myNewWidget;
     QWidget *widget;
     QList<QPushButton*> clientListButtons;
     QPushButton *logoutButton;
