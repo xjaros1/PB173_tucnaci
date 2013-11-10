@@ -52,8 +52,10 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
             this, SLOT(displayError(int, QString)));
     connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
             this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
-    connect(&myClient2ServerThread, SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
-            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)), Qt::DirectConnection);
+    connect(&myClient2ServerThread,
+            SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
+            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)),
+            Qt::DirectConnection);
 
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -97,22 +99,15 @@ void ClientBackgroundManager::enableSubmitButton() {
     submitButton->setEnabled(enable);
 }
 
-/*TODO list:
- *client A vola B
- *server preda B adresu
- *B vytvori poslouchaci vlakno s adresou A
- *Server posle adresu klientu A
- *az ziska klient A odpoved od serveru, zviditelni tlacitko zacit hovor
- **/
-
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     qDebug() << "Called displayClientList";
     QString str;
     //release buttons
     foreach (QPushButton* button, clientListButtons) {
-        delete button;
+        button->close();
+        //delete button;
     }
-    clientListButtons.clear();
+    //clientListButtons.clear();
     //create new
     foreach(str, list) {
         qDebug() << "Showing client " << str;
