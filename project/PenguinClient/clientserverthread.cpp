@@ -96,9 +96,14 @@ void ClientServerThread::readyRead() {
             emit clientList(readedData.getList());
             break;
         }
+        case SEND_INCOMMING_CALL_TO_CLIENT: {
+            qDebug() << "clientserver thread get request client list";
+            emit incommingCall(readedData.getName(), readedData.getAddr(), readedData.getPort());
+            break;
+        }
         default: {
             qDebug() << "clientserver thread get request: " << readedData.getRequestType();
-            emit signalToClient(readedData);
+            //emit signalToClient(readedData);
             break;
         }
     }

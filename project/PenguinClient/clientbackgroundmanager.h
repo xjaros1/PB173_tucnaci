@@ -31,7 +31,6 @@ private:
     ClientServerThread myClient2ServerThread;
     C2CListenThread *myClient2ClientListenThread;
     C2CWriteThread *myClient2ClientWriteThread;
-    //QTcpServer *listenerServer;
     QList<QString> myClientList;
     QString login;
 
@@ -51,22 +50,20 @@ private:
     QPushButton *quitButton;
 
 
-    void incommingCall(QString name, QHostAddress IP, quint16 port);
-    void incomingEndOfCall();
 signals:
     void sendDataToServer(MessageEnvelop &data);
 
 private slots:
     void init();
     void callClient();
-    void parseMessageFromServer(MessageEnvelop &notParsedIncomingData);
     void displayError(int socketError, const QString &message);
     void enableSubmitButton();
     void logout();
 
 public slots:
     void displayClientList(const QList<QString> list);
-    //void clientList(QList<QString> clientList);
+    void incommingCall(const QString name, const QHostAddress IP, const quint16 port);
+    void incomingEndOfCall();
 
 };
 

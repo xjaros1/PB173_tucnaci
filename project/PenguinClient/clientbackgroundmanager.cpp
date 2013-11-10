@@ -53,6 +53,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
             &myClient2ServerThread, SLOT(sendMessageToServer(MessageEnvelop&)), Qt::DirectConnection);
     connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
             this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
+    connect(&myClient2ServerThread, SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
+            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)), Qt::DirectConnection);
 
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -104,28 +106,6 @@ void ClientBackgroundManager::enableSubmitButton() {
  *az ziska klient A odpoved od serveru, zviditelni tlacitko zacit hovor
  **/
 
-/*void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
-    qDebug() << "Incoming message from server number: " << notParsedIncomingData.getRequestType();
-    switch (notParsedIncomingData.getRequestType()) {
-        case SEND_CLIENT_LIST_TO_CLIENT: {
-            displayClientList(notParsedIncomingData.getList());
-            break;
-        }
-        case SEND_INCOMMING_CALL_TO_CLIENT: {
-            incommingCall(notParsedIncomingData);
-            break;
-        }
-        case END_OF_CALL_TO_CLIENT: {
-            incomingEndOfCall();
-            break;
-        }
-        default:
-            qDebug() << "Unknown message from server: "
-                     << notParsedIncomingData.getRequestType();
-            break;
-    }
-}*/
-
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     qDebug() << "Called displayClientList";
     QString str;
@@ -160,7 +140,7 @@ void ClientBackgroundManager::callClient() {
     }
 }
 
-void ClientBackgroundManager::incommingCall(QString name, QHostAddress IP, quint16 port) {
+void ClientBackgroundManager::incommingCall(const QString name, const QHostAddress IP, const quint16 port) {
     qDebug() << "Called incommingCall" << name << IP << port;
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");

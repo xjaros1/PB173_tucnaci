@@ -11,6 +11,11 @@ QHostAddress MessageEnvelop::getAddr() const
     return addr;
 }
 
+qint16 MessageEnvelop::getPort() const
+{
+    return port;
+}
+
 qint16 MessageEnvelop::getRequestType() const
 {
     return messageType;
