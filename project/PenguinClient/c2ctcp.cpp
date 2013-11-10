@@ -1,4 +1,7 @@
 #include "c2ctcp.h"
+#include <iostream>
+#include "./../messageenvelop.h"
+
 namespace PenguinClient
 {
 C2CTcpListen::C2CTcpListen(qintptr , QObject *){
@@ -21,15 +24,14 @@ void C2CTcpListen::run(){
 }
 
 void C2CTcpListen::readyRead()
-{
-    // get the information
-    QByteArray Data = socket->readAll();
-    //socket->write(Data);
-    // will write on server side window
-    qDebug() << " Data in: " << Data;
-
-    //socket->write("Data received\n");
-
+{    
+    QDataStream stream(socket);
+    MessageEnvelop e;
+    stream >> e;
+    QList<QString> list = e.getList();
+    foreach(QString item , list){
+        std::cout << item.toStdString();
+    }
 }
 
 void C2CTcpListen::disconnected()
@@ -39,8 +41,10 @@ void C2CTcpListen::disconnected()
 }
 
 
-
+/*
 C2CTcpWrite::C2CTcpWrite(){
 
 }
+*/
 }
+

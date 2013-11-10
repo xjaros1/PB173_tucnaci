@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QtNetwork>
+#include <string>
 namespace PenguinClient
 {
 class C2CWriteThread : public QThread
@@ -23,7 +24,7 @@ public slots:
     
 private:
     int encryptDatagram(char* in, char* out, int length);
-    void fillRandom(char* data, int size);
+    std::string random_string( size_t length );
 
     QString hostName;
     quint16 port;

@@ -1,6 +1,6 @@
-
-
 #include "c2cwritethread.h"
+#include "./../messageenvelop.h"
+
 namespace PenguinClient
 {
 C2CWriteThread::C2CWriteThread(QObject *parent) :
@@ -23,36 +23,17 @@ void C2CWriteThread::startOutput(const QString &hostName, const quint16 port){
 
 void C2CWriteThread::run(){
     tcpSocket = new QTcpSocket(this);
-    tcpSocket->abort();
     tcpSocket->connectToHost(hostName, port);
-    char data[1024];
+    QDataStream stream(tcpSocket);
+    MessageEnvelop e;
+    QList<QString> list;
     for (int i = 0; i < 1024; i++){
-        fillRandom(data, 1024);
-        tcpSocket->write(data, 1024);
+        std::string str = random_string(1048576);
+        QString qstr = QString::fromStdString(str);
+        list.append(qstr);
     }
-
-
-    /*
-    mutex.lock();
-    QString serverName = hostName;
-    quint16 serverPort = port;
-    mutex.unlock();
-
-    socket = new QUdpSocket(this);
-    socket->connectToHost( QHostAddress(serverName), serverPort);
-    socket->waitForConnected(1000);
-    int counter = 0;
-    while (!quit) {
-        //send data
-        char data[1024];
-        fillRandom(data, 1024);
-        socket->write(QByteArray(data),1024);
-        counter++;
-        if(counter > 1024){
-            quit = true;
-        }
-    }
-    */
+    e.setClients(list);
+    stream << e;
 }
 
 int C2CWriteThread::encryptDatagram(char* in, char* out, int length){
@@ -62,9 +43,20 @@ int C2CWriteThread::encryptDatagram(char* in, char* out, int length){
     return 0;
 }
 
-void C2CWriteThread::fillRandom(char* data, int size){
-    for (int i = 0; i < size; i++){
-        data[i] = (char) (rand() % ('z' - '0' + 1) + '0');
-    }
+std::string C2CWriteThread::random_string( size_t length )
+{
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[ rand() % max_index ];
+    };
+    std::string str(length,0);
+    std::generate_n( str.begin(), length, randchar );
+    return str;
 }
+
 }

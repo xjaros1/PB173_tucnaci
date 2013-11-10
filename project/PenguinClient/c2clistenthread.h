@@ -5,6 +5,9 @@
 #include <QMutex>
 #include <QtNetwork>
 #include <QTcpServer>
+
+//take socketDescriptor and
+
 namespace PenguinClient
 {
 class ListenServer : public QTcpServer
@@ -12,7 +15,7 @@ class ListenServer : public QTcpServer
     Q_OBJECT
 public:
     explicit ListenServer(QObject *parent = 0);
-    void startServer(const QString &hostName, const quint16 port);
+    void startServer(const QString &hostName);
 signals:
     void endConnection();
 public slots:
@@ -29,7 +32,7 @@ public:
     explicit C2CListenThread(QObject *parent = 0);
     ~C2CListenThread();
 
-    void startListener(const QString &hostName, const quint16 port);
+    void startListener(const QString &hostName);
     void run();
 
 
@@ -41,8 +44,7 @@ public slots:
     void endConnection();
 
 private:
-    QString hostName;
-    quint16 port;
+    QString hostName;    
     QMutex mutex;
     bool quit;
     QUdpSocket* socket;

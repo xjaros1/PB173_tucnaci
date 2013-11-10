@@ -1,5 +1,6 @@
 #include "c2clistenthread.h"
 #include "c2ctcp.h"
+#include "./../messageenvelop.h"
 #include <iostream>
 #include <QThread>
 #include <QTcpSocket>
@@ -15,10 +16,10 @@ C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QString &hostName, const quint16 port){
+void C2CListenThread::startListener(const QString &hostName){
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
-    this->port = port;
+
     if (!isRunning()){
         start();
     } else {
@@ -28,30 +29,8 @@ void C2CListenThread::startListener(const QString &hostName, const quint16 port)
 
 void C2CListenThread::run(){
 
-    server.startServer(hostName, port);
-    connect(&server, SIGNAL(endConnection()),this, SLOT(connectionEnd()));
-    /*
-    mutex.lock();
-    QString serverName = hostName;
-    quint16 serverPort = port;
-    mutex.unlock();
+    server.startServer(hostName);
 
-    socket = new QUdpSocket(this);
-    socket->connectToHost( QHostAddress(serverName), serverPort);
-    socket->waitForConnected(1000);
-    while (!quit) {
-        //receive data
-        if(socket->hasPendingDatagrams()){
-            qint64 pendingSize = socket->pendingDatagramSize();
-            char data[pendingSize];
-            socket->readDatagram(data, pendingSize, 0, 0);
-            decryptDatagram(data, data, pendingSize);
-
-            //process data
-            std::cout << data;
-        }
-    }
-    */
     exec();
 }
 
@@ -78,10 +57,10 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QString &hostName, const quint16 port)
+void ListenServer::startServer(const QString &hostName)
 {
 
-    if(!this->listen(QHostAddress(hostName), port))
+    if(!this->listen(QHostAddress(hostName), CLIENT_PEARL_HARBOR_PORT))
     {
         std::cerr << "Could not start server";
     }
