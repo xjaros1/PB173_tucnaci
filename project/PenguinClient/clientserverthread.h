@@ -35,6 +35,8 @@ private:
     void decryptData(QDataStream &input, QString &output,quint16 &messageType);
     void readData(MessageEnvelop &readedData);
 
+    QMutex mutex;
+    QWaitCondition cond;
 signals:
     void signalToClient(MessageEnvelop &readedData);
     void clientList(const QList<QString> clientList);

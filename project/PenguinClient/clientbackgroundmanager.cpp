@@ -44,13 +44,12 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(logoutButton, SIGNAL(clicked()), this, SLOT(logout()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
 
-
-    connect(&myClient2ServerThread, SIGNAL(error(int, QString)),
-            this, SLOT(displayError(int, QString)));
-    connect(&myClient2ServerThread, SIGNAL(signalToClient(MessageEnvelop&)),
-            this, SLOT(parseMessageFromServer(MessageEnvelop&)));
+    //to server
     connect(this, SIGNAL(sendDataToServer(MessageEnvelop&)),
             &myClient2ServerThread, SLOT(sendMessageToServer(MessageEnvelop&)), Qt::DirectConnection);
+    //from server
+    connect(&myClient2ServerThread, SIGNAL(error(int, QString)),
+            this, SLOT(displayError(int, QString)));
     connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
             this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
     connect(&myClient2ServerThread, SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
@@ -109,6 +108,12 @@ void ClientBackgroundManager::enableSubmitButton() {
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     qDebug() << "Called displayClientList";
     QString str;
+    //release buttons
+    foreach (QPushButton* button, clientListButtons) {
+        delete button;
+    }
+    clientListButtons.clear();
+    //create new
     foreach(str, list) {
         qDebug() << "Showing client " << str;
         QPushButton* clientCallButton = new QPushButton(str);

@@ -9,19 +9,25 @@ ClientServerThread::ClientServerThread(QObject *parent)
 }
 
 ClientServerThread::~ClientServerThread() {
+    mutex.lock();
     quit = true;
+    cond.wakeOne();
+    mutex.unlock();
     wait();
 }
 
 void ClientServerThread::initThread(const QString &serverIPAdress,
                                            quint16 serverListenPort, QString login) {
-
+    mutex.lock();
     this->serverIPAdress = serverIPAdress;
     this->serverListenPort = serverListenPort;
     this->login = login;
+    mutex.unlock();
 
     if (!isRunning())
         start();
+    else
+        cond.wakeOne();
 
 }
 
@@ -40,6 +46,7 @@ void ClientServerThread::initCommunication() {
 }
 
 void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
+    mutex.lock();
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_1);
@@ -49,6 +56,7 @@ void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
 
     qDebug() << "sendMessageToServer";
     clientSocket.write(block);
+    mutex.unlock();
 }
 
 void ClientServerThread::readData(MessageEnvelop &output) {
@@ -78,7 +86,9 @@ void ClientServerThread::decryptData(QDataStream &input, QString &output,
 void ClientServerThread::readyRead() {
     //recieve data
     MessageEnvelop readedData;
+    mutex.lock();
     readData(readedData);
+    mutex.unlock();
 
     switch (readedData.getRequestType()) {
         case ERROR_SERVER_RESPONSE: {
