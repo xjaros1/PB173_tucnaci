@@ -85,19 +85,6 @@ void ClientBackgroundManager::enableSubmitButton() {
     submitButton->setEnabled(enable);
 }
 
-void ClientBackgroundManager::displayClientList(const QList<QString> list) {
-    QString str;
-    foreach(str, list) {
-        //qDebug() << str;
-        QPushButton* clientCallButton = new QPushButton(str);
-        clientCallButton->setVisible(true);
-        clientCallButton->setObjectName(str);
-        connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
-        clientListButtons.push_back(clientCallButton);
-        insideArea->addWidget(clientCallButton);
-    }
-}
-
 /*TODO list:
  *client A vola B
  *server preda B adresu
@@ -106,24 +93,8 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
  *az ziska klient A odpoved od serveru, zviditelni tlacitko zacit hovor
  **/
 
-void ClientBackgroundManager::callClient() {
-    //send message to server
-    QObject* sendedFrom = sender();
-    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
-    call.setName(sendedFrom->objectName());
-    myClient2ServerThread.sendMessageToServer(call);
-    //GUI
-    QMessageBox msgBox;
-    msgBox.setText("Calling to" + sendedFrom->objectName());
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    msgBox.exec();
-    if(QMessageBox::Save) {
-        MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-        myClient2ServerThread.sendMessageToServer(sendData);
-    }
-}
-
 void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
+    qDebug() << "Incoming message from server number: " << notParsedIncomingData.getRequestType();
     switch (notParsedIncomingData.getRequestType()) {
         case SEND_CLIENT_LIST_TO_CLIENT: {
             displayClientList(notParsedIncomingData.getList());
@@ -144,7 +115,40 @@ void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIn
     }
 }
 
+void ClientBackgroundManager::displayClientList(const QList<QString> list) {
+    qDebug() << "Called displayClientList";
+    QString str;
+    foreach(str, list) {
+        qDebug() << "Showing client " << str;
+        QPushButton* clientCallButton = new QPushButton(str);
+        clientCallButton->setVisible(true);
+        clientCallButton->setObjectName(str);
+        connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
+        clientListButtons.push_back(clientCallButton);
+        insideArea->addWidget(clientCallButton);
+    }
+}
+
+void ClientBackgroundManager::callClient() {
+    qDebug() << "Called callClient";
+    //send message to server
+    QObject* sendedFrom = sender();
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName(sendedFrom->objectName());
+    myClient2ServerThread.sendMessageToServer(call);
+    //GUI
+    QMessageBox msgBox;
+    msgBox.setText("Calling to" + sendedFrom->objectName());
+    msgBox.setStandardButtons(QMessageBox::Cancel);
+    msgBox.exec();
+    if(QMessageBox::Save) {
+        MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
+        myClient2ServerThread.sendMessageToServer(sendData);
+    }
+}
+
 void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
+    qDebug() << "Called incommingCall";
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
@@ -182,6 +186,7 @@ void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
 }
 
 void ClientBackgroundManager::incomingEndOfCall() {
+    qDebug() << "Called incomingEndOfCall";
     //lets kill Luke!!!
     myClient2ClientWriteThread->~C2CWriteThread();
     myClient2ClientListenThread->~C2CListenThread();
