@@ -52,15 +52,6 @@ void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
 }
 
 void ClientServerThread::readData(MessageEnvelop &output) {
-    const int Timeout = 5 * 1000;
-
-    //are data ready?
-    while (clientSocket.bytesAvailable() < (int)sizeof(quint16)) {
-        if (!clientSocket.waitForReadyRead(Timeout)) {
-            emit error(clientSocket.error(), clientSocket.errorString());
-            return;
-        }
-    }
 
     QDataStream input(&clientSocket);
     //decryptData(input, output);
@@ -100,6 +91,11 @@ void ClientServerThread::readyRead() {
             //sendMessageToServer(pingMessage);
             break;
         }
+        case SEND_CLIENT_LIST_TO_CLIENT: {
+            qDebug() << "clientserver thread get request client list";
+            emit clientList(readedData.getList());
+            break;
+        }
         default: {
             qDebug() << "clientserver thread get request: " << readedData.getRequestType();
             emit signalToClient(readedData);
@@ -121,6 +117,7 @@ void ClientServerThread::run() {
     connect(&clientSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(&clientSocket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
+    exec();
 
 }
 }//end of namespace PenguinClient

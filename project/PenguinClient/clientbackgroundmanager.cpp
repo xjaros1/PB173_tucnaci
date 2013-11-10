@@ -50,7 +50,9 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(&myClient2ServerThread, SIGNAL(signalToClient(MessageEnvelop&)),
             this, SLOT(parseMessageFromServer(MessageEnvelop&)));
     connect(this, SIGNAL(sendDataToServer(MessageEnvelop&)),
-            &myClient2ServerThread, SLOT(sendMessageToServer(MessageEnvelop&)));
+            &myClient2ServerThread, SLOT(sendMessageToServer(MessageEnvelop&)), Qt::DirectConnection);
+    connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
+            this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
 
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -73,7 +75,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 }
 
 ClientBackgroundManager::~ClientBackgroundManager() {
-
+    myClient2ServerThread.terminate();
 }
 
 void ClientBackgroundManager::init() {
@@ -139,16 +141,16 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
 }
 
 void ClientBackgroundManager::callClient() {
-    qDebug() << "Called callClient";
-    //send message to server
     QObject* sendedFrom = sender();
+    qDebug() << "Called callClient" << sendedFrom->objectName();
+    //send message to server
     MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
     call.setName(sendedFrom->objectName());
     emit sendDataToServer(call);
     //myClient2ServerThread.sendMessageToServer(call);
     //GUI
     QMessageBox msgBox;
-    msgBox.setText("Calling to" + sendedFrom->objectName());
+    msgBox.setText("Calling to " + sendedFrom->objectName());
     msgBox.setStandardButtons(QMessageBox::Cancel);
     msgBox.exec();
     if(QMessageBox::Save) {

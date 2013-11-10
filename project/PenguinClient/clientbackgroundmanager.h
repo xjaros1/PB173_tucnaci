@@ -51,8 +51,6 @@ private:
     QPushButton *quitButton;
 
 
-
-    void displayClientList(const QList<QString> list);
     void incommingCall(MessageEnvelop &from);
     void incomingEndOfCall();
 signals:
@@ -67,6 +65,8 @@ private slots:
     void logout();
 
 public slots:
+    void displayClientList(const QList<QString> list);
+    //void clientList(QList<QString> clientList);
 
 };
 
