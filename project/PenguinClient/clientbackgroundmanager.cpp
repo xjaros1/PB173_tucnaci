@@ -108,14 +108,13 @@ void ClientBackgroundManager::enableSubmitButton() {
     submitButton->setEnabled(enable);
 }
 
-void ClientBackgroundManager::displayClientList(/*const QString &notParsedClientList*/) {
-    //parse data
-    /*test*/QString mockListString = "karel\nlukas\nmiroslav";
-    /*test*/QStringList list = mockListString.split("\n");
+void ClientBackgroundManager::displayClientList(const QList<QString> list) {
+    ///*test*/QString mockListString = "karel\nlukas\nmiroslav";
+    ///*test*/QStringList list = mockListString.split("\n");
+
     QString str;
-    /*test*/qDebug() << "JSEM ZDE";
     foreach(str, list) {
-        qDebug() << str;
+        //qDebug() << str;
         QPushButton* clientCallButton = new QPushButton(str);
         clientCallButton->setVisible(true);
         clientCallButton->setObjectName(str);
@@ -125,99 +124,82 @@ void ClientBackgroundManager::displayClientList(/*const QString &notParsedClient
     }
 }
 
+/*TODO list:
+ *client A vola B
+ *server preda B adresu
+ *B vytvori poslouchaci vlakno s adresou A
+ *Server posle adresu klientu A
+ *az ziska klient A odpoved od serveru, zviditelni tlacitko zacit hovor
+ **/
+
 void ClientBackgroundManager::callClient() {
-    listenerServer = new QTcpServer(this);
-    if (!listenerServer->listen()) {
-        QMessageBox::critical(this, tr("Penguin client"),
-                              tr("Unable to start the listener server: %1.")
-                              .arg(listenerServer->errorString()));
-        close();
-
-    }
-    //copy of fortune server solution - I think choose local adress would be better, but I dont
-    //know howto do it
-    QString ipAddress;
-    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    // use the first non-localhost IPv4 address
-    for (int i = 0; i < ipAddressesList.size(); ++i) {
-        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
-            ipAddressesList.at(i).toIPv4Address()) {
-            ipAddress = ipAddressesList.at(i).toString();
-            break;
-        }
-    }
-    // if we did not find one, use IPv4 localhost
-    if (ipAddress.isEmpty())
-        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
-    //we have IP
-
-    myClient2ClientListenThread = new C2CListenThread();
-    myClient2ClientListenThread->startListener(ipAddress, listenerServer->serverPort());
-
     QObject* sendedFrom = sender();
     QMessageBox msgBox;
     msgBox.setText("Calling to" + sendedFrom->objectName());
     msgBox.setStandardButtons(QMessageBox::Cancel);
     msgBox.exec();
     if(QMessageBox::Save) {
-        myClient2ServerThread.sendEndOfCall();
+        MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
+        myClient2ServerThread.sendMessageToServer(sendData);
     }
-    //emit(sendedFrom->objectName()) to clientserver thread to init communication
+    //TODO: call to sendedFrom->objectName() to clientserver thread to init communication
 }
 
-void ClientBackgroundManager::incommingCall(/*const QString &notParsedClientData*/) {
-    /*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
-    QStringList list = notParsedClientData.split(" ");
+void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
+    switch (notParsedIncomingData.getRequestType()) {
+        case SEND_CLIENT_LIST_TO_CLIENT: {
+            displayClientList(notParsedIncomingData.getList());
+            break;
+        }
+        case SEND_INCOMMING_CALL_TO_CLIENT: {
+            incommingCall(notParsedIncomingData);
+            break;
+        }
+        case END_OF_CALL_TO_CLIENT: {
+            incomingEndOfCall();
+            break;
+        }
+        default:
+            qDebug() << "Unknown message from server: "
+                     << notParsedIncomingData.getRequestType();
+            break;
+    }
+}
+
+void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
+    ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
+    //QStringList list = from.split(" ");
 
     //graphic
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Prichozi hovor od " + list.at(0),
-                                  "Prichozi hovor od " + list.at(0) + "Answer?",
+    reply = QMessageBox::question(this, "Prichozi hovor od " + from.getName(),
+                                  "Prichozi hovor od " + from.getName() + "Answer?",
                                   QMessageBox::Yes|QMessageBox::No);
     if(reply) { //answer
-        //network
-        listenerServer = new QTcpServer(this);
-        if (!listenerServer->listen()) {
-            QMessageBox::critical(this, tr("Penguin client"),
-                                  tr("Unable to start the listener server: %1.")
-                                  .arg(listenerServer->errorString()));
-            close();
+        /*TODO:
+         *predat lukemu IP
+         **/
 
-        }
-        //copy of fortune server solution - I think choose local adress would be better, but I dont
-        //know howto do it
-        QString ipAddress;
-        QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-        // use the first non-localhost IPv4 address
-        for (int i = 0; i < ipAddressesList.size(); ++i) {
-            if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
-                ipAddressesList.at(i).toIPv4Address()) {
-                ipAddress = ipAddressesList.at(i).toString();
-                break;
-            }
-        }
-        // if we did not find one, use IPv4 localhost
-        if (ipAddress.isEmpty())
-            ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
-        //we have IP
 
-        myClient2ClientListenThread = new C2CListenThread();
-        myClient2ClientListenThread->startListener(ipAddress, listenerServer->serverPort());
+        //myClient2ClientListenThread = new C2CListenThread();
+        //myClient2ClientListenThread->startListener(from.getAddr(), from.getPort());
 
-        myClient2ClientWriteThread = new C2CWriteThread();
-        myClient2ClientWriteThread->startOutput(list.at(1), list.at(2).toInt());
+        //myClient2ClientWriteThread = new C2CWriteThread();
+        //myClient2ClientWriteThread->startOutput(from.getAddr(), from.getPort());
 
         QMessageBox msgBox;
-        msgBox.setText("You are speaking to" + list.at(0));
+        msgBox.setText("You are speaking to" + from.getName());
         msgBox.setStandardButtons(QMessageBox::Cancel);
         msgBox.exec();
         if(QMessageBox::Save) {
-            myClient2ServerThread.sendEndOfCall();
+            MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
+            myClient2ServerThread.sendMessageToServer(sendData);
         }
 
     }
     else {//deny
-        myClient2ServerThread.denyIncommingCall();
+        MessageEnvelop sendData(SEND_DENIED_RESPONSE_TO_COMMUNICATION);
+        myClient2ServerThread.sendMessageToServer(sendData);
     }
 }
 
@@ -257,3 +239,4 @@ void ClientBackgroundManager::logout() {
 }
 
 }//end of namespace PenguinClient
+

@@ -1,25 +1,14 @@
 #ifndef CLIENTSERVERTHREAD_H
 #define CLIENTSERVERTHREAD_H
 
-#define ERROR_SERVER_RESPONSE 666
-#define PING 0
-#define OK 1
-#define SEND_LOGIN_TO_SERVER 2
-#define REQUEST_CLIENT_LIST_FROM_SERVER 3
-#define REQUEST_CALL_TO_CLIENT_FROM_SERVER 4
-#define SEND_CLIENT_LIST_TO_CLIENT 5
-#define SEND_INCOMMING_CALL_TO_CLIENT 6
-#define DENY_INCOMMING_CALL_TO_SERVER 10
-#define END_OF_CALL_TO_CLIENT 7
-#define END_OF_CALL_FROM_CLIENT 8
-#define LOGOUT_TO_SERVER 9
-
 #define REFRESH_RATE 10
 
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
 #include <QtNetwork>
+
+#include "../messageenvelop.h"
 
 namespace PenguinClient
 {
@@ -32,11 +21,7 @@ public:
     ~ClientServerThread();
     void initThread(const QString &serverIPAdress, quint16 serverListenPort,
                     QString login);
-    void requestListOfClients();
-    void requestToCallChoosenClient(quint16 clientID);
-    void denyIncommingCall();
-    void sendEndOfCall();
-    void disconnect();
+    void sendMessageToServer(MessageEnvelop &dataToSend);
     void run();
 private:
     QTcpSocket clientSocket;
@@ -48,10 +33,9 @@ private:
     void initCommunication();
     void encyptData(QDataStream &output, QString input);
     void decryptData(QDataStream &input, QString &output,quint16 &messageType);
-    void readData(QString &input, quint16 &messageType);
-    void ping();
+    void readData(MessageEnvelop &readedData);
 signals:
-    void clientList(QString &notParsedClientList);
+    void signalToClient(MessageEnvelop &readedData);
     void incommingCall(QString &notParsedClientList);
     void endOfCall(QString &notParsedClientList);
     void error(int socketError, const QString &message);

@@ -4,6 +4,7 @@
 #include "clientserverthread.h"
 #include "c2clistenthread.h"
 #include "c2cwritethread.h"
+#include "../messageenvelop.h"
 
 #include <QWidget>
 #include <QtWidgets>
@@ -30,7 +31,7 @@ private:
     ClientServerThread myClient2ServerThread;
     C2CListenThread *myClient2ClientListenThread;
     C2CWriteThread *myClient2ClientWriteThread;
-    QTcpServer *listenerServer;
+    //QTcpServer *listenerServer;
     QList<QString> myClientList;
     QString login;
 
@@ -54,14 +55,17 @@ private:
     QPushButton *logoutButton;
     QPushButton *quitButton;
 
+
+
+    void displayClientList(const QList<QString> list);
+    void incommingCall(MessageEnvelop &from);
+    void incomingEndOfCall();
 signals:
 
 private slots:
     void init();
     void callClient();
-    void displayClientList(/*const QString &notParsedClientData*/);
-    void incommingCall(/*const QString &notParsedClientData*/);
-    void incomingEndOfCall();
+    void parseMessageFromServer(MessageEnvelop &notParsedIncomingData);
     void displayError(int socketError, const QString &message);
     void enableSubmitButton();
     void logout();

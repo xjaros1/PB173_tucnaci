@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     clientserverthread.cpp \
     c2cudp.cpp \
     c2ctcp.cpp \
-    clientbackgroundmanager.cpp
+    clientbackgroundmanager.cpp \
+    ../messageenvelop.cpp
 
 HEADERS += \
     c2clistenthread.h \
