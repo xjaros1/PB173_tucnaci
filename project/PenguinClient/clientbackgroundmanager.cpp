@@ -49,6 +49,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
             this, SLOT(displayError(int, QString)));
     connect(&myClient2ServerThread, SIGNAL(signalToClient(MessageEnvelop&)),
             this, SLOT(parseMessageFromServer(MessageEnvelop&)));
+    connect(this, SIGNAL(sendDataToServer(MessageEnvelop&)),
+            &myClient2ServerThread, SLOT(sendMessageToServer(MessageEnvelop&)));
 
 
     QGridLayout *mainLayout = new QGridLayout;

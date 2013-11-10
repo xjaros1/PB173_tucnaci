@@ -26,6 +26,7 @@ void ClientServerThread::initThread(const QString &serverIPAdress,
 }
 
 void ClientServerThread::initCommunication() {
+    qDebug() << "Initializing communication with server with login " << login;
     clientSocket.connectToHost(QHostAddress(serverIPAdress), serverListenPort);
     if (!clientSocket.waitForConnected(5000)) {
         emit error(clientSocket.error(), clientSocket.errorString());
@@ -46,6 +47,7 @@ void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
     out << dataToSend;
     //encyptData(out, input);
 
+    qDebug() << "sendMessageToServer";
     clientSocket.write(block);
 }
 
@@ -60,20 +62,10 @@ void ClientServerThread::readData(MessageEnvelop &output) {
         }
     }
 
-    quint16 blockSize;
-    QDataStream read(&clientSocket);
-    read.setVersion(QDataStream::Qt_5_1);
-    //read >> blockSize;
-    //read data of blockSize*n
-    while (clientSocket.bytesAvailable() < blockSize) {
-        if (!clientSocket.waitForReadyRead(Timeout)) {
-            emit error(clientSocket.error(), clientSocket.errorString());
-            return;
-        }
-    }
+    QDataStream input(&clientSocket);
+    //decryptData(input, output);
 
-    //decryptData(read, output, messageType);
-    read >> output;
+    input >> output;
 }
 
 /*void ClientServerThread::encyptData(QDataStream &output, QString input) {
@@ -92,35 +84,43 @@ void ClientServerThread::decryptData(QDataStream &input, QString &output,
 
 }*/
 
+void ClientServerThread::readyRead() {
+    //recieve data
+    MessageEnvelop readedData;
+    readData(readedData);
+
+    switch (readedData.getRequestType()) {
+        case ERROR_SERVER_RESPONSE: {
+            emit error(clientSocket.error(), clientSocket.errorString());
+            break;
+        }
+        case PING: {
+            qDebug() << "clientserver thread get request for ping";
+            //MessageEnvelop pingMessage(PING);
+            //sendMessageToServer(pingMessage);
+            break;
+        }
+        default: {
+            qDebug() << "clientserver thread get request: " << readedData.getRequestType();
+            emit signalToClient(readedData);
+            break;
+        }
+    }
+}
+
+
+void ClientServerThread::disconnected() {
+    //TODO: predat vyse
+    qDebug() << "Disconnected";
+    exit(0);
+}
+
 void ClientServerThread::run() {
     initCommunication();
 
+    connect(&clientSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
+    connect(&clientSocket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
-    while(!quit) {
-
-        //recieve data
-        MessageEnvelop readedData;
-        readData(readedData);
-
-        switch (readedData.getRequestType()) {
-            case ERROR_SERVER_RESPONSE: {
-                emit error(clientSocket.error(), clientSocket.errorString());
-                break;
-            }
-            case PING: {
-                qDebug() << "clientserver thread get request for ping";
-                //MessageEnvelop pingMessage(PING);
-                //sendMessageToServer(pingMessage);
-                break;
-            }
-            default: {
-                qDebug() << "clientserver thread get request: " << readedData.getRequestType();
-                emit signalToClient(readedData);
-                break;
-            }
-        }
-
-    }
 
 }
 }//end of namespace PenguinClient

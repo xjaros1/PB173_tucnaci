@@ -22,6 +22,7 @@ public:
     void initThread(const QString &serverIPAdress, quint16 serverListenPort,
                     QString login);
     void run();
+
 private:
     QTcpSocket clientSocket;
     QString serverIPAdress;
@@ -33,14 +34,19 @@ private:
     void encyptData(QDataStream &output, QString input);
     void decryptData(QDataStream &input, QString &output,quint16 &messageType);
     void readData(MessageEnvelop &readedData);
+
 signals:
     void signalToClient(MessageEnvelop &readedData);
     void incommingCall(QString &notParsedClientList);
     void endOfCall(QString &notParsedClientList);
     void error(int socketError, const QString &message);
     void callClient(QString clientLogin);
+
 public slots:
     void sendMessageToServer(MessageEnvelop &dataToSend);
+
+    void readyRead();
+    void disconnected();
 
 };
 
