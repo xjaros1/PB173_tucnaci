@@ -26,6 +26,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 
     myNewWidget = new QWidget();
     insideArea = new QVBoxLayout(myNewWidget);
+    myNewWidget->setLayout(insideArea);
 
     logoutButton = new QPushButton(tr("Logout"));
     logoutButton->setDefault(false);
