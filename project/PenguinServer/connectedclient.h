@@ -9,12 +9,13 @@
 namespace PenguinServer
 {
 
+class ServerThread;
 
 class ConnectedClient : public QObject
 {
     Q_OBJECT
 public:
-    ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, QObject * parent =0);
+    ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, ServerThread *parent =0);
 
     virtual ~ConnectedClient() { }
 
@@ -25,6 +26,10 @@ public:
     QHostAddress getIpAddr() ;
 
     void callRequest(int, ConnectedClient*);
+
+    void sendList(QList<QString> list);
+
+    void init(ServerThread *parent);
 
 
 signals:

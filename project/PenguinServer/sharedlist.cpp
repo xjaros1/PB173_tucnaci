@@ -7,6 +7,8 @@ namespace PenguinServer
 
 SharedList::SharedList(): QObject(), mutex()
 {
+    c = new ClientsManager(this);
+    c->start();
 }
 
 bool SharedList::addClient(ConnectedClient * cli)
@@ -37,12 +39,22 @@ bool SharedList::removeClient(const QString & tR)
 void SharedList::callAllClients()
 {
     mutex.lock();
-    QList<QString> toSent = clients.keys();
-    QMap<QString, ConnectedClient*>::Iterator it;
-    for(it = clients.begin(); it!= clients.end(); it++)
+//    QList<QString> toSent = clients.keys();
+//    QMap<QString, ConnectedClient*>::Iterator it;
+//    for(it = clients.begin(); it!= clients.end(); it++)
+//    {
+//        ConnectedClient * c = *it;
+//        emit c->sendUpdatedList(toSent);
+//    }
+    qDebug() << "Sending all data";
+    auto toSent = clients.keys();
+
+    auto it = clients.begin();
+
+    for(; it != clients.end(); it++)
     {
         ConnectedClient * c = *it;
-        emit c->sendUpdatedList(toSent);
+        c->sendList(toSent);
     }
 
     mutex.unlock();

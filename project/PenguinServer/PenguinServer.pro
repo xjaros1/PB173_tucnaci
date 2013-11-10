@@ -8,6 +8,8 @@ QT       += core
 QT       += network
 QT       -= gui
 
+QMAKE_CXXFLAGS += -std=c++11
+
 TARGET = PenguinServer
 CONFIG   += console
 CONFIG   -= app_bundle

@@ -3,6 +3,7 @@
 
 #include "connectedclient.h"
 #include "serverthread.h"
+#include "clientsmanager.h"
 
 #include <QMutex>
 #include <QList>
@@ -13,6 +14,7 @@ namespace PenguinServer
 {
 
 class ConnectedClient;
+class ClientsManager;
 
 class SharedList: public QObject
 {
@@ -32,6 +34,9 @@ public:
 
 private:
     QMap<QString, ConnectedClient*> clients;
+
+    ClientsManager * c;
+
     QMutex mutex;
 };
 

@@ -4,20 +4,31 @@
 #include <QThread>
 #include <QList>
 
+#include "sharedlist.h"
+
+
 namespace PenguinServer
 {
 
+class SharedList;
 
-  class ClientsManager : QThread
+  class ClientsManager : public QThread
   {
     Q_OBJECT
   public:
-    ClientsManager(QObject * parent = 0);
+    ClientsManager(SharedList * l, QObject * parent = 0):
+        QThread(parent), list(l) {}
+
+
+
+    void run();
+
+    void setList(SharedList * l);
 
 
 
   private:
-
+    SharedList * list;
   };
 
 }

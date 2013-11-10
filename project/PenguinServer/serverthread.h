@@ -14,8 +14,9 @@
 namespace PenguinServer
 {
 
-class SharedList;
+
 class ConnectedClient;
+class SharedList;
 
 class ServerThread : public QThread
 {

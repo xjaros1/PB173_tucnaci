@@ -8,16 +8,16 @@ namespace PenguinServer
 {
 
 ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, QObject *parent) :
-    QThread(), s(), socketDescriptor(socketDescriptor), list(list),
+    QThread(parent), s(), socketDescriptor(socketDescriptor), list(list),
     pending(0), available(true), isInitialized(false)
 {
 
-
+    qDebug() << socketDescriptor;
 }
 
 void ServerThread::run()
 {
-    s = new QTcpSocket(this);
+    s = new QTcpSocket();
     if(!s->setSocketDescriptor(socketDescriptor))
     {
         emit error(s->error());
@@ -25,6 +25,8 @@ void ServerThread::run()
 
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
     connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
+
+    qDebug() << "started listening";
 
     exec();
 
@@ -55,7 +57,7 @@ void ServerThread::initialize()
 
     str >> e;
 
-
+    qDebug() << e.getRequestType() << " initialize on data " << e.getName();
     if(e.getRequestType() != SEND_LOGIN_TO_SERVER)
     {
         sendError("The Connection is bad Mkay. You should try it again M'Kay");
@@ -68,8 +70,10 @@ void ServerThread::initialize()
 
 
     ConnectedClient * c = new ConnectedClient(s->peerAddress(), e.getName(),
-                                              s->peerPort());
+                                              s->peerPort(), this);
 
+    c->init(this);
+    qDebug() << "opened connection to " << e.getName();
     if(!list->addClient(c))
     {
         sendError("The connection already exists M'kay");
@@ -89,7 +93,7 @@ void ServerThread::requestCall(const QString & login)
 
 void ServerThread::readyRead()
 {
-    if(!isInitialized)
+        if(!isInitialized)
     {
         initialize();
         return;
@@ -123,6 +127,7 @@ void ServerThread::readyRead()
 
 void ServerThread::disconnected()
 {
+    qDebug() << "Disconnected" << name;
     list->removeClient(name);
     s->deleteLater();
     exit(0);
@@ -183,6 +188,7 @@ void ServerThread::distributeClients(QList<QString> list)
 {
 //    QList<QString>::Iterator it;
 
+    qDebug() << " sending clients to " << name;
     QByteArray block;
     QDataStream str(&block, QIODevice::WriteOnly);
 //    str << (qint16) 0;

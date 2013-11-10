@@ -7,18 +7,23 @@
 
 namespace PenguinServer
 {
-ConnectedClient::ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, QObject *parent):
-     ipaddress(ipAddr), port(port), name(name)
+ConnectedClient::ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, ServerThread *parent):
+     QObject(parent), ipaddress(ipAddr), port(port), name(name)
+{
+
+
+
+
+}
+
+void ConnectedClient::init(ServerThread * parent)
 {
     connect(this, SIGNAL(sendUpdatedList(QList<QString>)),
-            (ServerThread*) parent, SLOT(distributeClients(QList<QString>)));
+             parent, SLOT(distributeClients(QList<QString>)), Qt::DirectConnection);
     connect(this, SIGNAL(denyConnection(ConnectedClient*)),
-            (ServerThread*) parent, SLOT(connectionDenied(ConnectedClient*)));
+             parent, SLOT(connectionDenied(ConnectedClient*)), Qt::DirectConnection);
     connect(this, SIGNAL(allowConnection(ConnectedClient*)),
-            (ServerThread*) parent, SLOT(connectionOnSuccess(ConnectedClient*)));
-
-
-
+            parent, SLOT(connectionOnSuccess(ConnectedClient*)),Qt::DirectConnection);
 }
 
 QString ConnectedClient::getName()
@@ -63,6 +68,11 @@ void ConnectedClient::callRequest(int reqID, ConnectedClient *cli)
     }
 
 
+}
+
+void ConnectedClient::sendList(QList<QString> list)
+{
+    emit this->sendUpdatedList(list);
 }
 
 }// PenguinServer
