@@ -51,7 +51,7 @@ private:
     QPushButton *quitButton;
 
 
-    void incommingCall(MessageEnvelop &from);
+    void incommingCall(QString name, QHostAddress IP, quint16 port);
     void incomingEndOfCall();
 signals:
     void sendDataToServer(MessageEnvelop &data);

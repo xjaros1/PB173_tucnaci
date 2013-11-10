@@ -104,7 +104,7 @@ void ClientBackgroundManager::enableSubmitButton() {
  *az ziska klient A odpoved od serveru, zviditelni tlacitko zacit hovor
  **/
 
-void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
+/*void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
     qDebug() << "Incoming message from server number: " << notParsedIncomingData.getRequestType();
     switch (notParsedIncomingData.getRequestType()) {
         case SEND_CLIENT_LIST_TO_CLIENT: {
@@ -124,7 +124,7 @@ void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIn
                      << notParsedIncomingData.getRequestType();
             break;
     }
-}
+}*/
 
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     qDebug() << "Called displayClientList";
@@ -160,36 +160,40 @@ void ClientBackgroundManager::callClient() {
     }
 }
 
-void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
-    qDebug() << "Called incommingCall";
+void ClientBackgroundManager::incommingCall(QString name, QHostAddress IP, quint16 port) {
+    qDebug() << "Called incommingCall" << name << IP << port;
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
     //GUI
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Prichozi hovor od " + from.getName(),
-                                  "Prichozi hovor od " + from.getName() + "Answer?",
-                                  QMessageBox::Yes|QMessageBox::No);
+    reply = QMessageBox::question(this, "Prichozi hovor od " + name,
+                                      "Prichozi hovor od " + name + "Answer?",
+                                      QMessageBox::Yes|QMessageBox::No);
     if(reply) { //answer
         /*TODO:
          *predat lukemu IP
          **/
 
+        myClient2ClientListenThread = new C2CListenThread();
+        myClient2ClientListenThread->startListener(IP);
 
-        //myClient2ClientListenThread = new C2CListenThread();
-        //myClient2ClientListenThread->startListener(from.getAddr(), from.getPort());
-
-        //myClient2ClientWriteThread = new C2CWriteThread();
-        //myClient2ClientWriteThread->startOutput(from.getAddr(), from.getPort());
-
-        QMessageBox msgBox;
-        msgBox.setText("You are speaking to" + from.getName());
-        msgBox.setStandardButtons(QMessageBox::Cancel);
-        msgBox.exec();
-        if(QMessageBox::Save) {
-            MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-            emit sendDataToServer(sendData);
-            //myClient2ServerThread.sendMessageToServer(sendData);
+        QMessageBox::StandardButton really;
+        really = QMessageBox::question(this, "Zapnete si mikrofon",
+                                      "Zapli jste mikrofon?",
+                                      QMessageBox::Yes|QMessageBox::No);
+        if(really) {
+            myClient2ClientWriteThread = new C2CWriteThread();
+            myClient2ClientWriteThread->startOutput(IP, port);
+            QMessageBox msgBox;
+            msgBox.setText("You are speaking to" + name);
+            msgBox.setStandardButtons(QMessageBox::Cancel);
+            msgBox.exec();
+            if(QMessageBox::Save) {
+                MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
+                emit sendDataToServer(sendData);
+                //myClient2ServerThread.sendMessageToServer(sendData);
+            }
         }
 
     }
