@@ -9,15 +9,12 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     : QWidget(parent)
 {
     serverIpLabel = new QLabel(tr("&Server IP:"));
-    serverPortLabel = new QLabel(tr("&Server port:"));
     loginLabel = new QLabel(tr("&Login:"));
 
     serverIpEdit = new QLineEdit(tr("127.0.0.1"));
-    serverPortEdit = new QLineEdit(tr("1234"));
     loginEdit = new QLineEdit(tr("karlos"));
 
     serverIpLabel->setBuddy(serverIpEdit);
-    serverPortLabel->setBuddy(serverPortEdit);
     loginLabel->setBuddy(loginEdit);
 
     submitButton = new QPushButton(tr("Submit"));
@@ -27,17 +24,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel = new QLabel(tr("Seznam online klientu"));
     listHeaderlabel->setEnabled(false);
 
-    //clientListArea = new QScrollArea();
-    //widget = new QWidget(/*clientListArea*/);
     insideArea = new QVBoxLayout();
-    //clientListArea->setWidget(widget);
-
-    /*test*/magicButton = new QPushButton(tr("Show magic"));
-    /*test*/magicButton->setDefault(false);
-    /*test*/magicButton->setEnabled(true);
-    /*test*/fooButton = new QPushButton(tr("Foo bar"));
-    /*test*/fooButton->setDefault(false);
-    /*test*/fooButton->setEnabled(true);
 
     logoutButton = new QPushButton(tr("Logout"));
     logoutButton->setDefault(false);
@@ -51,32 +38,23 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 
     connect(serverIpEdit, SIGNAL(textChanged(QString)), this,
             SLOT(enableSubmitButton()));
-    connect(serverPortEdit, SIGNAL(textChanged(QString)), this,
-            SLOT(enableSubmitButton()));
     connect(loginEdit, SIGNAL(textChanged(QString)), this,
             SLOT(enableSubmitButton()));
     connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
     connect(logoutButton, SIGNAL(clicked()), this, SLOT(logout()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    /*test*/connect(magicButton, SIGNAL(clicked()), this, SLOT(displayClientList()));
-    /*test*/connect(fooButton, SIGNAL(clicked()), this, SLOT(incommingCall()));
-
 
     QGridLayout *mainLayout = new QGridLayout;
     mainLayout->addWidget(serverIpLabel, 0, 0);
     mainLayout->addWidget(serverIpEdit, 0, 1);
-    mainLayout->addWidget(serverPortLabel, 1, 0);
-    mainLayout->addWidget(serverPortEdit, 1, 1);
-    mainLayout->addWidget(loginLabel, 2, 0);
-    mainLayout->addWidget(loginEdit, 2, 1);
-    mainLayout->addWidget(submitButton, 3, 0);
+    mainLayout->addWidget(loginLabel, 1, 0);
+    mainLayout->addWidget(loginEdit, 1, 1);
+    mainLayout->addWidget(submitButton, 2, 0);
 
-    mainLayout->addWidget(listHeaderlabel, 4, 0);
-    mainLayout->addLayout(insideArea, 5, 0);
-    mainLayout->addWidget(logoutButton, 6, 0);
-    mainLayout->addWidget(quitButton, 7, 0);
-    /*test*/mainLayout->addWidget(magicButton, 8, 0);
-    /*test*/mainLayout->addWidget(fooButton, 9, 0);
+    mainLayout->addWidget(listHeaderlabel, 3, 0);
+    mainLayout->addLayout(insideArea, 4, 0);
+    mainLayout->addWidget(logoutButton, 5, 0);
+    mainLayout->addWidget(quitButton, 6, 0);
 
     setLayout(mainLayout);
 
@@ -91,7 +69,7 @@ ClientBackgroundManager::~ClientBackgroundManager() {
 
 void ClientBackgroundManager::init() {
     QString adress = serverIpEdit->text();
-    quint16 port = serverPortEdit->text().toInt();
+    quint16 port = SERVER_VIETNAM_WAR_PORT;
     login = loginEdit->text();
 
     myClient2ServerThread.initThread(adress, port, login);
@@ -103,15 +81,11 @@ void ClientBackgroundManager::init() {
 }
 
 void ClientBackgroundManager::enableSubmitButton() {
-    bool enable(!serverIpEdit->text().isEmpty() && !serverPortEdit->text().isEmpty()
-                && !loginEdit->text().isEmpty());
+    bool enable = (!serverIpEdit->text().isEmpty() && !loginEdit->text().isEmpty());
     submitButton->setEnabled(enable);
 }
 
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {
-    ///*test*/QString mockListString = "karel\nlukas\nmiroslav";
-    ///*test*/QStringList list = mockListString.split("\n");
-
     QString str;
     foreach(str, list) {
         //qDebug() << str;
@@ -133,7 +107,12 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
  **/
 
 void ClientBackgroundManager::callClient() {
+    //send message to server
     QObject* sendedFrom = sender();
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName(sendedFrom->objectName());
+    myClient2ServerThread.sendMessageToServer(call);
+    //GUI
     QMessageBox msgBox;
     msgBox.setText("Calling to" + sendedFrom->objectName());
     msgBox.setStandardButtons(QMessageBox::Cancel);
@@ -142,7 +121,6 @@ void ClientBackgroundManager::callClient() {
         MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
         myClient2ServerThread.sendMessageToServer(sendData);
     }
-    //TODO: call to sendedFrom->objectName() to clientserver thread to init communication
 }
 
 void ClientBackgroundManager::parseMessageFromServer(MessageEnvelop &notParsedIncomingData) {
@@ -170,7 +148,7 @@ void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
-    //graphic
+    //GUI
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Prichozi hovor od " + from.getName(),
                                   "Prichozi hovor od " + from.getName() + "Answer?",

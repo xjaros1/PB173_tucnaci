@@ -38,20 +38,15 @@ private:
 
     //init window
     QLabel *serverIpLabel;
-    QLabel *serverPortLabel;
     QLabel *loginLabel;
     QLineEdit *serverIpEdit;
-    QLineEdit *serverPortEdit;
     QLineEdit *loginEdit;
     QPushButton *submitButton;
     //main window
     QLabel *listHeaderlabel;
-    QScrollArea *clientListArea;
     QVBoxLayout *insideArea;
     QWidget *widget;
     QList<QPushButton*> clientListButtons;
-    /*test*/QPushButton *magicButton;
-    /*test*/QPushButton *fooButton;
     QPushButton *logoutButton;
     QPushButton *quitButton;
 
