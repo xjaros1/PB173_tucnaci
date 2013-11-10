@@ -20,7 +20,6 @@ void ClientServerThread::initThread(const QString &serverIPAdress,
     this->serverListenPort = serverListenPort;
     this->login = login;
 
-    clientSocket.connectToHost(serverIPAdress, serverListenPort);
     if (!isRunning())
         start();
 
@@ -64,7 +63,7 @@ void ClientServerThread::readData(MessageEnvelop &output) {
     quint16 blockSize;
     QDataStream read(&clientSocket);
     read.setVersion(QDataStream::Qt_5_1);
-    read >> blockSize;
+    //read >> blockSize;
     //read data of blockSize*n
     while (clientSocket.bytesAvailable() < blockSize) {
         if (!clientSocket.waitForReadyRead(Timeout)) {
@@ -109,11 +108,13 @@ void ClientServerThread::run() {
                 break;
             }
             case PING: {
-                MessageEnvelop pingMessage(PING);
-                sendMessageToServer(pingMessage);
+                qDebug() << "clientserver thread get request for ping";
+                //MessageEnvelop pingMessage(PING);
+                //sendMessageToServer(pingMessage);
                 break;
             }
             default: {
+                qDebug() << "clientserver thread get request: " << readedData.getRequestType();
                 emit signalToClient(readedData);
                 break;
             }

@@ -21,7 +21,6 @@ public:
     ~ClientServerThread();
     void initThread(const QString &serverIPAdress, quint16 serverListenPort,
                     QString login);
-    void sendMessageToServer(MessageEnvelop &dataToSend);
     void run();
 private:
     QTcpSocket clientSocket;
@@ -40,7 +39,8 @@ signals:
     void endOfCall(QString &notParsedClientList);
     void error(int socketError, const QString &message);
     void callClient(QString clientLogin);
-
+public slots:
+    void sendMessageToServer(MessageEnvelop &dataToSend);
 
 };
 

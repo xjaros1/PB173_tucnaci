@@ -11,7 +11,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     serverIpLabel = new QLabel(tr("&Server IP:"));
     loginLabel = new QLabel(tr("&Login:"));
 
-    serverIpEdit = new QLineEdit(tr("127.0.0.1"));
+    serverIpEdit = new QLineEdit(tr("89.103.183.36"));
     loginEdit = new QLineEdit(tr("karlos"));
 
     serverIpLabel->setBuddy(serverIpEdit);
@@ -43,6 +43,13 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
     connect(logoutButton, SIGNAL(clicked()), this, SLOT(logout()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+
+
+    connect(&myClient2ServerThread, SIGNAL(error(int, QString)),
+            this, SLOT(displayError(int, QString)));
+    connect(&myClient2ServerThread, SIGNAL(signalToClient(MessageEnvelop&)),
+            this, SLOT(parseMessageFromServer(MessageEnvelop&)));
+
 
     QGridLayout *mainLayout = new QGridLayout;
     mainLayout->addWidget(serverIpLabel, 0, 0);
@@ -135,7 +142,8 @@ void ClientBackgroundManager::callClient() {
     QObject* sendedFrom = sender();
     MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
     call.setName(sendedFrom->objectName());
-    myClient2ServerThread.sendMessageToServer(call);
+    emit sendDataToServer(call);
+    //myClient2ServerThread.sendMessageToServer(call);
     //GUI
     QMessageBox msgBox;
     msgBox.setText("Calling to" + sendedFrom->objectName());
@@ -143,7 +151,8 @@ void ClientBackgroundManager::callClient() {
     msgBox.exec();
     if(QMessageBox::Save) {
         MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-        myClient2ServerThread.sendMessageToServer(sendData);
+        emit sendDataToServer(sendData);
+        //myClient2ServerThread.sendMessageToServer(sendData);
     }
 }
 
@@ -175,13 +184,15 @@ void ClientBackgroundManager::incommingCall(MessageEnvelop &from) {
         msgBox.exec();
         if(QMessageBox::Save) {
             MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-            myClient2ServerThread.sendMessageToServer(sendData);
+            emit sendDataToServer(sendData);
+            //myClient2ServerThread.sendMessageToServer(sendData);
         }
 
     }
     else {//deny
         MessageEnvelop sendData(SEND_DENIED_RESPONSE_TO_COMMUNICATION);
-        myClient2ServerThread.sendMessageToServer(sendData);
+        emit sendDataToServer(sendData);
+        //myClient2ServerThread.sendMessageToServer(sendData);
     }
 }
 

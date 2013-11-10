@@ -56,6 +56,7 @@ private:
     void incommingCall(MessageEnvelop &from);
     void incomingEndOfCall();
 signals:
+    void sendDataToServer(MessageEnvelop &data);
 
 private slots:
     void init();
@@ -64,6 +65,8 @@ private slots:
     void displayError(int socketError, const QString &message);
     void enableSubmitButton();
     void logout();
+
+public slots:
 
 };
 
