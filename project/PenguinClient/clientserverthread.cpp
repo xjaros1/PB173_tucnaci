@@ -6,6 +6,7 @@ namespace PenguinClient
 ClientServerThread::ClientServerThread(QObject *parent)
     : QThread(parent), quit(false)
 {
+    clientSocket.bind(CLIENT_PEARL_HARBOR_PORT);
 }
 
 ClientServerThread::~ClientServerThread() {

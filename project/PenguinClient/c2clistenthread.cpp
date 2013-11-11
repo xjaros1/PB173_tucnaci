@@ -17,6 +17,7 @@ C2CListenThread::~C2CListenThread(){
 }
 
 void C2CListenThread::startListener(const QHostAddress &hostName){
+    qDebug() << "Listener started";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
 
@@ -30,7 +31,7 @@ void C2CListenThread::startListener(const QHostAddress &hostName){
 void C2CListenThread::run(){
 
     server.startServer(hostName);
-
+    qDebug() << "TcpServer started";
     exec();
 }
 

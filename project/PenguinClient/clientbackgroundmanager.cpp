@@ -169,7 +169,7 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
     /*test*/myClient2ClientListenThread->startListener(IP);
 
     sleep(1);
-
+    qDebug() << "write start";
     /*test*/myClient2ClientWriteThread = new C2CWriteThread();
     /*test*/myClient2ClientWriteThread->startOutput(IP, port);
 

@@ -9,6 +9,7 @@ C2CTcpListen::C2CTcpListen(qintptr , QObject *){
 }
 
 void C2CTcpListen::run(){
+    qDebug() << "Server thread started";
     socket = new QTcpSocket();
 
     if(!socket->setSocketDescriptor(this->socketDescriptor))
@@ -25,6 +26,7 @@ void C2CTcpListen::run(){
 
 void C2CTcpListen::readyRead()
 {    
+    qDebug() << "incoming connection";
     QDataStream stream(socket);
     MessageEnvelop e;
     stream >> e;
