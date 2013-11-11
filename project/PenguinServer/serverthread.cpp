@@ -54,16 +54,22 @@ void ServerThread::initialize()
     isInitialized = true;
     MessageEnvelop e;
     QDataStream str(s);
+    try
+    {
+        str >> e;
+    }
+    catch(...)
+    {
 
-    str >> e;
+    }
 
     qDebug() << e.getRequestType() << " initialize on data " << e.getName();
     if(e.getRequestType() != SEND_LOGIN_TO_SERVER)
     {
         sendError("The Connection is bad Mkay. You should try it again M'Kay");
         emit error(s->error());
-        s->deleteLater();
-        emit disconnected();
+        //s->deleteLater();
+        //emit disconnected();
         return;
     }
 
@@ -107,7 +113,7 @@ void ServerThread::ConnectionGranted()
 
 void ServerThread::logout()
 {
-    list->removeClient(name);
+    //list->removeClient(name);
 
 //    MessageEnvelop e(SEND_LOGOUT_RESPONSE);
 //    e.setName(name);
@@ -118,7 +124,7 @@ void ServerThread::logout()
 
 //    s->write(block);
     s->disconnectFromHost();
-    s->waitForDisconnected();
+    //s->waitForDisconnected();
 
 }
 
@@ -163,6 +169,7 @@ void ServerThread::readyRead()
 
     case SEND_LOGOUT_REQUEST:
         logout();
+        return;
     case END_OF_CALL_TO_CLIENT:
     case ERROR_SERVER_RESPONSE:
         return sendError("Only me can communicate on port 666 MUHEHEHE");

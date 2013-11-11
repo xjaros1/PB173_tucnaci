@@ -1,9 +1,7 @@
 #include "sharedlist.h"
-#include "config.h"
+
 namespace PenguinServer
 {
-
-
 
 SharedList::SharedList(): QObject(), mutex()
 {
@@ -32,8 +30,6 @@ bool SharedList::removeClient(const QString & tR)
     mutex.unlock();
     if(k==0) return false;
     return true;
-
-
 }
 
 void SharedList::callAllClients()
@@ -58,16 +54,18 @@ void SharedList::callAllClients()
     }
 
     mutex.unlock();
-
-
 }
 
 void SharedList::callClient(const QString &destName, const QString &srcName, qint16 type)
 {
     mutex.lock();
-    if(!clients.contains(destName)) return;
+    if(!clients.contains(destName))
+    {
+        mutex.unlock();
+        return;
+    }
     ConnectedClient* c = clients[destName];
-    c->callRequest(SEND_INCOMMING_CALL_TO_CLIENT, clients[srcName]);
+    c->callRequest(type, clients[srcName]);
     mutex.unlock();
 
 }
