@@ -34,5 +34,20 @@ private:
     SharedList * list;
 
 };
+
+class Controler: public QThread
+{
+    Q_OBJECT
+public:
+
+    explicit Controler(QObject * parent = 0);
+    virtual ~Controler();
+
+    virtual void run();
+
+signals:
+    void finish();
+
+};
 }
 #endif // SERVERLISTENER_H
