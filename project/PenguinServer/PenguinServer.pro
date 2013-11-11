@@ -31,5 +31,4 @@ HEADERS += \
     serverlistener.h \
     connectedclient.h \
     sharedlist.h \
-    config.h \
     ../messageenvelop.h
