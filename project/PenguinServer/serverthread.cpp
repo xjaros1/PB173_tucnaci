@@ -9,7 +9,7 @@ namespace PenguinServer
 
 ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, QObject *parent) :
     QThread(parent), s(), socketDescriptor(socketDescriptor), list(list),
-    pending(0), available(true), isInitialized(false)
+    pending(), available(true), isInitialized(false)
 {
 
     qDebug() << socketDescriptor;
@@ -88,7 +88,38 @@ void ServerThread::initialize()
 
 void ServerThread::requestCall(const QString & login)
 {
-    list->callClient(login, name);
+    list->callClient(login, name, SEND_INCOMMING_CALL_TO_CLIENT);
+    pending = login;
+    available = false;
+}
+
+void ServerThread::sendConnectionDenied()
+{
+
+    list->callClient(pending, name, SEND_DENIED_RESPONSE_TO_COMMUNICATION);
+    available = true;
+}
+
+void ServerThread::ConnectionGranted()
+{
+    list->callClient(pending, name, SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+}
+
+void ServerThread::logout()
+{
+    list->removeClient(name);
+
+//    MessageEnvelop e(SEND_LOGOUT_RESPONSE);
+//    e.setName(name);
+
+//    QByteArray block;
+//    QDataStream str(&block, QIODevice::WriteOnly);
+//    str << e;
+
+//    s->write(block);
+    s->disconnectFromHost();
+    s->waitForDisconnected();
+
 }
 
 void ServerThread::readyRead()
@@ -102,7 +133,16 @@ void ServerThread::readyRead()
     QDataStream input(s);
 
     MessageEnvelop e;
-    input >> e;
+    try
+    {
+        input >> e;
+    }
+    catch(...)
+    {
+        qDebug() << "Hackers are strong "
+                 << "But I'm stronger";
+        sendError("Telnet Cannot kill me");
+    }
 
     switch (e.getRequestType())
     {
@@ -114,7 +154,15 @@ void ServerThread::readyRead()
         return requestCall(e.getName());
     case REQUEST_CLIENT_LIST_FROM_SERVER:
         return sendError("The List will be sent M'kay");
+    case SEND_DENIED_RESPONSE_TO_COMMUNICATION:
+        sendConnectionDenied();
+        return;
+    case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION:
+        ConnectionGranted();
+        return;
 
+    case SEND_LOGOUT_REQUEST:
+        logout();
     case END_OF_CALL_TO_CLIENT:
     case ERROR_SERVER_RESPONSE:
         return sendError("Only me can communicate on port 666 MUHEHEHE");
@@ -154,7 +202,8 @@ void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
 //    QString name = cli->getName();
 //    QHostAddress address = cli->getIpAddr();
 //    qint16 port = cli->getPort();
-
+    qDebug() << "Sending client to" << cli->getName()
+             << " from " << name;
     QByteArray block;
     QDataStream str(&block, QIODevice::WriteOnly);
 
@@ -176,11 +225,15 @@ void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
 
 void ServerThread::askNewConnection(ConnectedClient * cli)
 {
+    qDebug() << "Asking new connection from " << name
+             << " to " << cli->getName();
     sendAClient(SEND_INCOMMING_CALL_TO_CLIENT,cli);
 }
 
 void ServerThread::connectionOnSuccess(ConnectedClient *cli)
 {
+    qDebug() << "Succeeded connection between " << name
+             << " and " << cli->getName();
     sendAClient(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION, cli);
 }
 

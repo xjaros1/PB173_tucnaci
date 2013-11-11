@@ -12,10 +12,16 @@ namespace PenguinServer
 
 class SharedList;
 
-  class ClientsManager : public QThread
-  {
+class ClientsManager : public QThread
+{
     Q_OBJECT
-  public:
+public:
+
+    /**
+       * @brief ClientsManager
+       * @param l
+       * @param parent
+       */
     ClientsManager(SharedList * l, QObject * parent = 0):
         QThread(parent), list(l) {}
 
@@ -23,13 +29,17 @@ class SharedList;
 
     void run();
 
+    /**
+     * @brief setList
+     * @param l
+     */
     void setList(SharedList * l);
 
 
 
-  private:
+private:
     SharedList * list;
-  };
+};
 
 }
 

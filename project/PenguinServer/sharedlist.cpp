@@ -62,13 +62,15 @@ void SharedList::callAllClients()
 
 }
 
-void SharedList::callClient(const QString &destName, const QString &srcName)
+void SharedList::callClient(const QString &destName, const QString &srcName, qint16 type)
 {
+    mutex.lock();
     if(!clients.contains(destName)) return;
     ConnectedClient* c = clients[destName];
     c->callRequest(SEND_INCOMMING_CALL_TO_CLIENT, clients[srcName]);
-
+    mutex.unlock();
 
 }
+
 
 }//namespace PenguinServer

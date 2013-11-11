@@ -11,7 +11,8 @@ using namespace PenguinServer;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    ServerListener * s = new ServerListener(&a);
+    auto s = new ServerListener(&a);
+    s->start();
     qDebug() << "opened server";
 
 //    MessageEnvelop h;

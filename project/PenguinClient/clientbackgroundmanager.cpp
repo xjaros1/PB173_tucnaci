@@ -115,10 +115,11 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
         qDebug() << "Showing client " << str;
         QPushButton* clientCallButton = new QPushButton(str);
         insideArea->addWidget(clientCallButton);
-        clientCallButton->setVisible(true);
+
         clientCallButton->setObjectName(str);
         connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
+        insideArea->update();
     }
 }
 
@@ -131,15 +132,7 @@ void ClientBackgroundManager::callClient() {
     emit sendDataToServer(call);
     //myClient2ServerThread.sendMessageToServer(call);
     //GUI
-    QMessageBox msgBox;
-    msgBox.setText("Calling to " + sendedFrom->objectName());
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    msgBox.exec();
-    if(QMessageBox::Save) {
-        MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-        emit sendDataToServer(sendData);
-        //myClient2ServerThread.sendMessageToServer(sendData);
-    }
+
 }
 
 void ClientBackgroundManager::incommingCall(const QString name, const QHostAddress IP, const quint16 port) {

@@ -10,22 +10,29 @@
 namespace PenguinServer
 {
 
-  class ServerListener : public QTcpServer
-  {
+class ServerListener : public QTcpServer
+{
     Q_OBJECT
-  public:
+public:
+
+    /**
+     * @brief ServerListener
+     * @param parent
+     */
     explicit ServerListener(QObject *parent = 0);
 
-  signals:
+    void start();
 
-  public slots:
+signals:
 
-  protected:
+public slots:
+
+protected:
     void incomingConnection(qintptr handle);
 
-  private:
+private:
     SharedList * list;
 
-  };
+};
 }
 #endif // SERVERLISTENER_H
