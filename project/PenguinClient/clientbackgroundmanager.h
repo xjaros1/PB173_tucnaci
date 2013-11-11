@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QScrollArea>
+#include <unistd.h>
 
 class QDialogButtonBox;
 class QLabel;
@@ -47,6 +48,8 @@ private:
     QWidget *myNewWidget;
     QWidget *widget;
     QList<QPushButton*> clientListButtons;
+    /*test*/QPushButton *callAnotherClient1;
+    /*test*/QPushButton *callAnotherClient2;
     QPushButton *logoutButton;
     QPushButton *quitButton;
 
@@ -55,6 +58,8 @@ signals:
     void sendDataToServer(MessageEnvelop &data);
 
 private slots:
+    /*test*/void call1();
+    /*test*/void call2();
     void init();
     void callClient();
     void displayError(int socketError, const QString &message);

@@ -54,7 +54,7 @@ void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
     out << dataToSend;
     //encyptData(out, input);
 
-    qDebug() << "sendMessageToServer";
+    qDebug() << "sendMessageToServer" << dataToSend.getRequestType();
     clientSocket.write(block);
     mutex.unlock();
 }
@@ -111,6 +111,12 @@ void ClientServerThread::readyRead() {
             emit incommingCall(readedData.getName(), readedData.getAddr(), readedData.getPort());
             break;
         }
+        case SEND_LOGOUT_RESPONSE: {
+            qDebug() << "clientserver thread get LOGOUT_RESPONSE";
+            disconnected();
+            break;
+        }
+
         default: {
             qDebug() << "clientserver thread get request: " << readedData.getRequestType();
             //emit signalToClient(readedData);
@@ -122,7 +128,7 @@ void ClientServerThread::readyRead() {
 
 void ClientServerThread::disconnected() {
     //TODO: predat vyse
-    qDebug() << "Disconnected";
+    qDebug() << "Disconnected in client server";
     exit(0);
 }
 

@@ -12,7 +12,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     loginLabel = new QLabel(tr("&Login:"));
 
     serverIpEdit = new QLineEdit(tr("89.103.183.36"));
-    loginEdit = new QLineEdit(tr("karlos"));
+    loginEdit = new QLineEdit(tr("client"));
 
     serverIpLabel->setBuddy(serverIpEdit);
     loginLabel->setBuddy(loginEdit);
@@ -59,6 +59,15 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
             this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)),
             Qt::DirectConnection);
 
+    /*test*/callAnotherClient1 = new QPushButton(tr("call 1. client"));
+    /*test*/callAnotherClient1->setDefault(true);
+    /*test*/callAnotherClient1->setEnabled(true);
+    /*test*/callAnotherClient2 = new QPushButton(tr("call 2. client"));
+    /*test*/callAnotherClient2->setDefault(true);
+    /*test*/callAnotherClient2->setEnabled(true);
+    /*test*/connect(callAnotherClient1, SIGNAL(clicked()), this, SLOT(call1()));
+    /*test*/connect(callAnotherClient2, SIGNAL(clicked()), this, SLOT(call2()));
+
 
     QGridLayout *mainLayout = new QGridLayout;
     mainLayout->addWidget(serverIpLabel, 0, 0);
@@ -69,6 +78,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 
     mainLayout->addWidget(listHeaderlabel, 3, 0);
     mainLayout->addWidget(myNewWidget, 4, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient1, 5, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient2, 5, 1);
     mainLayout->addWidget(logoutButton, 6, 0);
     mainLayout->addWidget(quitButton, 6, 1);
 
@@ -113,14 +124,25 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     //create new
     foreach(str, list) {
         qDebug() << "Showing client " << str;
-        QPushButton* clientCallButton = new QPushButton(str);
+        /*QPushButton* clientCallButton = new QPushButton(str);
         insideArea->addWidget(clientCallButton);
-
         clientCallButton->setObjectName(str);
         connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
-        insideArea->update();
+        insideArea->update();*/
     }
+}
+
+void ClientBackgroundManager::call1() {
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName("client1");
+    emit sendDataToServer(call);
+}
+
+void ClientBackgroundManager::call2() {
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName("client2");
+    emit sendDataToServer(call);
 }
 
 void ClientBackgroundManager::callClient() {
@@ -140,8 +162,19 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
+
+    /*test*/MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+    /*test*/emit sendDataToServer(sendData);
+    /*test*/myClient2ClientListenThread = new C2CListenThread();
+    /*test*/myClient2ClientListenThread->startListener(IP);
+
+    sleep(1);
+
+    /*test*/myClient2ClientWriteThread = new C2CWriteThread();
+    /*test*/myClient2ClientWriteThread->startOutput(IP, port);
+
     //GUI
-    QMessageBox::StandardButton reply;
+    /*QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Hovor s " + name,
                                       "Chcete navazat hovor s hovor " + name + " Answer?",
                                       QMessageBox::Yes|QMessageBox::No);
@@ -174,7 +207,7 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
         MessageEnvelop sendData(SEND_DENIED_RESPONSE_TO_COMMUNICATION);
         emit sendDataToServer(sendData);
         //myClient2ServerThread.sendMessageToServer(sendData);
-    }
+    }*/
 }
 
 void ClientBackgroundManager::incomingEndOfCall() {
@@ -209,8 +242,11 @@ void ClientBackgroundManager::displayError(int socketError, const QString &messa
 
 
 void ClientBackgroundManager::logout() {
-    myClient2ServerThread.disconnect();
-    submitButton->setEnabled(true);
+    MessageEnvelop sendData(SEND_LOGOUT_REQUEST);
+    emit sendDataToServer(sendData);
+
+//    myClient2ServerThread.disconnect();
+//    submitButton->setEnabled(true);
 }
 
 }//end of namespace PenguinClient
