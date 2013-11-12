@@ -62,7 +62,7 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
 void ListenServer::startServer(const QHostAddress &hostName, const qint16 port)
 {
 
-    if(!this->listen(QHostAddress(hostName), CLIENT_PEARL_HARBOR_PORT))
+    if(!this->listen(hostName, port))
     {
         std::cerr << "Could not start server";
 
