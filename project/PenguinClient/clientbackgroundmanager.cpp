@@ -166,7 +166,9 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
     /*test*/MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
     /*test*/emit sendDataToServer(sendData);
     /*test*/myClient2ClientListenThread = new C2CListenThread();
-    /*test*/myClient2ClientListenThread->startListener(IP);
+
+    //port edit needed
+    /*test*/myClient2ClientListenThread->startListener(IP, 1);
 
     sleep(1);
     qDebug() << "write start";
