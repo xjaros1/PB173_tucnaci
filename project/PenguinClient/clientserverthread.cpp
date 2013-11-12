@@ -40,9 +40,9 @@ void ClientServerThread::initCommunication() {
         return;
     }
 
-    qDebug() << "Socket to sever has port " << clientSocket.peerPort();
+    //qDebug() << "Socket to sever has port " << clientSocket.localPort();
     MessageEnvelop dataToSend(SEND_LOGIN_TO_SERVER);
-    /*test*/dataToSend.setPort(clientSocket.peerPort());
+    ///*test*/dataToSend.setPort(clientSocket.localPort());
     dataToSend.setName(login);
 
     sendMessageToServer(dataToSend);
@@ -112,6 +112,12 @@ void ClientServerThread::readyRead() {
         case SEND_INCOMMING_CALL_TO_CLIENT: {
             qDebug() << "clientserver thread get request client list";
             emit incommingCall(readedData.getName(), readedData.getAddr(),
+                               readedData.getPort(), clientSocket.localPort());
+            break;
+        }
+        case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
+            qDebug() << "clientserver thread get request client list";
+            emit successResponseCall(readedData.getName(), readedData.getAddr(),
                                readedData.getPort(), clientSocket.localPort());
             break;
         }
