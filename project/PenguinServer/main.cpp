@@ -1,5 +1,8 @@
 #include <QCoreApplication>
+<<<<<<< HEAD
+=======
 #include <QThread>
+>>>>>>> ca229af4b5ce032edbfc852d053436907cb8eb66
 
 #include <iostream>
 
@@ -13,14 +16,21 @@
 using namespace PenguinServer;
 
 
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> ca229af4b5ce032edbfc852d053436907cb8eb66
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     Controler c;
+<<<<<<< HEAD
+    QObject::connect(&c, SIGNAL(finish()), &a,SLOT(quit()), Qt::QueuedConnection);
+=======
     QObject::connect(&c, SIGNAL(finish()), &a,SLOT(quit()));
+>>>>>>> ca229af4b5ce032edbfc852d053436907cb8eb66
     auto s = new ServerListener(&a);
     s->start();
     qDebug() << "opened server";

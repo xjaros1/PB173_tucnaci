@@ -78,6 +78,8 @@ void ServerThread::initialize()
     ConnectedClient * c = new ConnectedClient(s->peerAddress(), e.getName(),
                                               s->peerPort(), this);
 
+    qDebug() << "The host " << e.getName()
+             << " on address " <<   s->peerAddress() << " on port " << s->peerPort();
     c->init(this);
     qDebug() << "opened connection to " << e.getName();
     if(!list->addClient(c))
@@ -157,6 +159,7 @@ void ServerThread::readyRead()
     case OK:
         return;
     case REQUEST_CALL_TO_CLIENT_FROM_SERVER:
+        qDebug() << "Connection init";
         return requestCall(e.getName());
     case REQUEST_CLIENT_LIST_FROM_SERVER:
         return sendError("The List will be sent M'kay");
@@ -164,6 +167,7 @@ void ServerThread::readyRead()
         sendConnectionDenied();
         return;
     case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION:
+        qDebug() << "Connection Granted";
         ConnectionGranted();
         return;
 
@@ -234,6 +238,7 @@ void ServerThread::askNewConnection(ConnectedClient * cli)
 {
     qDebug() << "Asking new connection from " << name
              << " to " << cli->getName();
+    pending = cli->getName();
     sendAClient(SEND_INCOMMING_CALL_TO_CLIENT,cli);
 }
 
