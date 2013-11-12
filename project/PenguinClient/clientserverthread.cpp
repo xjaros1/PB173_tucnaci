@@ -111,7 +111,8 @@ void ClientServerThread::readyRead() {
         }
         case SEND_INCOMMING_CALL_TO_CLIENT: {
             qDebug() << "clientserver thread get request client list";
-            emit incommingCall(readedData.getName(), readedData.getAddr(), readedData.getPort());
+            emit incommingCall(readedData.getName(), readedData.getAddr(),
+                               readedData.getPort(), clientSocket.localPort());
             break;
         }
         case SEND_LOGOUT_RESPONSE: {

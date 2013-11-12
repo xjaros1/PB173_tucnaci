@@ -68,7 +68,8 @@ private slots:
 
 public slots:
     void displayClientList(const QList<QString> list);
-    void incommingCall(const QString name, const QHostAddress IP, const quint16 port);
+    void incommingCall(const QString name, const QHostAddress IP,
+                       const quint16 hisPort, const quint16 myPort);
     void incomingEndOfCall();
 
 };

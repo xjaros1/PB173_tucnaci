@@ -40,7 +40,8 @@ private:
 signals:
     void signalToClient(MessageEnvelop &readedData);
     void clientList(const QList<QString> clientList);
-    void incommingCall(const QString name, const QHostAddress, const quint16);
+    void incommingCall(const QString name, const QHostAddress IP,
+                       const quint16 hisPort, const quint16 myPort);
     void endOfCall();
     void error(int socketError, const QString &message);
     void callClient(QString clientLogin);

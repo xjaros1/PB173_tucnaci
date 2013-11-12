@@ -11,7 +11,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     serverIpLabel = new QLabel(tr("&Server IP:"));
     loginLabel = new QLabel(tr("&Login:"));
 
-    serverIpEdit = new QLineEdit(tr("89.103.183.36"));
+    serverIpEdit = new QLineEdit(tr("192.168.15.1"));
     loginEdit = new QLineEdit(tr("client"));
 
     serverIpLabel->setBuddy(serverIpEdit);
@@ -55,8 +55,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
             this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
     connect(&myClient2ServerThread,
-            SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
-            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)),
+            SIGNAL(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
+            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
             Qt::DirectConnection);
 
     /*test*/callAnotherClient1 = new QPushButton(tr("call 1. client"));
@@ -157,8 +157,11 @@ void ClientBackgroundManager::callClient() {
 
 }
 
-void ClientBackgroundManager::incommingCall(const QString name, const QHostAddress IP, const quint16 port) {
-    qDebug() << "Called incommingCall" << name << IP << port;
+void ClientBackgroundManager::incommingCall(const QString name,
+             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+
+    qDebug() << "Called incommingCall " << name << IP
+             << "with port " << hisPort << "myPort " << myPort;
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
@@ -168,12 +171,12 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
     /*test*/myClient2ClientListenThread = new C2CListenThread();
 
     //port edit needed
-    /*test*/myClient2ClientListenThread->startListener(IP, 1);
+    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
 
     sleep(1);
     qDebug() << "write start";
     /*test*/myClient2ClientWriteThread = new C2CWriteThread();
-    /*test*/myClient2ClientWriteThread->startOutput(IP, port);
+    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
 
     //GUI
     /*QMessageBox::StandardButton reply;
