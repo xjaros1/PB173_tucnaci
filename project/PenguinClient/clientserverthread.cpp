@@ -40,7 +40,9 @@ void ClientServerThread::initCommunication() {
         return;
     }
 
+    qDebug() << "Socket to sever has port " << clientSocket.peerPort();
     MessageEnvelop dataToSend(SEND_LOGIN_TO_SERVER);
+    /*test*/dataToSend.setPort(clientSocket.peerPort());
     dataToSend.setName(login);
 
     sendMessageToServer(dataToSend);
