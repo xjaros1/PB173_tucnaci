@@ -58,6 +58,10 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
             SIGNAL(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
             this, SLOT(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
             Qt::DirectConnection);
+    connect(&myClient2ServerThread,
+            SIGNAL(successResponseCall(const QString, const QHostAddress, const quint16, const quint16)),
+            this, SLOT(successResponseCall(const QString, const QHostAddress, const quint16, const quint16)),
+            Qt::DirectConnection);
 
     /*test*/callAnotherClient1 = new QPushButton(tr("call 1. client"));
     /*test*/callAnotherClient1->setDefault(true);
@@ -213,6 +217,24 @@ void ClientBackgroundManager::incommingCall(const QString name,
         emit sendDataToServer(sendData);
         //myClient2ServerThread.sendMessageToServer(sendData);
     }*/
+}
+
+void ClientBackgroundManager::successResponseCall(const QString name,
+             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+
+    qDebug() << "Called successResponseCall " << name << IP
+             << "with port " << hisPort << "myPort " << myPort;
+    ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
+    //QStringList list = from.split(" ");
+
+
+    /*test*/myClient2ClientListenThread = new C2CListenThread();
+    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
+
+    sleep(1);
+    qDebug() << "write start";
+    /*test*/myClient2ClientWriteThread = new C2CWriteThread();
+    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
 }
 
 void ClientBackgroundManager::incomingEndOfCall() {

@@ -115,6 +115,12 @@ void ClientServerThread::readyRead() {
                                readedData.getPort(), clientSocket.localPort());
             break;
         }
+        case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
+            qDebug() << "clientserver thread get request client list";
+            emit successResponseCall(readedData.getName(), readedData.getAddr(),
+                               readedData.getPort(), clientSocket.localPort());
+            break;
+        }
         case SEND_LOGOUT_RESPONSE: {
             qDebug() << "clientserver thread get LOGOUT_RESPONSE";
             disconnected();

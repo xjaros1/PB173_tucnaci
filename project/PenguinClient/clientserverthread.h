@@ -42,6 +42,8 @@ signals:
     void clientList(const QList<QString> clientList);
     void incommingCall(const QString name, const QHostAddress IP,
                        const quint16 hisPort, const quint16 myPort);
+    void successResponseCall(const QString name, const QHostAddress IP,
+                       const quint16 hisPort, const quint16 myPort);
     void endOfCall();
     void error(int socketError, const QString &message);
     void callClient(QString clientLogin);
