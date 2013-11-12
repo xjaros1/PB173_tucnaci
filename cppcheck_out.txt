@@ -82,17 +82,16 @@
 [project/PenguinClient/c2ctcp.cpp:7]: (warning) Member variable 'C2CTcpListen::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::tcpSocket' is not initialized in the constructor.
-[project/PenguinServer/main.cpp:14]: (style) Variable 's' is assigned a value that is never used.
+[project/PenguinServer/serverlistener.cpp:6]: (warning) Member variable 'ServerListener::list' is not initialized in the constructor.
 [tmp/main.c:40]: (error) Resource leak: key2
 [tmp/main.c:40]: (error) Resource leak: key3
 [tmp/myServerClient/mythread.cpp:3]: (warning) Member variable 'MyThread::socket' is not initialized in the constructor.
-[project/PenguinServer/serverthread.cpp:177]: (style) The function 'askNewConnection' is never used.
-[project/PenguinClient/c2clistenthread.cpp:37]: (style) The function 'decryptDatagram' is never used.
-[project/PenguinClient/c2cwritethread.cpp:39]: (style) The function 'encryptDatagram' is never used.
-[project/PenguinClient/c2clistenthread.cpp:44]: (style) The function 'endConnection' is never used.
-[project/PenguinClient/c2clistenthread.cpp:50]: (style) The function 'incomingConnection' is never used.
-[project/PenguinClient/clientbackgroundmanager.cpp:187]: (style) The function 'incomingEndOfCall' is never used.
-[project/PenguinClient/c2clistenthread.cpp:30]: (style) The function 'run' is never used.
+[project/PenguinClient/c2clistenthread.cpp:38]: (style) The function 'decryptDatagram' is never used.
+[project/PenguinClient/c2cwritethread.cpp:42]: (style) The function 'encryptDatagram' is never used.
+[project/PenguinClient/c2clistenthread.cpp:45]: (style) The function 'endConnection' is never used.
+[project/PenguinClient/c2clistenthread.cpp:51]: (style) The function 'incomingConnection' is never used.
+[project/PenguinClient/clientbackgroundmanager.cpp:213]: (style) The function 'incomingEndOfCall' is never used.
+[project/PenguinClient/c2clistenthread.cpp:31]: (style) The function 'run' is never used.
 [project/PenguinServer/clientsmanager.cpp:16]: (style) The function 'setList' is never used.
 [project-old/tests/servertest.cpp:117]: (style) The function 'testConnectToClientBadAttr' is never used.
 [project-old/tests/servertest.cpp:135]: (style) The function 'testConnectToClientOK' is never used.
