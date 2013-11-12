@@ -173,8 +173,6 @@ void ClientBackgroundManager::incommingCall(const QString name,
     /*test*/MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
     /*test*/emit sendDataToServer(sendData);
     /*test*/myClient2ClientListenThread = new C2CListenThread();
-
-    //port edit needed
     /*test*/myClient2ClientListenThread->startListener(IP, myPort);
 
     sleep(1);
@@ -239,7 +237,7 @@ void ClientBackgroundManager::successResponseCall(const QString name,
 
 void ClientBackgroundManager::incomingEndOfCall() {
     qDebug() << "Called incomingEndOfCall";
-    //lets kill Luke!!!
+    //lets exterminate Luke!!!
     myClient2ClientWriteThread->~C2CWriteThread();
     myClient2ClientListenThread->~C2CListenThread();
 }
