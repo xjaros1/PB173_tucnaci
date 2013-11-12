@@ -4,7 +4,7 @@ namespace PenguinServer
 {
 
 ServerListener::ServerListener(QObject *parent) :
-    QTcpServer(parent)
+    QTcpServer(parent), list(0)
 {
 
 }

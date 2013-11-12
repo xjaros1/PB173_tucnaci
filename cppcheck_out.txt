@@ -1,99 +1,12 @@
-[project-old/ca.h:12] -> [project-old/connection.h:9]: (style) Variable 'CertificationAuthority' hides enumerator with same name
-[project-old/client.cpp:3]: (warning) Member variable 'Client::pubkeyCA' is not initialized in the constructor.
-[project-old/client.cpp:3]: (warning) Member variable 'Client::pubkeySerever' is not initialized in the constructor.
-[project-old/client.cpp:3]: (warning) Member variable 'Client::connectionServer' is not initialized in the constructor.
-[project-old/client.cpp:3]: (warning) Member variable 'Client::connectionCA' is not initialized in the constructor.
-[project-old/main.cpp:10]: (style) Unused variable: c
-[project-old/main.cpp:12]: (style) Unused variable: s
-[project-old/main.cpp:13]: (style) Unused variable: e
-[project-old/tests/catests.h:90] -> [project-old/connection.h:9]: (style) Variable 'CertificationAuthority' hides enumerator with same name
-[project-old/tests/catests.cpp:43]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:52]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:59]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:66]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:77]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:99]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:116]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:130]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/catests.cpp:150]: (warning) Redundant code: Found a statement that begins with numeric constant.
-[project-old/tests/clienttest.h:15]: (style) The class 'ClientMock' does not have a constructor.
-[project-old/tests/clienttest.cpp:29]: (error) Uninitialized variable: ctx
-[project-old/tests/clienttest.cpp:30]: (error) Uninitialized variable: ctx
-[project-old/tests/clienttest.cpp:45]: (error) Uninitialized variable: ctx
-[project-old/tests/clienttest.cpp:46]: (error) Uninitialized variable: ctx
-[project-old/tests/clienttest.cpp:55]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:61]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:57]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:61]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:61]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:78]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:74]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:78]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:78]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:89]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:94]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:94]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:94]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:105]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:111]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:107]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:111]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:122]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:128]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:124]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:128]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:128]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:145]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:141]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:145]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:145]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:156]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:161]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:161]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:161]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:172]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:178]: (error) Uninitialized variable: receiver
-[project-old/tests/clienttest.cpp:174]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:178]: (error) Uninitialized variable: sender
-[project-old/tests/clienttest.cpp:189]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:194]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:194]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:209]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:209]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:219]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:224]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:224]: (error) Uninitialized variable: output
-[project-old/tests/clienttest.cpp:234]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:239]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:252]: (error) Uninitialized variable: key
-[project-old/tests/clienttest.cpp:252]: (error) Uninitialized variable: output
-[project-old/tests/servertest.cpp:143] -> [project-old/tests/servertest.cpp:145]: (performance) Variable 'back' is reassigned a value before the old one has been used.
-[project-old/tests/servertest.cpp:68]: (error) Memory leak: con
-[project-old/tests/servertest.cpp:68]: (error) Memory leak: notInitCon
-[project-old/tests/servertest.cpp:19]: (error) Uninitialized variable: ctx
-[project-old/tests/servertest.cpp:22]: (error) Uninitialized variable: ctx
-[project-old/tests/servertest.cpp:25]: (error) Uninitialized variable: ctx
-[project-old/tests/servertest.cpp:25]: (error) Uninitialized variable: output
-[project-old/tests/servertest.cpp:29]: (error) Uninitialized variable: output
-[project-old/tests/servertest.cpp:32]: (error) Uninitialized variable: output
-[project-old/tests/servertest.cpp:45]: (error) Uninitialized variable: output
-[project-old/tests/servertest.cpp:48]: (error) Uninitialized variable: output
 [project/PenguinClient/c2clistenthread.cpp:10]: (warning) Member variable 'C2CListenThread::socket' is not initialized in the constructor.
 [project/PenguinClient/c2ctcp.cpp:7]: (warning) Member variable 'C2CTcpListen::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::tcpSocket' is not initialized in the constructor.
-[project/PenguinServer/serverlistener.cpp:6]: (warning) Member variable 'ServerListener::list' is not initialized in the constructor.
-[tmp/main.c:40]: (error) Resource leak: key2
-[tmp/main.c:40]: (error) Resource leak: key3
-[tmp/myServerClient/mythread.cpp:3]: (warning) Member variable 'MyThread::socket' is not initialized in the constructor.
-[project/PenguinClient/c2clistenthread.cpp:38]: (style) The function 'decryptDatagram' is never used.
+[project/PenguinClient/c2clistenthread.cpp:39]: (style) The function 'decryptDatagram' is never used.
 [project/PenguinClient/c2cwritethread.cpp:42]: (style) The function 'encryptDatagram' is never used.
-[project/PenguinClient/c2clistenthread.cpp:45]: (style) The function 'endConnection' is never used.
-[project/PenguinClient/c2clistenthread.cpp:51]: (style) The function 'incomingConnection' is never used.
-[project/PenguinClient/clientbackgroundmanager.cpp:213]: (style) The function 'incomingEndOfCall' is never used.
+[project/PenguinClient/c2clistenthread.cpp:46]: (style) The function 'endConnection' is never used.
+[project/PenguinClient/c2clistenthread.cpp:52]: (style) The function 'incomingConnection' is never used.
+[project/PenguinClient/clientbackgroundmanager.cpp:240]: (style) The function 'incomingEndOfCall' is never used.
 [project/PenguinClient/c2clistenthread.cpp:31]: (style) The function 'run' is never used.
 [project/PenguinServer/clientsmanager.cpp:16]: (style) The function 'setList' is never used.
-[project-old/tests/servertest.cpp:117]: (style) The function 'testConnectToClientBadAttr' is never used.
-[project-old/tests/servertest.cpp:135]: (style) The function 'testConnectToClientOK' is never used.
-[project-old/tests/catests.cpp:137]: (style) The function 'testEncryptAndSignInorrect' is never used.
 (information) Cppcheck cannot find all the include files (use --check-config for details)
