@@ -16,7 +16,7 @@ C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QHostAddress &hostName, const qint16 port){
+void C2CListenThread::startListener(const QHostAddress &hostName, const quint16 port){
     qDebug() << "Listener started";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
@@ -59,7 +59,7 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QHostAddress &hostName, const qint16 port)
+void ListenServer::startServer(const QHostAddress hostName, const quint16 port)
 {
 
     if(!this->listen(hostName, port))
