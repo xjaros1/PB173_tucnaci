@@ -15,7 +15,7 @@ class ListenServer : public QTcpServer
     Q_OBJECT
 public:
     explicit ListenServer(QObject *parent = 0);
-    void startServer(const QHostAddress &hostName);
+    void startServer(const QHostAddress &hostName, const qint16 port);
 signals:
     void endConnection();
 public slots:
@@ -32,7 +32,7 @@ public:
     explicit C2CListenThread(QObject *parent = 0);
     ~C2CListenThread();
 
-    void startListener(const QHostAddress &hostName);
+    void startListener(const QHostAddress &hostName, const qint16 port);
     void run();
 
 
@@ -45,6 +45,7 @@ public slots:
 
 private:
     QHostAddress hostName;
+    qint16 port;
     QMutex mutex;
     bool quit;
     QUdpSocket* socket;
