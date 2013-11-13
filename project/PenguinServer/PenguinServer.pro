@@ -8,7 +8,7 @@ QT       += core
 QT       += network
 QT       -= gui
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 --coverage
  QMAKE_CXXFLAGS_DEBUG += -pg
  QMAKE_LFLAGS_DEBUG += -pg
 

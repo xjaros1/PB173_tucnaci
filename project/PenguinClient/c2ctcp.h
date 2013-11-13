@@ -4,10 +4,22 @@
 #include <QTcpSocket>
 namespace PenguinClient
 {
+/**
+ * @brief The C2CTcpListen class
+ * used for management of TCP connection between clients
+ * for every new connection new thread is created
+ */
 class C2CTcpListen : public QThread
 {
     Q_OBJECT
 public:
+    /**
+     * @brief C2CTcpListen
+     * used for initialization, started by TCP server by signal of
+     * incoming connection
+     * @param ID socket descriptor
+     * @param parent
+     */
     explicit C2CTcpListen(qintptr ID, QObject *parent = 0);
 
     void run();
