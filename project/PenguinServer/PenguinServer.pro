@@ -8,9 +8,7 @@ QT       += core
 QT       += network
 QT       -= gui
 
-QMAKE_CXXFLAGS += -std=c++11 --coverage
- QMAKE_CXXFLAGS_DEBUG += -pg
- QMAKE_LFLAGS_DEBUG += -pg
+QMAKE_CXXFLAGS += -std=c++11
 
 TARGET = PenguinServer
 CONFIG   += console
@@ -35,5 +33,3 @@ HEADERS += \
     sharedlist.h \
     ../messageenvelop.h
 
- QMAKE_CXXFLAGS_DEBUG += -pg
- QMAKE_LFLAGS_DEBUG += -pg

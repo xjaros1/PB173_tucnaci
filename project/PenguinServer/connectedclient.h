@@ -9,19 +9,26 @@
 namespace PenguinServer
 {
 
-class ServerThread;
+class ServerThread; //forward declaration
 
+
+/**
+ * @brief The ConnectedClient class
+ *        Class represents data of client in system.
+ *        Is connected to ServerThread which is operating all incomming and outcomming data
+ *
+ */
 class ConnectedClient : public QObject
 {
     Q_OBJECT
 public:
 
     /**
-     * @brief ConnectedClient
-     * @param ipAddr
-     * @param name
-     * @param port
-     * @param parent
+     * @brief ConnectedClient constructor
+     * @param ipAddr Address of the client
+     * @param name name of the client
+     * @param port port which is used to communication
+     * @param parent QObject
      */
     ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, ServerThread *parent =0);
 
@@ -29,35 +36,41 @@ public:
 
     /**
      * @brief getName
-     * @return
+     * @return name
      */
     QString getName();
 
     /**
      * @brief getPort
-     * @return
+     * @return port number
      */
     qint16 getPort();
 
     /**
      * @brief getIpAddr
-     * @return
+     * @return ip address
      */
     QHostAddress getIpAddr() ;
 
     /**
      * @brief callRequest
+     *        Calls request - emits signal, to Thread to send data from another client
+     * @param reqId ID of request more in ../messageenvelop.h
+     * @param cli client whose data mus be sent
      */
-    void callRequest(int, ConnectedClient*);
+    void callRequest(int reqId, ConnectedClient*cli);
 
     /**
      * @brief sendList
-     * @param list
+     *        Sends list of clients to this client - emits signal
+     * @param list data to be sent
      */
     void sendList(QList<QString> list);
 
     /**
      * @brief init
+     *        Initializes the conectivity to parent thread, connects this signalst to
+     *        parent->slots
      * @param parent
      */
     void init(ServerThread *parent);

@@ -10,23 +10,34 @@
 namespace PenguinServer
 {
 
-class SharedList;
+class SharedList; //forward declaration
 
+
+/**
+ * @brief The ClientsManager class
+ *        This class represents manager of all clients.
+ *        Curently this manager is responsible for resending the Clients list, but for
+ *        the future will be used to manage all other issues checking state of communication
+ *        and other
+ */
 class ClientsManager : public QThread
 {
     Q_OBJECT
 public:
 
     /**
-       * @brief ClientsManager
-       * @param l
-       * @param parent
+       * @brief ClientsManager constructor
+       * @param l The shared list to work with
+       * @param parent - The parent of object
        */
     ClientsManager(SharedList * l, QObject * parent = 0):
         QThread(parent), list(l) {}
 
 
-
+    /**
+     * @brief run abstract metod inhered from QThread
+     *  runs the loop which emits the data send signal.
+     */
     void run();
 
     /**
@@ -41,6 +52,6 @@ private:
     SharedList * list;
 };
 
-}
+}// namespace Penguin server
 
 #endif // CLIENTSMANAGER_H

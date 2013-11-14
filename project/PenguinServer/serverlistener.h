@@ -10,6 +10,11 @@
 namespace PenguinServer
 {
 
+/**
+ * @brief The ServerListener class
+ *        Class represents a Tcp Listenere which manages all incomming
+ *         calls
+ */
 class ServerListener : public QTcpServer
 {
     Q_OBJECT
