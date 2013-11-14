@@ -1,0 +1,72 @@
+\hypertarget{classPenguinClient_1_1C2CListenThread}{\section{Penguin\-Client\-:\-:C2\-C\-Listen\-Thread Class Reference}
+\label{classPenguinClient_1_1C2CListenThread}\index{Penguin\-Client\-::\-C2\-C\-Listen\-Thread@{Penguin\-Client\-::\-C2\-C\-Listen\-Thread}}
+}
+
+
+The \hyperlink{classPenguinClient_1_1C2CListenThread}{C2\-C\-Listen\-Thread} class class with general purpose to manage communication between clients starts T\-C\-P server, manages handshake between clients, starts U\-D\-P communication when required.  
+
+
+
+
+{\ttfamily \#include $<$c2clistenthread.\-h$>$}
+
+Inheritance diagram for Penguin\-Client\-:\-:C2\-C\-Listen\-Thread\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPenguinClient_1_1C2CListenThread}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1C2CListenThread_a38a97a242e5915c5c6c22bcf04ef964c}{void {\bfseries end\-Connection} ()}\label{classPenguinClient_1_1C2CListenThread_a38a97a242e5915c5c6c22bcf04ef964c}
+
+\end{DoxyCompactItemize}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1C2CListenThread_aad8292f0535d5fe879fb1120337dc91f}{void {\bfseries error} (int socket\-Error, const Q\-String \&message)}\label{classPenguinClient_1_1C2CListenThread_aad8292f0535d5fe879fb1120337dc91f}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1C2CListenThread_a2c81ce5a877bc4709c757fb66a238695}{{\bfseries C2\-C\-Listen\-Thread} (Q\-Object $\ast$parent=0)}\label{classPenguinClient_1_1C2CListenThread_a2c81ce5a877bc4709c757fb66a238695}
+
+\item 
+void \hyperlink{classPenguinClient_1_1C2CListenThread_a3a68c0a5b439d9807805e3cac6d5a0d1}{start\-Listener} (const Q\-Host\-Address \&host\-Name, const quint16 port)
+\begin{DoxyCompactList}\small\item\em start\-Listener starts this thread with given parameters \end{DoxyCompactList}\item 
+\hypertarget{classPenguinClient_1_1C2CListenThread_a245f2c7a87431c92dab777dd5719836e}{void {\bfseries run} ()}\label{classPenguinClient_1_1C2CListenThread_a245f2c7a87431c92dab777dd5719836e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{classPenguinClient_1_1C2CListenThread}{C2\-C\-Listen\-Thread} class class with general purpose to manage communication between clients starts T\-C\-P server, manages handshake between clients, starts U\-D\-P communication when required. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classPenguinClient_1_1C2CListenThread_a3a68c0a5b439d9807805e3cac6d5a0d1}{\index{Penguin\-Client\-::\-C2\-C\-Listen\-Thread@{Penguin\-Client\-::\-C2\-C\-Listen\-Thread}!start\-Listener@{start\-Listener}}
+\index{start\-Listener@{start\-Listener}!PenguinClient::C2CListenThread@{Penguin\-Client\-::\-C2\-C\-Listen\-Thread}}
+\subsubsection[{start\-Listener}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-C2\-C\-Listen\-Thread\-::start\-Listener (
+\begin{DoxyParamCaption}
+\item[{const Q\-Host\-Address \&}]{host\-Name, }
+\item[{const quint16}]{port}
+\end{DoxyParamCaption}
+)}}\label{classPenguinClient_1_1C2CListenThread_a3a68c0a5b439d9807805e3cac6d5a0d1}
+
+
+start\-Listener starts this thread with given parameters 
+
+
+\begin{DoxyParams}{Parameters}
+{\em host\-Name} & \\
+\hline
+{\em port} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+c2clistenthread.\-h\item 
+c2clistenthread.\-cpp\end{DoxyCompactItemize}
