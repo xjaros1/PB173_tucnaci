@@ -6,6 +6,7 @@ namespace PenguinClient
 ClientServerThread::ClientServerThread(QObject *parent)
     : QThread(parent), quit(false)
 {
+    clientSocket.bind(CLIENT_PEARL_HARBOR_PORT);
 }
 
 ClientServerThread::~ClientServerThread() {
@@ -39,7 +40,9 @@ void ClientServerThread::initCommunication() {
         return;
     }
 
+    //qDebug() << "Socket to sever has port " << clientSocket.localPort();
     MessageEnvelop dataToSend(SEND_LOGIN_TO_SERVER);
+    ///*test*/dataToSend.setPort(clientSocket.localPort());
     dataToSend.setName(login);
 
     sendMessageToServer(dataToSend);
@@ -54,7 +57,7 @@ void ClientServerThread::sendMessageToServer(MessageEnvelop &dataToSend) {
     out << dataToSend;
     //encyptData(out, input);
 
-    qDebug() << "sendMessageToServer";
+    qDebug() << "sendMessageToServer" << dataToSend.getRequestType();
     clientSocket.write(block);
     mutex.unlock();
 }
@@ -108,9 +111,22 @@ void ClientServerThread::readyRead() {
         }
         case SEND_INCOMMING_CALL_TO_CLIENT: {
             qDebug() << "clientserver thread get request client list";
-            emit incommingCall(readedData.getName(), readedData.getAddr(), readedData.getPort());
+            emit incommingCall(readedData.getName(), readedData.getAddr(),
+                               readedData.getPort(), clientSocket.localPort());
             break;
         }
+        case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
+            qDebug() << "clientserver thread get request client list";
+            emit successResponseCall(readedData.getName(), readedData.getAddr(),
+                               readedData.getPort(), clientSocket.localPort());
+            break;
+        }
+        case SEND_LOGOUT_RESPONSE: {
+            qDebug() << "clientserver thread get LOGOUT_RESPONSE";
+            disconnected();
+            break;
+        }
+
         default: {
             qDebug() << "clientserver thread get request: " << readedData.getRequestType();
             //emit signalToClient(readedData);
@@ -122,7 +138,7 @@ void ClientServerThread::readyRead() {
 
 void ClientServerThread::disconnected() {
     //TODO: predat vyse
-    qDebug() << "Disconnected";
+    qDebug() << "Disconnected in client server";
     exit(0);
 }
 

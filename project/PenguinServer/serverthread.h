@@ -22,6 +22,12 @@ class ServerThread : public QThread
 {
     Q_OBJECT
 public:
+    /**
+     * @brief ServerThread
+     * @param socketDescriptor
+     * @param list
+     * @param parent
+     */
     explicit ServerThread(qintptr socketDescriptor, SharedList * list,  QObject *parent = 0);
 
     ~ServerThread() {}
@@ -30,15 +36,38 @@ public:
 
 private:
 
+    /**
+     * @brief initialize
+     */
     void initialize();
 
+    /**
+     * @brief sendError
+     */
     void sendError(QString);
 
+    /**
+     * @brief requestCall
+     */
     void requestCall(const QString &);
 
+    /**
+     * @brief sendAClient
+     * @param reason
+     */
     void sendAClient(qint16 reason, ConnectedClient*);
     
+    /**
+     * @brief ConnectionGranted
+     */
     void ConnectionGranted();
+
+    /**
+     * @brief sendConnectionDenied
+     */
+    void sendConnectionDenied();
+
+    void logout();
 
 signals:
 
@@ -46,16 +75,35 @@ signals:
     void error();
 public slots:
 
+    /**
+     * @brief distributeClients
+     * @param list
+     */
     void distributeClients(QList<QString> list);
 
+    /**
+     * @brief askNewConnection
+     */
     void askNewConnection(ConnectedClient*);
 
+    /**
+     * @brief connectionOnSuccess
+     */
     void connectionOnSuccess(ConnectedClient*);
 
+    /**
+     * @brief connectionDenied
+     */
     void connectionDenied(ConnectedClient*);
 
+    /**
+     * @brief readyRead
+     */
     void readyRead();
 
+    /**
+     * @brief disconnected
+     */
     void disconnected();
 
 
@@ -69,7 +117,7 @@ private:
 
     
     
-    ConnectedClient* pending;
+    QString pending;
     
     bool available;
 

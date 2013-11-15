@@ -1,7 +1,6 @@
 #include "connectedclient.h"
-
+#include "../messageenvelop.h"
 #include "serverthread.h"
-#include "config.h"
 
 
 
@@ -10,9 +9,6 @@ namespace PenguinServer
 ConnectedClient::ConnectedClient(QHostAddress ipAddr, QString name, qint16 port, ServerThread *parent):
      QObject(parent), ipaddress(ipAddr), port(port), name(name)
 {
-
-
-
 
 }
 
@@ -24,6 +20,8 @@ void ConnectedClient::init(ServerThread * parent)
              parent, SLOT(connectionDenied(ConnectedClient*)), Qt::DirectConnection);
     connect(this, SIGNAL(allowConnection(ConnectedClient*)),
             parent, SLOT(connectionOnSuccess(ConnectedClient*)),Qt::DirectConnection);
+    connect(this, SIGNAL(requestConnection(ConnectedClient*)),
+            parent, SLOT(askNewConnection(ConnectedClient*)), Qt::DirectConnection);
 }
 
 QString ConnectedClient::getName()
@@ -54,14 +52,15 @@ void ConnectedClient::callRequest(int reqID, ConnectedClient *cli)
 {
     switch(reqID)
     {
-    case REQUEST_CALL_TO_CLIENT_FROM_SERVER:
-        emit requestConnection(cli);
+    case SEND_INCOMMING_CALL_TO_CLIENT:
+        emit this->requestConnection(cli);
         return;
     case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION:
-        emit allowConnection(cli);
+
+        emit this->allowConnection(cli);
         return;
     case SEND_DENIED_RESPONSE_TO_COMMUNICATION:
-        emit denyConnection(cli);
+        emit this->denyConnection(cli);
         return;
     default:
         return;

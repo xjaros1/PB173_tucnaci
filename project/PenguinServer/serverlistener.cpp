@@ -4,7 +4,12 @@ namespace PenguinServer
 {
 
 ServerListener::ServerListener(QObject *parent) :
-    QTcpServer(parent)
+    QTcpServer(parent), list(0)
+{
+
+}
+
+void ServerListener::start()
 {
     list = new SharedList;
     if(!this->listen(QHostAddress::Any, 27173))
@@ -12,6 +17,8 @@ ServerListener::ServerListener(QObject *parent) :
 
     }
 }
+
+
 
 void ServerListener::incomingConnection(qintptr handle)
 {

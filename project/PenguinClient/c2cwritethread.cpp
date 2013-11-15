@@ -13,6 +13,7 @@ C2CWriteThread::~C2CWriteThread(){
 }
 
 void C2CWriteThread::startOutput(const QHostAddress &hostName, const quint16 port){
+    qDebug() << "Write init";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
     this->port = port;
@@ -27,13 +28,15 @@ void C2CWriteThread::run(){
     QDataStream stream(tcpSocket);
     MessageEnvelop e;
     QList<QString> list;
-    for (int i = 0; i < 1024; i++){
-        std::string str = random_string(1048576);
+    for (int i = 0; i < 10; i++){
+        qDebug() << "generating data";
+        std::string str = random_string(1024);
         QString qstr = QString::fromStdString(str);
         list.append(qstr);
     }
     e.setClients(list);
     stream << e;
+    qDebug() << "data sent";
 }
 
 int C2CWriteThread::encryptDatagram(char* in, char* out, int length){

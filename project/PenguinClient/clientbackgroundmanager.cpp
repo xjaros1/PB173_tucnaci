@@ -11,8 +11,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     serverIpLabel = new QLabel(tr("&Server IP:"));
     loginLabel = new QLabel(tr("&Login:"));
 
-    serverIpEdit = new QLineEdit(tr("89.103.183.36"));
-    loginEdit = new QLineEdit(tr("karlos"));
+    serverIpEdit = new QLineEdit(tr("192.168.15.1"));
+    loginEdit = new QLineEdit(tr("client"));
 
     serverIpLabel->setBuddy(serverIpEdit);
     loginLabel->setBuddy(loginEdit);
@@ -25,7 +25,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel->setEnabled(false);
 
     myNewWidget = new QWidget();
-    insideArea = new QVBoxLayout();
+    insideArea = new QVBoxLayout(myNewWidget);
     myNewWidget->setLayout(insideArea);
 
     logoutButton = new QPushButton(tr("Logout"));
@@ -55,9 +55,22 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     connect(&myClient2ServerThread, SIGNAL(clientList(const QList<QString>)),
             this, SLOT(displayClientList(const QList<QString>)), Qt::DirectConnection);
     connect(&myClient2ServerThread,
-            SIGNAL(incommingCall(const QString, const QHostAddress, const quint16)),
-            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16)),
+            SIGNAL(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
+            this, SLOT(incommingCall(const QString, const QHostAddress, const quint16, const quint16)),
             Qt::DirectConnection);
+    connect(&myClient2ServerThread,
+            SIGNAL(successResponseCall(const QString, const QHostAddress, const quint16, const quint16)),
+            this, SLOT(successResponseCall(const QString, const QHostAddress, const quint16, const quint16)),
+            Qt::DirectConnection);
+
+    /*test*/callAnotherClient1 = new QPushButton(tr("call 1. client"));
+    /*test*/callAnotherClient1->setDefault(true);
+    /*test*/callAnotherClient1->setEnabled(true);
+    /*test*/callAnotherClient2 = new QPushButton(tr("call 2. client"));
+    /*test*/callAnotherClient2->setDefault(true);
+    /*test*/callAnotherClient2->setEnabled(true);
+    /*test*/connect(callAnotherClient1, SIGNAL(clicked()), this, SLOT(call1()));
+    /*test*/connect(callAnotherClient2, SIGNAL(clicked()), this, SLOT(call2()));
 
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -69,6 +82,8 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 
     mainLayout->addWidget(listHeaderlabel, 3, 0);
     mainLayout->addWidget(myNewWidget, 4, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient1, 5, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient2, 5, 1);
     mainLayout->addWidget(logoutButton, 6, 0);
     mainLayout->addWidget(quitButton, 6, 1);
 
@@ -107,17 +122,31 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     //release buttons
     foreach (QPushButton* button, clientListButtons) {
         button->close();
+        //delete button;
     }
     //clientListButtons.clear();
     //create new
     foreach(str, list) {
         qDebug() << "Showing client " << str;
-        QPushButton* clientCallButton = new QPushButton(str);
+        /*QPushButton* clientCallButton = new QPushButton(str);
         insideArea->addWidget(clientCallButton);
         clientCallButton->setObjectName(str);
         connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
+        insideArea->update();*/
     }
+}
+
+void ClientBackgroundManager::call1() {
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName("client1");
+    emit sendDataToServer(call);
+}
+
+void ClientBackgroundManager::call2() {
+    MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
+    call.setName("client2");
+    emit sendDataToServer(call);
 }
 
 void ClientBackgroundManager::callClient() {
@@ -127,15 +156,32 @@ void ClientBackgroundManager::callClient() {
     MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
     call.setName(sendedFrom->objectName());
     emit sendDataToServer(call);
+    //myClient2ServerThread.sendMessageToServer(call);
+    //GUI
+
 }
 
-void ClientBackgroundManager::incommingCall(const QString name, const QHostAddress IP, const quint16 port) {
-    qDebug() << "Called incommingCall" << name << IP << port;
+void ClientBackgroundManager::incommingCall(const QString name,
+             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+
+    qDebug() << "Called incommingCall " << name << IP
+             << "with port " << hisPort << "myPort " << myPort;
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
+
+    /*test*/MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+    /*test*/emit sendDataToServer(sendData);
+    /*test*/myClient2ClientListenThread = new C2CListenThread();
+    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
+
+    sleep(1);
+    qDebug() << "write start";
+    /*test*/myClient2ClientWriteThread = new C2CWriteThread();
+    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
+
     //GUI
-    QMessageBox::StandardButton reply;
+    /*QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Hovor s " + name,
                                       "Chcete navazat hovor s hovor " + name + " Answer?",
                                       QMessageBox::Yes|QMessageBox::No);
@@ -168,12 +214,30 @@ void ClientBackgroundManager::incommingCall(const QString name, const QHostAddre
         MessageEnvelop sendData(SEND_DENIED_RESPONSE_TO_COMMUNICATION);
         emit sendDataToServer(sendData);
         //myClient2ServerThread.sendMessageToServer(sendData);
-    }
+    }*/
+}
+
+void ClientBackgroundManager::successResponseCall(const QString name,
+             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+
+    qDebug() << "Called successResponseCall " << name << IP
+             << "with port " << hisPort << "myPort " << myPort;
+    ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
+    //QStringList list = from.split(" ");
+
+
+    /*test*/myClient2ClientListenThread = new C2CListenThread();
+    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
+
+    sleep(1);
+    qDebug() << "write start";
+    /*test*/myClient2ClientWriteThread = new C2CWriteThread();
+    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
 }
 
 void ClientBackgroundManager::incomingEndOfCall() {
     qDebug() << "Called incomingEndOfCall";
-    //lets kill Luke!!!
+    //lets exterminate Luke!!!
     myClient2ClientWriteThread->~C2CWriteThread();
     myClient2ClientListenThread->~C2CListenThread();
 }
@@ -203,8 +267,11 @@ void ClientBackgroundManager::displayError(int socketError, const QString &messa
 
 
 void ClientBackgroundManager::logout() {
-    myClient2ServerThread.disconnect();
-    submitButton->setEnabled(true);
+    MessageEnvelop sendData(SEND_LOGOUT_REQUEST);
+    emit sendDataToServer(sendData);
+
+//    myClient2ServerThread.disconnect();
+//    submitButton->setEnabled(true);
 }
 
 }//end of namespace PenguinClient

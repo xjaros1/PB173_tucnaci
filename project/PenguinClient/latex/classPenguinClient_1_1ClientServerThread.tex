@@ -1,0 +1,174 @@
+\hypertarget{classPenguinClient_1_1ClientServerThread}{\section{Penguin\-Client\-:\-:Client\-Server\-Thread Class Reference}
+\label{classPenguinClient_1_1ClientServerThread}\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+}
+Inheritance diagram for Penguin\-Client\-:\-:Client\-Server\-Thread\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPenguinClient_1_1ClientServerThread}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_ac900a0f88575edac07b986919252124a}{send\-Message\-To\-Server} (Message\-Envelop \&data\-To\-Send)
+\begin{DoxyCompactList}\small\item\em send\-Message\-To\-Server outcoming message to server \end{DoxyCompactList}\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_adcb5c4f0a262e466c7112b6936bf1afa}{void \hyperlink{classPenguinClient_1_1ClientServerThread_adcb5c4f0a262e466c7112b6936bf1afa}{ready\-Read} ()}\label{classPenguinClient_1_1ClientServerThread_adcb5c4f0a262e466c7112b6936bf1afa}
+
+\begin{DoxyCompactList}\small\item\em ready\-Read slot for inherited signal ready\-Read (from Tcp\-Socket), which wake thread on incomming message \end{DoxyCompactList}\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_aa7ec5ef2fe7b46a75f6e36981ed0853f}{void \hyperlink{classPenguinClient_1_1ClientServerThread_aa7ec5ef2fe7b46a75f6e36981ed0853f}{disconnected} ()}\label{classPenguinClient_1_1ClientServerThread_aa7ec5ef2fe7b46a75f6e36981ed0853f}
+
+\begin{DoxyCompactList}\small\item\em disconnected slot for inherited signal disconnected (from Tcp\-Socket), which wake thread on incomming message \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_a43213b711e120e2e84c82c8e35480c5f}{signal\-To\-Client} (Message\-Envelop \&readed\-Data)
+\begin{DoxyCompactList}\small\item\em signal\-To\-Client send message to client, to show him data, not in use now \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_afe6e7353d83b7abaeed8a5cd3d6d308b}{client\-List} (const Q\-List$<$ Q\-String $>$ client\-List)
+\begin{DoxyCompactList}\small\item\em client\-List sends list of clients to G\-U\-I thread \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_ad9243936519761c34857b7be3e13305d}{incomming\-Call} (const Q\-String name, const Q\-Host\-Address I\-P, const quint16 his\-Port, const quint16 my\-Port)
+\begin{DoxyCompactList}\small\item\em incomming\-Call 1. part of initializitiaon of call \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_a82b4668ed1c995b0e6c82ef0e1970630}{success\-Response\-Call} (const Q\-String name, const Q\-Host\-Address I\-P, const quint16 his\-Port, const quint16 my\-Port)
+\begin{DoxyCompactList}\small\item\em success\-Response\-Call 2. part of initializitiaon of call \end{DoxyCompactList}\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_acb0bacb6fc830edb2ea2d7e1a33b7256}{void \hyperlink{classPenguinClient_1_1ClientServerThread_acb0bacb6fc830edb2ea2d7e1a33b7256}{end\-Of\-Call} ()}\label{classPenguinClient_1_1ClientServerThread_acb0bacb6fc830edb2ea2d7e1a33b7256}
+
+\begin{DoxyCompactList}\small\item\em end\-Of\-Call signal of ending call from other side \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientServerThread_a9946be2e2851f3e87a17fbaa6da55c4f}{error} (int socket\-Error, const Q\-String \&message)
+\begin{DoxyCompactList}\small\item\em error \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_a22658f01ef195ca0ca894cfeb503efab}{{\bfseries Client\-Server\-Thread} (Q\-Object $\ast$parent=0)}\label{classPenguinClient_1_1ClientServerThread_a22658f01ef195ca0ca894cfeb503efab}
+
+\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_a0150b6ece694bd17d0b336db842ad785}{void {\bfseries init\-Thread} (const Q\-String \&server\-I\-P\-Adress, quint16 server\-Listen\-Port, Q\-String login)}\label{classPenguinClient_1_1ClientServerThread_a0150b6ece694bd17d0b336db842ad785}
+
+\item 
+\hypertarget{classPenguinClient_1_1ClientServerThread_ac16c04f5113ec2ea901f4ee035ab02f2}{void {\bfseries run} ()}\label{classPenguinClient_1_1ClientServerThread_ac16c04f5113ec2ea901f4ee035ab02f2}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPenguinClient_1_1ClientServerThread_afe6e7353d83b7abaeed8a5cd3d6d308b}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!client\-List@{client\-List}}
+\index{client\-List@{client\-List}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{client\-List}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::client\-List (
+\begin{DoxyParamCaption}
+\item[{const Q\-List$<$ Q\-String $>$}]{client\-List}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [signal]}}}\label{classPenguinClient_1_1ClientServerThread_afe6e7353d83b7abaeed8a5cd3d6d308b}
+
+
+client\-List sends list of clients to G\-U\-I thread 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em client\-List} & list of logins \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientServerThread_a9946be2e2851f3e87a17fbaa6da55c4f}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!error@{error}}
+\index{error@{error}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{error}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::error (
+\begin{DoxyParamCaption}
+\item[{int}]{socket\-Error, }
+\item[{const Q\-String \&}]{message}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [signal]}}}\label{classPenguinClient_1_1ClientServerThread_a9946be2e2851f3e87a17fbaa6da55c4f}
+
+
+error 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em socket\-Error} & \\
+\hline
+\mbox{\tt out}  & {\em message} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientServerThread_ad9243936519761c34857b7be3e13305d}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!incomming\-Call@{incomming\-Call}}
+\index{incomming\-Call@{incomming\-Call}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{incomming\-Call}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::incomming\-Call (
+\begin{DoxyParamCaption}
+\item[{const Q\-String}]{name, }
+\item[{const Q\-Host\-Address}]{I\-P, }
+\item[{const quint16}]{his\-Port, }
+\item[{const quint16}]{my\-Port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [signal]}}}\label{classPenguinClient_1_1ClientServerThread_ad9243936519761c34857b7be3e13305d}
+
+
+incomming\-Call 1. part of initializitiaon of call 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em name} & login of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em I\-P} & of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em his\-Port} & port of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em my\-Port} & port, which this client uses for communication with server \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientServerThread_ac900a0f88575edac07b986919252124a}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!send\-Message\-To\-Server@{send\-Message\-To\-Server}}
+\index{send\-Message\-To\-Server@{send\-Message\-To\-Server}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{send\-Message\-To\-Server}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::send\-Message\-To\-Server (
+\begin{DoxyParamCaption}
+\item[{Message\-Envelop \&}]{data\-To\-Send}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{classPenguinClient_1_1ClientServerThread_ac900a0f88575edac07b986919252124a}
+
+
+send\-Message\-To\-Server outcoming message to server 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\-To\-Send} & non encrypted message from G\-U\-I thread \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientServerThread_a43213b711e120e2e84c82c8e35480c5f}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!signal\-To\-Client@{signal\-To\-Client}}
+\index{signal\-To\-Client@{signal\-To\-Client}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{signal\-To\-Client}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::signal\-To\-Client (
+\begin{DoxyParamCaption}
+\item[{Message\-Envelop \&}]{readed\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [signal]}}}\label{classPenguinClient_1_1ClientServerThread_a43213b711e120e2e84c82c8e35480c5f}
+
+
+signal\-To\-Client send message to client, to show him data, not in use now 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em readed\-Data} & not parsed data from server \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientServerThread_a82b4668ed1c995b0e6c82ef0e1970630}{\index{Penguin\-Client\-::\-Client\-Server\-Thread@{Penguin\-Client\-::\-Client\-Server\-Thread}!success\-Response\-Call@{success\-Response\-Call}}
+\index{success\-Response\-Call@{success\-Response\-Call}!PenguinClient::ClientServerThread@{Penguin\-Client\-::\-Client\-Server\-Thread}}
+\subsubsection[{success\-Response\-Call}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Server\-Thread\-::success\-Response\-Call (
+\begin{DoxyParamCaption}
+\item[{const Q\-String}]{name, }
+\item[{const Q\-Host\-Address}]{I\-P, }
+\item[{const quint16}]{his\-Port, }
+\item[{const quint16}]{my\-Port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [signal]}}}\label{classPenguinClient_1_1ClientServerThread_a82b4668ed1c995b0e6c82ef0e1970630}
+
+
+success\-Response\-Call 2. part of initializitiaon of call 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em name} & login of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em I\-P} & of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em his\-Port} & port of person, who calls us \\
+\hline
+\mbox{\tt out}  & {\em my\-Port} & port, which this client uses for communication with server \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+clientserverthread.\-h\item 
+clientserverthread.\-cpp\end{DoxyCompactItemize}

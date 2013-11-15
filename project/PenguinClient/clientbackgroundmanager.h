@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QScrollArea>
+#include <unistd.h>
 
 class QDialogButtonBox;
 class QLabel;
@@ -47,6 +48,8 @@ private:
     QWidget *myNewWidget;
     QWidget *widget;
     QList<QPushButton*> clientListButtons;
+    /*test*/QPushButton *callAnotherClient1;
+    /*test*/QPushButton *callAnotherClient2;
     QPushButton *logoutButton;
     QPushButton *quitButton;
 
@@ -55,16 +58,81 @@ signals:
     void sendDataToServer(MessageEnvelop &data);
 
 private slots:
-    void init();
+    //SLOTS FOR INTERNAL SIGNALS
+    /**
+     * @brief call1 slot for button callAnotherClient1, sends call request for client1 to server
+     * internal signal used, call outern method
+     */
+    /*test*/void call1();
+    /**
+     * @brief call2 slot for button callAnotherClient2, sends call request for client2 to server
+     * actually is not used, because dynamical buttons are not working
+     * internal signal used, call outern method
+     */
+    /*test*/void call2();
+    /**
+     * @brief callClient slot for dynamicaly generated buttons, send call request to server
+     * actually is not used, because dynamical buttons are not working
+     * internal signal used, call outern method
+     */
     void callClient();
-    void displayError(int socketError, const QString &message);
-    void enableSubmitButton();
+    /**
+     * @brief init slot for submit button, initialize serverClient thread
+     * after pushing submit button, allows to click logout and quit buttons
+     * login and IP is read from QLineEdit, port is SERVER_VIETNAM_WAR_PORT
+     * internal signal used, call outern method
+     */
+    void init();
+    /**
+     * @brief logout slot for logout button, send logout to server and kill serverClient thread
+     * internal signal used, call outern method
+     */
     void logout();
+    /**
+     * @brief enableSubmitButton allow to click logout and quit
+     * internal signal used, call internall method
+     */
+    void enableSubmitButton();
+
 
 public slots:
+    //SLOT FOR EXTERNAL SIGNAL
+    /**
+     * @brief displayClientList shows list of ClientServerThread
+     * @param[in] list QList<QString> of clients logins
+     * actually are dymamical generated buttons inactive
+     * client list is printed by qDebug(), static buttons just for 2 clients
+     */
     void displayClientList(const QList<QString> list);
-    void incommingCall(const QString name, const QHostAddress IP, const quint16 port);
+    /**
+     * @brief incommingCall 1. part of initialazing communication between 2 clients
+     * @param[in] name login of client, which initialize call
+     * @param[in] IP IP of client, which initialize call
+     * @param[in] hisPort port of client, which initialize call
+     * @param[in] myPort port of this user, got from socket for communication to server
+     */
+    void incommingCall(const QString name, const QHostAddress IP,
+                       const quint16 hisPort, const quint16 myPort);
+    /**
+     * @brief successResponseCall 2. part of initialazing communication between 2 clients
+     * @param[in] name login of client, which initialize call
+     * @param[in] IP IP of client, which initialize call
+     * @param[in] hisPort port of client, which initialize call
+     * @param[in] myPort port of this user, got from socket for communication to server
+     */
+    void successResponseCall(const QString name, const QHostAddress IP,
+                       const quint16 hisPort, const quint16 myPort);
+    /**
+     * @brief incomingEndOfCall call ended, I terminate threads between clients
+     */
     void incomingEndOfCall();
+    /**
+     * @brief displayError print error of TcpSocket message
+     * @param socketError number of error
+     * @param message string version error
+     * external signal is used, call internal method
+     */
+    void displayError(int socketError, const QString &message);
 
 };
 

@@ -5,6 +5,12 @@
 #include <QMutex>
 #include <QThread>
 
+/**
+ * class will be used for transmision on UDP protocol
+ * with aim on multimedia (audio, video)
+ * currently not implemented
+*/
+
 /*
 namespace PenguinClient
 {

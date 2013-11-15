@@ -1,0 +1,129 @@
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager}{\section{Penguin\-Client\-:\-:Client\-Background\-Manager Class Reference}
+\label{classPenguinClient_1_1ClientBackgroundManager}\index{Penguin\-Client\-::\-Client\-Background\-Manager@{Penguin\-Client\-::\-Client\-Background\-Manager}}
+}
+Inheritance diagram for Penguin\-Client\-:\-:Client\-Background\-Manager\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPenguinClient_1_1ClientBackgroundManager}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPenguinClient_1_1ClientBackgroundManager_a20188400ab079c3e9007f0fa8eb3eb72}{display\-Client\-List} (const Q\-List$<$ Q\-String $>$ list)
+\begin{DoxyCompactList}\small\item\em display\-Client\-List shows list of \hyperlink{classPenguinClient_1_1ClientServerThread}{Client\-Server\-Thread} \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientBackgroundManager_a906fafa8aa934bd6b42eb6389cb1b13c}{incomming\-Call} (const Q\-String name, const Q\-Host\-Address I\-P, const quint16 his\-Port, const quint16 my\-Port)
+\begin{DoxyCompactList}\small\item\em incomming\-Call 1. part of initialazing communication between 2 clients \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientBackgroundManager_a5e403150552041e610e59c8a21f436cc}{success\-Response\-Call} (const Q\-String name, const Q\-Host\-Address I\-P, const quint16 his\-Port, const quint16 my\-Port)
+\begin{DoxyCompactList}\small\item\em success\-Response\-Call 2. part of initialazing communication between 2 clients \end{DoxyCompactList}\item 
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_a14b9cf4e8330646b04d9cc20c3c8266b}{void \hyperlink{classPenguinClient_1_1ClientBackgroundManager_a14b9cf4e8330646b04d9cc20c3c8266b}{incoming\-End\-Of\-Call} ()}\label{classPenguinClient_1_1ClientBackgroundManager_a14b9cf4e8330646b04d9cc20c3c8266b}
+
+\begin{DoxyCompactList}\small\item\em incoming\-End\-Of\-Call call ended, I terminate threads between clients \end{DoxyCompactList}\item 
+void \hyperlink{classPenguinClient_1_1ClientBackgroundManager_a60a97bd6e105887a188ca99d69996e48}{display\-Error} (int socket\-Error, const Q\-String \&message)
+\begin{DoxyCompactList}\small\item\em display\-Error print error of Tcp\-Socket message \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_abf7ff4d2782997a9947fc191709b353e}{void {\bfseries send\-Data\-To\-Server} (Message\-Envelop \&data)}\label{classPenguinClient_1_1ClientBackgroundManager_abf7ff4d2782997a9947fc191709b353e}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_a93db4d3ba8a0cf57d99d2d22bc608536}{{\bfseries Client\-Background\-Manager} (Q\-Widget $\ast$parent=0)}\label{classPenguinClient_1_1ClientBackgroundManager_a93db4d3ba8a0cf57d99d2d22bc608536}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_a20188400ab079c3e9007f0fa8eb3eb72}{\index{Penguin\-Client\-::\-Client\-Background\-Manager@{Penguin\-Client\-::\-Client\-Background\-Manager}!display\-Client\-List@{display\-Client\-List}}
+\index{display\-Client\-List@{display\-Client\-List}!PenguinClient::ClientBackgroundManager@{Penguin\-Client\-::\-Client\-Background\-Manager}}
+\subsubsection[{display\-Client\-List}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Background\-Manager\-::display\-Client\-List (
+\begin{DoxyParamCaption}
+\item[{const Q\-List$<$ Q\-String $>$}]{list}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{classPenguinClient_1_1ClientBackgroundManager_a20188400ab079c3e9007f0fa8eb3eb72}
+
+
+display\-Client\-List shows list of \hyperlink{classPenguinClient_1_1ClientServerThread}{Client\-Server\-Thread} 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em list} & Q\-List$<$\-Q\-String$>$ of clients logins actually are dymamical generated buttons inactive client list is printed by q\-Debug(), static buttons just for 2 clients \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_a60a97bd6e105887a188ca99d69996e48}{\index{Penguin\-Client\-::\-Client\-Background\-Manager@{Penguin\-Client\-::\-Client\-Background\-Manager}!display\-Error@{display\-Error}}
+\index{display\-Error@{display\-Error}!PenguinClient::ClientBackgroundManager@{Penguin\-Client\-::\-Client\-Background\-Manager}}
+\subsubsection[{display\-Error}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Background\-Manager\-::display\-Error (
+\begin{DoxyParamCaption}
+\item[{int}]{socket\-Error, }
+\item[{const Q\-String \&}]{message}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{classPenguinClient_1_1ClientBackgroundManager_a60a97bd6e105887a188ca99d69996e48}
+
+
+display\-Error print error of Tcp\-Socket message 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket\-Error} & number of error \\
+\hline
+{\em message} & string version error external signal is used, call internal method \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ClientBackgroundManager_a906fafa8aa934bd6b42eb6389cb1b13c}{\index{Penguin\-Client\-::\-Client\-Background\-Manager@{Penguin\-Client\-::\-Client\-Background\-Manager}!incomming\-Call@{incomming\-Call}}
+\index{incomming\-Call@{incomming\-Call}!PenguinClient::ClientBackgroundManager@{Penguin\-Client\-::\-Client\-Background\-Manager}}
+\subsubsection[{incomming\-Call}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Background\-Manager\-::incomming\-Call (
+\begin{DoxyParamCaption}
+\item[{const Q\-String}]{name, }
+\item[{const Q\-Host\-Address}]{I\-P, }
+\item[{const quint16}]{his\-Port, }
+\item[{const quint16}]{my\-Port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{classPenguinClient_1_1ClientBackgroundManager_a906fafa8aa934bd6b42eb6389cb1b13c}
+
+
+incomming\-Call 1. part of initialazing communication between 2 clients 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & login of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em I\-P} & I\-P of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em his\-Port} & port of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em my\-Port} & port of this user, got from socket for communication to server \\
+\hline
+\end{DoxyParams}
+{\itshape test}/\-Q\-String not\-Parsed\-Client\-Data = \char`\"{}karlos 127.\-0.\-0.\-1 1234\char`\"{}; \hypertarget{classPenguinClient_1_1ClientBackgroundManager_a5e403150552041e610e59c8a21f436cc}{\index{Penguin\-Client\-::\-Client\-Background\-Manager@{Penguin\-Client\-::\-Client\-Background\-Manager}!success\-Response\-Call@{success\-Response\-Call}}
+\index{success\-Response\-Call@{success\-Response\-Call}!PenguinClient::ClientBackgroundManager@{Penguin\-Client\-::\-Client\-Background\-Manager}}
+\subsubsection[{success\-Response\-Call}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Client\-Background\-Manager\-::success\-Response\-Call (
+\begin{DoxyParamCaption}
+\item[{const Q\-String}]{name, }
+\item[{const Q\-Host\-Address}]{I\-P, }
+\item[{const quint16}]{his\-Port, }
+\item[{const quint16}]{my\-Port}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [slot]}}}\label{classPenguinClient_1_1ClientBackgroundManager_a5e403150552041e610e59c8a21f436cc}
+
+
+success\-Response\-Call 2. part of initialazing communication between 2 clients 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & login of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em I\-P} & I\-P of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em his\-Port} & port of client, which initialize call \\
+\hline
+\mbox{\tt in}  & {\em my\-Port} & port of this user, got from socket for communication to server \\
+\hline
+\end{DoxyParams}
+{\itshape test}/\-Q\-String not\-Parsed\-Client\-Data = \char`\"{}karlos 127.\-0.\-0.\-1 1234\char`\"{}; 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+clientbackgroundmanager.\-h\item 
+clientbackgroundmanager.\-cpp\end{DoxyCompactItemize}

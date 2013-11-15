@@ -16,10 +16,11 @@ C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QHostAddress &hostName){
+void C2CListenThread::startListener(const QHostAddress &hostName, const quint16 port){
+    qDebug() << "Listener started";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
-
+    this->port = port;
     if (!isRunning()){
         start();
     } else {
@@ -29,8 +30,9 @@ void C2CListenThread::startListener(const QHostAddress &hostName){
 
 void C2CListenThread::run(){
 
-    server.startServer(hostName);
-
+    server.startServer(hostName, port);
+    qDebug() <<  (server.errorString());
+    qDebug() << "TcpServer started";
     exec();
 }
 
@@ -57,12 +59,13 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QHostAddress &hostName)
+void ListenServer::startServer(const QHostAddress hostName, const quint16 port)
 {
 
-    if(!this->listen(QHostAddress(hostName), CLIENT_PEARL_HARBOR_PORT))
+    if(!this->listen(hostName, port))
     {
         std::cerr << "Could not start server";
+
     }
 }
 

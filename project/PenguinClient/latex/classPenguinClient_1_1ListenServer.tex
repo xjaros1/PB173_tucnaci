@@ -1,0 +1,84 @@
+\hypertarget{classPenguinClient_1_1ListenServer}{\section{Penguin\-Client\-:\-:Listen\-Server Class Reference}
+\label{classPenguinClient_1_1ListenServer}\index{Penguin\-Client\-::\-Listen\-Server@{Penguin\-Client\-::\-Listen\-Server}}
+}
+
+
+The \hyperlink{classPenguinClient_1_1ListenServer}{Listen\-Server} class T\-C\-P server opened for communication between clients $\ast$.  
+
+
+
+
+{\ttfamily \#include $<$c2clistenthread.\-h$>$}
+
+Inheritance diagram for Penguin\-Client\-:\-:Listen\-Server\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPenguinClient_1_1ListenServer}
+\end{center}
+\end{figure}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1ListenServer_ab74d4758471671d645b2b735f1e26991}{void {\bfseries end\-Connection} ()}\label{classPenguinClient_1_1ListenServer_ab74d4758471671d645b2b735f1e26991}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classPenguinClient_1_1ListenServer_adb2d8a57702edd4efba425d0f3032795}{{\bfseries Listen\-Server} (Q\-Object $\ast$parent=0)}\label{classPenguinClient_1_1ListenServer_adb2d8a57702edd4efba425d0f3032795}
+
+\item 
+void \hyperlink{classPenguinClient_1_1ListenServer_aa122118cd9b60c0a1caea453d3fc2bec}{start\-Server} (const Q\-Host\-Address host\-Name, const quint16 port)
+\begin{DoxyCompactList}\small\item\em start\-Server starts server on given host name and port \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPenguinClient_1_1ListenServer_ad31c26e1ca9ee83a753164643e7ab81d}{incoming\-Connection} (qintptr socket\-Descriptor)
+\begin{DoxyCompactList}\small\item\em incoming\-Connection incoming connection management, starts new thread for incoming connection \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{classPenguinClient_1_1ListenServer}{Listen\-Server} class T\-C\-P server opened for communication between clients $\ast$. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classPenguinClient_1_1ListenServer_ad31c26e1ca9ee83a753164643e7ab81d}{\index{Penguin\-Client\-::\-Listen\-Server@{Penguin\-Client\-::\-Listen\-Server}!incoming\-Connection@{incoming\-Connection}}
+\index{incoming\-Connection@{incoming\-Connection}!PenguinClient::ListenServer@{Penguin\-Client\-::\-Listen\-Server}}
+\subsubsection[{incoming\-Connection}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Listen\-Server\-::incoming\-Connection (
+\begin{DoxyParamCaption}
+\item[{qintptr}]{socket\-Descriptor}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classPenguinClient_1_1ListenServer_ad31c26e1ca9ee83a753164643e7ab81d}
+
+
+incoming\-Connection incoming connection management, starts new thread for incoming connection 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket\-Descriptor} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPenguinClient_1_1ListenServer_aa122118cd9b60c0a1caea453d3fc2bec}{\index{Penguin\-Client\-::\-Listen\-Server@{Penguin\-Client\-::\-Listen\-Server}!start\-Server@{start\-Server}}
+\index{start\-Server@{start\-Server}!PenguinClient::ListenServer@{Penguin\-Client\-::\-Listen\-Server}}
+\subsubsection[{start\-Server}]{\setlength{\rightskip}{0pt plus 5cm}void Penguin\-Client\-::\-Listen\-Server\-::start\-Server (
+\begin{DoxyParamCaption}
+\item[{const Q\-Host\-Address}]{host\-Name, }
+\item[{const quint16}]{port}
+\end{DoxyParamCaption}
+)}}\label{classPenguinClient_1_1ListenServer_aa122118cd9b60c0a1caea453d3fc2bec}
+
+
+start\-Server starts server on given host name and port 
+
+
+\begin{DoxyParams}{Parameters}
+{\em host\-Name} & \\
+\hline
+{\em port} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+c2clistenthread.\-h\item 
+c2clistenthread.\-cpp\end{DoxyCompactItemize}
