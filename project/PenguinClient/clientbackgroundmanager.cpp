@@ -25,7 +25,7 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     listHeaderlabel->setEnabled(false);
 
     myNewWidget = new QWidget();
-    insideArea = new QVBoxLayout(myNewWidget);
+    insideArea = new QVBoxLayout();
     myNewWidget->setLayout(insideArea);
 
     logoutButton = new QPushButton(tr("Logout"));
@@ -107,7 +107,6 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
     //release buttons
     foreach (QPushButton* button, clientListButtons) {
         button->close();
-        //delete button;
     }
     //clientListButtons.clear();
     //create new
@@ -115,7 +114,6 @@ void ClientBackgroundManager::displayClientList(const QList<QString> list) {
         qDebug() << "Showing client " << str;
         QPushButton* clientCallButton = new QPushButton(str);
         insideArea->addWidget(clientCallButton);
-        clientCallButton->setVisible(true);
         clientCallButton->setObjectName(str);
         connect(clientCallButton, SIGNAL(clicked()), this, SLOT(callClient()));
         clientListButtons.push_back(clientCallButton);
@@ -129,17 +127,6 @@ void ClientBackgroundManager::callClient() {
     MessageEnvelop call(REQUEST_CALL_TO_CLIENT_FROM_SERVER);
     call.setName(sendedFrom->objectName());
     emit sendDataToServer(call);
-    //myClient2ServerThread.sendMessageToServer(call);
-    //GUI
-    QMessageBox msgBox;
-    msgBox.setText("Calling to " + sendedFrom->objectName());
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    msgBox.exec();
-    if(QMessageBox::Save) {
-        MessageEnvelop sendData(END_OF_CALL_FROM_CLIENT);
-        emit sendDataToServer(sendData);
-        //myClient2ServerThread.sendMessageToServer(sendData);
-    }
 }
 
 void ClientBackgroundManager::incommingCall(const QString name, const QHostAddress IP, const quint16 port) {
