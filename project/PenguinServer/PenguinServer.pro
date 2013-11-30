@@ -14,6 +14,8 @@ TARGET = PenguinServer
 CONFIG   += console
 CONFIG   -= app_bundle
 
+LIBS  += -lsqlite3 -lpolarssl
+
 TEMPLATE = app
 
 
@@ -23,7 +25,8 @@ SOURCES += main.cpp \
     serverlistener.cpp \
     connectedclient.cpp \
     sharedlist.cpp \
-    ../messageenvelop.cpp
+    ../messageenvelop.cpp \
+    database.cpp
 
 HEADERS += \
     serverthread.h \
@@ -31,5 +34,6 @@ HEADERS += \
     serverlistener.h \
     connectedclient.h \
     sharedlist.h \
-    ../messageenvelop.h
+    ../messageenvelop.h \
+    database.h
 

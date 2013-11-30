@@ -92,6 +92,8 @@ public:
      */
     QString getName() const;
 
+    QString getPassword() const;
+
     /**
      * @brief getRequestType
      * @return
@@ -114,13 +116,15 @@ public:
      * @brief setClients
      * @param list
      */
-    void setClients(QList<QString> list);
+    void setClients(const QList<QString> &list);
 
     /**
      * @brief setName
      * @param name
      */
-    void setName(QString name);
+    void setName(const QString & name);
+
+    void setPassword(const QString &password);
 
 
 
@@ -132,6 +136,7 @@ private:
     qint16 port;
     QList<QString> clients;
     QString name;
+    QString password;
 
 
 
