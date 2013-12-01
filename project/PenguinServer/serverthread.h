@@ -4,12 +4,15 @@
 
 
 #include <QTcpSocket>
+#include <QSslSocket>
 #include <QMutex>
 
 #include <QThread>
 
 #include "connectedclient.h"
 #include "sharedlist.h"
+#include "database.h"
+#include "../messageenvelop.h"
 
 namespace PenguinServer
 {
@@ -28,7 +31,7 @@ public:
      * @param list
      * @param parent
      */
-    explicit ServerThread(qintptr socketDescriptor, SharedList * list,  QObject *parent = 0);
+    explicit ServerThread(qintptr socketDescriptor, SharedList * list,SqlConnection * conn,   QObject *parent = 0);
 
     ~ServerThread() {}
 
@@ -69,6 +72,11 @@ private:
 
     void logout();
 
+    bool verify(const QString &, const QString& );
+
+    void registerNewClient(MessageEnvelop & e);
+
+
 signals:
 
     void error(QTcpSocket::SocketError err);
@@ -108,12 +116,15 @@ public slots:
 
 
 
+
 private:
-    QTcpSocket *s;
+    QSslSocket *s;
 
     qintptr socketDescriptor;
 
     SharedList * list;
+
+    SqlConnection * database;
 
     
     

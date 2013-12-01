@@ -37,6 +37,7 @@ protected:
 
 private:
     SharedList * list;
+    SqlConnection * database;
 
 };
 

@@ -12,6 +12,7 @@ ServerListener::ServerListener(QObject *parent) :
 void ServerListener::start()
 {
     list = new SharedList;
+    database = new SqlConnection;
     if(!this->listen(QHostAddress::Any, 27173))
     {
 
@@ -22,7 +23,7 @@ void ServerListener::start()
 
 void ServerListener::incomingConnection(qintptr handle)
 {
-    ServerThread * thread = new ServerThread(handle, list);
+    ServerThread * thread = new ServerThread(handle, list, database);
 
     connect(thread, SIGNAL(finished()), thread, SLOT(deletelater()));
 

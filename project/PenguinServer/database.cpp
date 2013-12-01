@@ -1,5 +1,8 @@
 #include "database.h"
 
+namespace PenguinServer
+{
+
 char * getAscii85(const char * data, size_t len)
 {
     if(len<=0) return NULL;
@@ -70,51 +73,72 @@ SqlConnection::SqlConnection()
     {
         throw SqlException("Unable to open database");
     }
-    std::string statement1("select * from user where UserName= ?");
-    std::string statement2("insert into user (UserName, password) VALUES(?,?)");
+    std::string statement1("select * from Users where UserName= ?");
+    std::string statement2("insert into Users (UserName, PasswordSHA2, Salt) VALUES(?,?,?)");
     int res = sqlite3_prepare_v2(connection, statement1.c_str(), statement1.length()+1, &getByName, NULL );
     if(res != SQLITE_OK)
     {
-        throw SqlException("The statement was not created");
+        throw SqlException("The statement1 was not created");
     }
     res = sqlite3_prepare_v2(connection, statement2.c_str(), statement2.length()+1, &include, NULL);
     if(res != SQLITE_OK)
     {
-        throw SqlException("The statement was not created");
+        throw SqlException("The statement2 was not created");
     }
 }
 
-SqlConnection::ContainedData SqlConnection::getUserByName(std::string username)
+bool SqlConnection::existsUser(const QString &name)
 {
     QMutexLocker l(&mutex);
-    sqlite3_bind_text(getByName, 1, username.c_str(), username.length(), NULL);
+    sqlite3_bind_text(getByName, 1, name.toStdString().c_str(), name.toStdString().length(), NULL);
+    if(sqlite3_step(getByName) != SQLITE_ROW)
+    {
+        sqlite3_reset(getByName);
+        return false;
+    }
+    sqlite3_finalize(getByName);
+    return true;
+}
+
+SqlConnection::ContainedData SqlConnection::getUserByName(const QString &username)
+{
+    QMutexLocker l(&mutex);
+
+    sqlite3_bind_text(getByName, 1, username.toUtf8().constData(), username.length(), NULL);
     if(sqlite3_step(getByName) !=SQLITE_ROW)
     {
         sqlite3_reset(getByName);
-        throw SqlException("The message is not in the db");
+        throw SqlException("The user is not in the db");
     }
     ContainedData t;
     t.id = sqlite3_column_int(getByName, 0);
 
-    const char * t1, *t2;
+    char * t1, *t2, *t3;
     t1 = (char*)sqlite3_column_text(getByName,1);
     t2 = (char*)sqlite3_column_text(getByName,2);
+    t3 = (char*)sqlite3_column_text(getByName,3);
 
-    std::string name(t1), pass(t2);
+
+    QString name(t1), pass(t2), salt(t3);
 
     t.name = name;
     t.password = pass;
+    t.salt = salt;
+    free(t1);
+    free(t2);
+    free(t3);
     sqlite3_finalize(getByName);
 
     return t;
 
 }
 
-bool SqlConnection::insertUser(std::string name, std::string password)
+bool SqlConnection::insertUser(const QString &name, const QString &password, const QString &salt)
 {
     QMutexLocker  lock(&mutex);
-    sqlite3_bind_text(include, 1, name.c_str(), name.length(), NULL);
-    sqlite3_bind_text(include, 2, password.c_str(), password.length(), NULL);
+    sqlite3_bind_text(include, 1, name.toUtf8().constData(), name.length(), NULL);
+    sqlite3_bind_text(include, 2, password.toUtf8().constData(), password.length(), NULL);
+    sqlite3_bind_text(include, 3, salt.toUtf8().constData(), salt.length(), NULL);
 
     sqlite3_step(include);
     sqlite3_finalize(include);
@@ -127,13 +151,19 @@ int SqlConnection::ContainedData::getID() const
     return id;
 }
 
-const std::string & SqlConnection::ContainedData::getName() const
+const QString & SqlConnection::ContainedData::getName() const
 {
     return name;
 }
 
-const  std::string &SqlConnection::ContainedData::getPass() const
+const  QString & SqlConnection::ContainedData::getPass() const
 {
     return password;
 }
 
+const QString& SqlConnection::ContainedData::getSalt() const
+{
+    return salt;
+}
+
+}
