@@ -1,5 +1,7 @@
 #include "messageenvelop.h"
 
+static QString head("The message"), end("The End");
+
 MessageEnvelop::MessageEnvelop(qint16 reason):
     messageType(reason), addr(), port(0), clients(), name()
 {
@@ -67,19 +69,29 @@ void MessageEnvelop::setPassword(const QString & password)
 QDataStream& operator <<(QDataStream & out, const MessageEnvelop & wr)
 {
 
-
+    out << head;
     out << wr.messageType  << wr.addr  << wr.port
         <<  wr.clients <<  wr.name << wr.password;
-
+    out << end;
     return out;
 
 }
 
-QDataStream& operator >>(QDataStream& in, MessageEnvelop & out)
+QDataStream& operator >>(QDataStream& in, MessageEnvelop & out) throw (MessageException)
 {
-
+    QString h, e;
+    in >> h;
+    if(h != head)
+    {
+        throw MessageException("The head is not allright");
+    }
     in >> out.messageType >> out.addr >> out.port
        >> out.clients >> out.name >> out.password;
+    in >> e;
+    if(e != end)
+    {
+        throw MessageException("The end of message is not allright");
+    }
 
     return in;
 }

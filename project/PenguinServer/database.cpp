@@ -94,7 +94,7 @@ bool SqlConnection::existsUser(const QString &name)
     sqlite3_bind_text(getByName, 1, name.toStdString().c_str(), name.toStdString().length(), NULL);
     if(sqlite3_step(getByName) != SQLITE_ROW)
     {
-        sqlite3_reset(getByName);
+        sqlite3_finalize(getByName);
         return false;
     }
     sqlite3_finalize(getByName);
