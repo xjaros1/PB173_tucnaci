@@ -19,10 +19,13 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 
     serverIpLabel->setBuddy(serverIpEdit);
     loginLabel->setBuddy(loginEdit);
+    passwdLabel->setBuddy(passwdEdit);
 
-    submitButton = new QPushButton(tr("Submit"));
-    submitButton->setDefault(true);
-    submitButton->setEnabled(false);
+    loginButton = new QPushButton(tr("Login"));
+    loginButton->setEnabled(false);
+
+    registerButton = new QPushButton(tr("Register"));
+    registerButton->setEnabled(false);
 
     listHeaderlabel = new QLabel(tr("Seznam online klientu"));
     listHeaderlabel->setEnabled(false);
@@ -39,13 +42,12 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     quitButton->setDefault(false);
     quitButton->setEnabled(false);
 
-    connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
-
     connect(serverIpEdit, SIGNAL(textChanged(QString)), this,
             SLOT(enableSubmitButton()));
     connect(loginEdit, SIGNAL(textChanged(QString)), this,
             SLOT(enableSubmitButton()));
-    connect(submitButton, SIGNAL(clicked()), this, SLOT(init()));
+    connect(loginButton, SIGNAL(clicked()), this, SLOT(initLogin()));
+    connect(registerButton, SIGNAL(clicked()), this, SLOT(initRegister()));
     connect(logoutButton, SIGNAL(clicked()), this, SLOT(logout()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
 
@@ -80,10 +82,11 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     mainLayout->addWidget(serverIpLabel, 0, 0);
     mainLayout->addWidget(serverIpEdit, 0, 1);
     mainLayout->addWidget(loginLabel, 1, 0);
-    mainLayout->addWidget(passwdEdit, 1, 1);
-    mainLayout->addWidget(passwdLabel, 1, 0);
     mainLayout->addWidget(loginEdit, 1, 1);
-    mainLayout->addWidget(submitButton, 3, 0);
+    mainLayout->addWidget(passwdLabel, 2, 0);
+    mainLayout->addWidget(passwdEdit, 2, 1);
+    mainLayout->addWidget(loginButton, 3, 0);
+    mainLayout->addWidget(registerButton, 3, 1);
 
     mainLayout->addWidget(listHeaderlabel, 4, 0);
     mainLayout->addWidget(myNewWidget, 5, 0);
@@ -103,13 +106,27 @@ ClientBackgroundManager::~ClientBackgroundManager() {
     myClient2ServerThread.terminate();
 }
 
-void ClientBackgroundManager::init() {
+void ClientBackgroundManager::initLogin() {
     QString adress = serverIpEdit->text();
     quint16 port = SERVER_VIETNAM_WAR_PORT;
     login = loginEdit->text();
     QString passwd = passwdEdit->text();
 
-    myClient2ServerThread.initThread(adress, port, login, passwd);
+    myClient2ServerThread.initThread(adress, port, login, passwd, false);
+
+    //maybe wait for reply from server, but not for testing
+    /*test*/listHeaderlabel->setEnabled(true);
+    /*test*/logoutButton->setEnabled(true);
+    /*test*/quitButton->setEnabled(true);
+}
+
+void ClientBackgroundManager::initRegister() {
+    QString adress = serverIpEdit->text();
+    quint16 port = SERVER_VIETNAM_WAR_PORT;
+    login = loginEdit->text();
+    QString passwd = passwdEdit->text();
+
+    myClient2ServerThread.initThread(adress, port, login, passwd, true);
 
     //maybe wait for reply from server, but not for testing
     /*test*/listHeaderlabel->setEnabled(true);
@@ -119,7 +136,8 @@ void ClientBackgroundManager::init() {
 
 void ClientBackgroundManager::enableSubmitButton() {
     bool enable = (!serverIpEdit->text().isEmpty() && !loginEdit->text().isEmpty());
-    submitButton->setEnabled(enable);
+    loginButton->setEnabled(enable);
+    registerButton->setEnabled(enable);
 }
 
 void ClientBackgroundManager::displayClientList(const QList<QString> list) {

@@ -43,7 +43,8 @@ private:
     QLineEdit *serverIpEdit;
     QLineEdit *loginEdit;
     QLineEdit *passwdEdit;
-    QPushButton *submitButton;
+    QPushButton *registerButton;
+    QPushButton *loginButton;
     //main window
     QLabel *listHeaderlabel;
     QVBoxLayout *insideArea;
@@ -79,12 +80,21 @@ private slots:
      */
     void callClient();
     /**
-     * @brief init slot for submit button, initialize serverClient thread
+     * @brief init slot for login button, initialize serverClient thread
      * after pushing submit button, allows to click logout and quit buttons
      * login and IP is read from QLineEdit, port is SERVER_VIETNAM_WAR_PORT
+     * client is registered
      * internal signal used, call outern method
      */
-    void init();
+    void initLogin();
+    /**
+     * @brief init slot for register button, initialize serverClient thread
+     * after pushing submit button, allows to click logout and quit buttons
+     * login and IP is read from QLineEdit, port is SERVER_VIETNAM_WAR_PORT
+     * client is not registered - send registration data first
+     * internal signal used, call outern method
+     */
+    void initRegister();
     /**
      * @brief logout slot for logout button, send logout to server and kill serverClient thread
      * internal signal used, call outern method
@@ -98,7 +108,7 @@ private slots:
 
 
 public slots:
-    //SLOT FOR EXTERNAL SIGNAL
+    //SLOTS FOR EXTERNAL SIGNAL
     /**
      * @brief displayClientList shows list of ClientServerThread
      * @param[in] list QList<QString> of clients logins
