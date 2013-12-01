@@ -71,18 +71,18 @@ void ServerThread::registerNewClient(MessageEnvelop &e)
     delete[] newSalt;
 
 
-    QString s(e.getPassword()), qCorrSalt(corrSalt);
+    std::string s(e.getPassword().toStdString()), qCorrSalt(corrSalt);
     s = s + qCorrSalt;
 
     free(corrSalt);
     unsigned char hash[32];
     char *printableHash;
 
-    sha2((unsigned char *) s.toStdString().c_str(), s.length(), hash, 0);
+    sha2((unsigned char *) s.c_str(), s.length(), hash, 0);
     printableHash = getAscii85((char*) hash, 32);
-    QString pass(printableHash);
+    QString pass(printableHash), Qsalt(qCorrSalt.c_str());
 
-    database->insertUser(e.getName(), pass, qCorrSalt);
+    database->insertUser(e.getName(), pass,Qsalt);
     QByteArray b;
     QDataStream outStr(&b, QIODevice::WriteOnly);
     MessageEnvelop ret(REGISTER_APROOVED);
@@ -91,6 +91,8 @@ void ServerThread::registerNewClient(MessageEnvelop &e)
     outStr << ret;
 
     this->s->write(b);
+
+
 
 }
 
@@ -129,6 +131,8 @@ void ServerThread::sendError(QString str)
     s->disconnectFromHost();
     //s->waitForDisconnected();
     emit deleteLater();
+    exit(0);
+
 
 
 }
@@ -144,7 +148,7 @@ void ServerThread::initialize()
     }
     catch(MessageException e)
     {
-        sendError(e.what());
+
         return;
     }
 
@@ -253,11 +257,12 @@ void ServerThread::readyRead()
     {
         input >> e;
     }
-    catch(...)
+    catch(MessageException e)
     {
         qDebug() << "Hackers are strong "
                  << "But I'm stronger";
-        sendError("Telnet Cannot kill me");
+        return;
+        //sendError("Telnet Cannot kill me");
     }
 
     switch (e.getRequestType())
