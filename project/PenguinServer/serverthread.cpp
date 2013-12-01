@@ -142,9 +142,10 @@ void ServerThread::initialize()
     {
         str >> e;
     }
-    catch(...)
+    catch(MessageException e)
     {
-
+        sendError(e.what());
+        return;
     }
 
     qDebug() << e.getRequestType() << " initialize on data " << e.getName();

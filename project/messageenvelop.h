@@ -31,9 +31,32 @@
 
 
 #include <QtNetwork>
+#include <exception>
 
 
 class MessageEnvelop; //forward declaration
+
+class MessageException: public std::exception
+{
+    std::string message;
+
+public:
+
+    MessageException(std::string message):message(message)
+    { }
+
+    virtual ~MessageException() throw()
+    { }
+
+    virtual const char * what() const throw()
+    {
+        return message.c_str();
+    }
+
+};
+
+
+
 
 /**
  * @brief operator <<
@@ -50,7 +73,9 @@ QDataStream& operator <<(QDataStream & out, const MessageEnvelop & wr);
  * @param out
  * @return
  */
-QDataStream& operator >>(QDataStream& in, MessageEnvelop & out);
+QDataStream& operator >>(QDataStream& in, MessageEnvelop & out)  throw (MessageException);
+
+
 
 
 /**
@@ -72,7 +97,7 @@ public:
      * @brief operator >>
      * @return
      */
-    friend QDataStream& operator >>(QDataStream&, MessageEnvelop &);
+    friend QDataStream& operator >>(QDataStream&, MessageEnvelop &) throw (MessageException);
 
     /**
      * @brief getAddr
