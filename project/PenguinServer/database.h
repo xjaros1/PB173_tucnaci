@@ -1,10 +1,13 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <polarssl/sha2.h>
+
 #include <sqlite3.h>
 #include <QMutex>
+#include <QString>
 
+namespace PenguinServer
+{
 char * getAscii85(const char * data, size_t len);
 
 char * getPlainfrom85(const char * data, int len);
@@ -19,9 +22,9 @@ public:
     SqlConnection();
 
 
-    ContainedData getUserByName(std::string username);
+    ContainedData getUserByName(const QString & username);
 
-    bool insertUser(std::string name, std::string password);
+    bool insertUser(const QString &name, const QString &password, const QString &salt);
 
 
     class ContainedData
@@ -33,17 +36,20 @@ public:
 
         int getID() const;
 
-        const std::string & getName() const;
+        const QString & getName() const;
 
-        const std::string & getPass() const;
+        const QString & getPass() const;
+
+        const QString & getSalt() const;
 
         friend class SqlConnection;
 
     private:
 
         int id;
-        std::string  name;
-        std::string  password;
+        QString  name;
+        QString  password;
+        QString  salt;
     };
 
     class SqlException: public std::exception
@@ -80,7 +86,7 @@ private:
 
 };
 
-
+}
 
 
 #endif // SQLCONNECTION_H
