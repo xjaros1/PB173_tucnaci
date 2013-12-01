@@ -25,6 +25,7 @@ void ClientServerThread::initThread(const QString &serverIPAdress,
                                     const QString login, const QString passwd,
                                     bool haveToRegister) {
 
+    qDebug() << "I'm in initThread";
     mutex.lock();
     this->serverIPAdress = serverIPAdress;
     this->serverListenPort = serverListenPort;
@@ -44,15 +45,29 @@ void ClientServerThread::initCommunication() {
     qDebug() << "Initializing communication with server with login " << login;
 
     //certificates
-    clientEncryptedSocket->addCaCertificates(QString("../cert/" + login + ".crt "));
-    clientEncryptedSocket->setLocalCertificate(QString("../cert/" + login + ".key "), QSsl::Pem);
+    QByteArray  inputKey;
+    QFile  fileKey("../cert/" + login + ".key");
+    if(fileKey.open(QIODevice ::ReadOnly))
+    {
+        qDebug() << "key opened";
+        inputKey = fileKey.readAll();
+        fileKey.close();
+    }
+    QSslKey key(inputKey, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
+    clientEncryptedSocket->setPrivateKey(key);
+    if (clientEncryptedSocket->addCaCertificates(QString("../cert/ca.crt")))
+        qDebug() << "ca.crt loaded OK";
+    clientEncryptedSocket->setLocalCertificate(QString("../cert/" + login + ".crt"), QSsl::Pem);
 
 
     clientEncryptedSocket->connectToHost(QHostAddress(serverIPAdress), serverListenPort);
     if (!clientEncryptedSocket->waitForEncrypted(30000)) {
+        qDebug() << "I'm in waitForEncrypted " << clientEncryptedSocket->error()
+                    << clientEncryptedSocket->errorString();
         emit error(clientEncryptedSocket->error(), clientEncryptedSocket->errorString());
         return;
     }
+    qDebug() << "I'm after waitForEncrypted";
 
     //qDebug() << "Socket to sever has port " << clientEncryptedSocket.localPort();
     if(isRegistered) loginToServer();
@@ -159,6 +174,7 @@ void ClientServerThread::disconnected() {
 
 void ClientServerThread::run() {
     initCommunication();
+    qDebug() << "I'm in run";
 
     connect(clientEncryptedSocket, SIGNAL(encrypted()), this, SLOT(ready()));
     connect(clientEncryptedSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
