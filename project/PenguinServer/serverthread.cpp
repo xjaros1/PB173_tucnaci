@@ -1,14 +1,16 @@
 #include "serverthread.h"
 
 #include <QDataStream>
+#include <fstream>
+#include <polarssl/sha2.h>
 
-#include "../messageenvelop.h"
+
 
 namespace PenguinServer
 {
 
-ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, QObject *parent) :
-    QThread(parent), s(), socketDescriptor(socketDescriptor), list(list),
+ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, SqlConnection *conn, QObject *parent) :
+    QThread(parent), s(), socketDescriptor(socketDescriptor), list(list), database(conn),
     pending(), available(true), isInitialized(false)
 {
 
@@ -17,18 +19,80 @@ ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, QObject *
 
 void ServerThread::run()
 {
-    s = new QTcpSocket();
+    QFile cert("./server.key");
+    s = new QSslSocket();
     if(!s->setSocketDescriptor(socketDescriptor))
     {
         emit error(s->error());
     }
 
+    cert.open(QIODevice::ReadOnly);
+
+    QSslKey key(&cert, QSsl::Rsa, QSsl::Pem,QSsl::PrivateKey, "server");
+
+    s->setPrivateKey(key);
+    s->setLocalCertificate("./server.crt",QSsl::Pem);
+    s->addCaCertificates("./ca.crt");
+
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
     connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
+
+    s->startServerEncryption();
 
     qDebug() << "started listening";
 
     exec();
+
+}
+
+void ServerThread::registerNewClient(MessageEnvelop &e)
+{
+    if(database->existsUser(e.getName()))
+    {
+        sendError("The Username already exists M'kay, pick another one M'kay");
+        emit error(this->s->error());
+        return;
+    }
+    std::ifstream rand("/dev/urandom",std::ios::binary);
+    char * newSalt = new char[8];
+    rand.read(newSalt, 8);
+    rand.close();
+    char * corrSalt = getAscii85(newSalt, 8);
+    delete[] newSalt;
+
+
+    QString s(e.getPassword()), qCorrSalt(corrSalt);
+    s = s + qCorrSalt;
+
+    free(corrSalt);
+    unsigned char hash[32];
+    char *printableHash;
+
+    sha2((unsigned char *) s.toStdString().c_str(), s.length(), hash, 0);
+    printableHash = getAscii85((char*) hash, 32);
+    QString pass(printableHash);
+
+    database->insertUser(e.getName(), pass, qCorrSalt);
+}
+
+bool ServerThread::verify(const QString & name, const QString & password)
+{
+    auto info = database->getUserByName(name);
+
+    QString s(password);
+    s = s + info.getPass();
+    unsigned char hash[32];
+    sha2((unsigned char*) s.toUtf8().constData(), s.length(), hash, 0);
+    char * base = getAscii85((char*) hash, 32);
+    QString hashed(base);
+    free(base);
+    if(hashed != info.getPass())
+    {
+        return false;
+    }
+
+    return true;
+
 
 }
 
@@ -45,6 +109,7 @@ void ServerThread::sendError(QString str)
     s->write(bl);
     s->disconnectFromHost();
     s->waitForDisconnected();
+    emit deleteLater();
 
 
 }
@@ -64,6 +129,13 @@ void ServerThread::initialize()
     }
 
     qDebug() << e.getRequestType() << " initialize on data " << e.getName();
+
+    if(e.getRequestType() == REGISTER_TO_SERVER)
+    {
+        registerNewClient(e);
+        return;
+    }
+
     if(e.getRequestType() != SEND_LOGIN_TO_SERVER)
     {
         sendError("The Connection is bad Mkay. You should try it again M'Kay");
@@ -72,8 +144,24 @@ void ServerThread::initialize()
         //emit disconnected();
         return;
     }
+    bool result = false;
+    try
+    {
+        result = verify(e.getName(), e.getPassword());
+    }
+    catch (SqlConnection::SqlException e)
+    {
+        sendError("The username is not in the database M'kay");
+        emit error(s->error());
+        return;
+    }
 
-
+    if(!result)
+    {
+        sendError("The password is bad M'kay");
+        emit error(s->error());
+        return;
+    }
 
     ConnectedClient * c = new ConnectedClient(s->peerAddress(), e.getName(),
                                               s->peerPort(), this);
@@ -188,7 +276,8 @@ void ServerThread::disconnected()
 {
     qDebug() << "Disconnected" << name;
     list->removeClient(name);
-    s->deleteLater();
+    emit s->deleteLater();
+    emit deleteLater();
     exit(0);
 
 }
