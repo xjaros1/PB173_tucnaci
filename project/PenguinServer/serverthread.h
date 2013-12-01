@@ -114,6 +114,8 @@ public slots:
      */
     void disconnected();
 
+    void ready();
+
 
 
 
