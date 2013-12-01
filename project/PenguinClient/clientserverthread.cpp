@@ -44,23 +44,24 @@ void ClientServerThread::initThread(const QString &serverIPAdress,
 void ClientServerThread::initCommunication() {
     qDebug() << "Initializing communication with server with login " << login;
 
-    //certificates
-    QByteArray  inputKey;
+    //certificates and key
     QFile  fileKey("../cert/" + login + ".key");
     if(fileKey.open(QIODevice ::ReadOnly))
     {
-        qDebug() << "key opened";
-        inputKey = fileKey.readAll();
-        fileKey.close();
+        qDebug() << "key loaded OK";
+        QSslKey key(&fileKey, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
+        clientEncryptedSocket->setPrivateKey(key);
+        //fileKey.close();
     }
-    QSslKey key(inputKey, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey);
-    clientEncryptedSocket->setPrivateKey(key);
     if (clientEncryptedSocket->addCaCertificates(QString("../cert/ca.crt")))
         qDebug() << "ca.crt loaded OK";
     clientEncryptedSocket->setLocalCertificate(QString("../cert/" + login + ".crt"), QSsl::Pem);
 
+    //everything ready - connect to server
+    clientEncryptedSocket->connectToHostEncrypted(serverIPAdress, serverListenPort);
 
-    clientEncryptedSocket->connectToHost(QHostAddress(serverIPAdress), serverListenPort);
+    connect(clientEncryptedSocket, SIGNAL(encrypted()), this, SLOT(ready()));
+    clientEncryptedSocket->ignoreSslErrors();
     if (!clientEncryptedSocket->waitForEncrypted(30000)) {
         qDebug() << "I'm in waitForEncrypted " << clientEncryptedSocket->error()
                     << clientEncryptedSocket->errorString();
@@ -77,6 +78,7 @@ void ClientServerThread::initCommunication() {
         dataToSend.setPassword(passwd);
 
         sendMessageToServer(dataToSend);
+        isRegistered = true;
     }
 }
 
@@ -109,6 +111,7 @@ void ClientServerThread::readData(MessageEnvelop &output) {
 }
 
 void ClientServerThread::readyRead() {
+    qDebug() << "I'm in readyRead";
     //recieve data
     MessageEnvelop readedData;
     mutex.lock();
@@ -176,7 +179,6 @@ void ClientServerThread::run() {
     initCommunication();
     qDebug() << "I'm in run";
 
-    connect(clientEncryptedSocket, SIGNAL(encrypted()), this, SLOT(ready()));
     connect(clientEncryptedSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(clientEncryptedSocket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
