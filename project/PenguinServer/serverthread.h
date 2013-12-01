@@ -4,6 +4,7 @@
 
 
 #include <QTcpSocket>
+#include <QSslSocket>
 #include <QMutex>
 
 #include <QThread>
@@ -117,7 +118,7 @@ public slots:
 
 
 private:
-    QTcpSocket *s;
+    QSslSocket *s;
 
     qintptr socketDescriptor;
 

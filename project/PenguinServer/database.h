@@ -26,6 +26,8 @@ public:
 
     bool insertUser(const QString &name, const QString &password, const QString &salt);
 
+    bool existsUser(const QString & name);
+
 
     class ContainedData
     {

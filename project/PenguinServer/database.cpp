@@ -73,18 +73,31 @@ SqlConnection::SqlConnection()
     {
         throw SqlException("Unable to open database");
     }
-    std::string statement1("select * from User where UserName= ?");
-    std::string statement2("insert into user (UserName, PasswordSHA2, Salt) VALUES(?,?,?)");
+    std::string statement1("select * from Users where UserName= ?");
+    std::string statement2("insert into Users (UserName, PasswordSHA2, Salt) VALUES(?,?,?)");
     int res = sqlite3_prepare_v2(connection, statement1.c_str(), statement1.length()+1, &getByName, NULL );
     if(res != SQLITE_OK)
     {
-        throw SqlException("The statement was not created");
+        throw SqlException("The statement1 was not created");
     }
     res = sqlite3_prepare_v2(connection, statement2.c_str(), statement2.length()+1, &include, NULL);
     if(res != SQLITE_OK)
     {
-        throw SqlException("The statement was not created");
+        throw SqlException("The statement2 was not created");
     }
+}
+
+bool SqlConnection::existsUser(const QString &name)
+{
+    QMutexLocker l(&mutex);
+    sqlite3_bind_text(getByName, 1, name.toStdString().c_str(), name.toStdString().length(), NULL);
+    if(sqlite3_step(getByName) != SQLITE_ROW)
+    {
+        sqlite3_reset(getByName);
+        return false;
+    }
+    sqlite3_finalize(getByName);
+    return true;
 }
 
 SqlConnection::ContainedData SqlConnection::getUserByName(const QString &username)
@@ -95,7 +108,7 @@ SqlConnection::ContainedData SqlConnection::getUserByName(const QString &usernam
     if(sqlite3_step(getByName) !=SQLITE_ROW)
     {
         sqlite3_reset(getByName);
-        throw SqlException("The message is not in the db");
+        throw SqlException("The user is not in the db");
     }
     ContainedData t;
     t.id = sqlite3_column_int(getByName, 0);

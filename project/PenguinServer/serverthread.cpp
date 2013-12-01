@@ -19,14 +19,25 @@ ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, SqlConnec
 
 void ServerThread::run()
 {
-    s = new QTcpSocket();
+    QFile cert("./server.key");
+    s = new QSslSocket();
     if(!s->setSocketDescriptor(socketDescriptor))
     {
         emit error(s->error());
     }
 
+    cert.open(QIODevice::ReadOnly);
+
+    QSslKey key(&cert, QSsl::Rsa, QSsl::Pem,QSsl::PrivateKey, "server");
+
+    s->setPrivateKey(key);
+    s->setLocalCertificate("./server.crt",QSsl::Pem);
+    s->addCaCertificates("./ca.crt");
+
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
     connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
+
+    s->startServerEncryption();
 
     qDebug() << "started listening";
 
@@ -36,6 +47,12 @@ void ServerThread::run()
 
 void ServerThread::registerNewClient(MessageEnvelop &e)
 {
+    if(database->existsUser(e.getName()))
+    {
+        sendError("The Username already exists M'kay, pick another one M'kay");
+        emit error(this->s->error());
+        return;
+    }
     std::ifstream rand("/dev/urandom",std::ios::binary);
     char * newSalt = new char[8];
     rand.read(newSalt, 8);
@@ -92,6 +109,7 @@ void ServerThread::sendError(QString str)
     s->write(bl);
     s->disconnectFromHost();
     s->waitForDisconnected();
+    emit deleteLater();
 
 
 }
@@ -114,7 +132,8 @@ void ServerThread::initialize()
 
     if(e.getRequestType() == REGISTER_TO_SERVER)
     {
-
+        registerNewClient(e);
+        return;
     }
 
     if(e.getRequestType() != SEND_LOGIN_TO_SERVER)
@@ -257,7 +276,8 @@ void ServerThread::disconnected()
 {
     qDebug() << "Disconnected" << name;
     list->removeClient(name);
-    s->deleteLater();
+    emit s->deleteLater();
+    emit deleteLater();
     exit(0);
 
 }
