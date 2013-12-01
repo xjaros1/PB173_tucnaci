@@ -39,8 +39,10 @@ private:
     //init window
     QLabel *serverIpLabel;
     QLabel *loginLabel;
+    QLabel *passwdLabel;
     QLineEdit *serverIpEdit;
     QLineEdit *loginEdit;
+    QLineEdit *passwdEdit;
     QPushButton *submitButton;
     //main window
     QLabel *listHeaderlabel;

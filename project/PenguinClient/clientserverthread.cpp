@@ -18,11 +18,14 @@ ClientServerThread::~ClientServerThread() {
 }
 
 void ClientServerThread::initThread(const QString &serverIPAdress,
-                                           quint16 serverListenPort, QString login) {
+                                    const quint16 serverListenPort,
+                                    const QString login, const QString passwd) {
+
     mutex.lock();
     this->serverIPAdress = serverIPAdress;
     this->serverListenPort = serverListenPort;
     this->login = login;
+    this->passwd = passwd;
     mutex.unlock();
 
     if (!isRunning())
@@ -44,6 +47,7 @@ void ClientServerThread::initCommunication() {
     MessageEnvelop dataToSend(SEND_LOGIN_TO_SERVER);
     ///*test*/dataToSend.setPort(clientSocket.localPort());
     dataToSend.setName(login);
+    dataToSend.setPassword(passwd);
 
     sendMessageToServer(dataToSend);
 }

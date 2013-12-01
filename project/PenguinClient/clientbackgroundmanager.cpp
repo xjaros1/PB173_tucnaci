@@ -10,9 +10,12 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
 {
     serverIpLabel = new QLabel(tr("&Server IP:"));
     loginLabel = new QLabel(tr("&Login:"));
+    passwdLabel = new QLabel(tr("&Password:"));
 
     serverIpEdit = new QLineEdit(tr("192.168.15.1"));
     loginEdit = new QLineEdit(tr("client"));
+    passwdEdit = new QLineEdit(tr(""));
+    passwdEdit->setEchoMode(QLineEdit::Password);
 
     serverIpLabel->setBuddy(serverIpEdit);
     loginLabel->setBuddy(loginEdit);
@@ -77,15 +80,17 @@ ClientBackgroundManager::ClientBackgroundManager(QWidget *parent)
     mainLayout->addWidget(serverIpLabel, 0, 0);
     mainLayout->addWidget(serverIpEdit, 0, 1);
     mainLayout->addWidget(loginLabel, 1, 0);
+    mainLayout->addWidget(passwdEdit, 1, 1);
+    mainLayout->addWidget(passwdLabel, 1, 0);
     mainLayout->addWidget(loginEdit, 1, 1);
-    mainLayout->addWidget(submitButton, 2, 0);
+    mainLayout->addWidget(submitButton, 3, 0);
 
-    mainLayout->addWidget(listHeaderlabel, 3, 0);
-    mainLayout->addWidget(myNewWidget, 4, 0);
-    /*test*/mainLayout->addWidget(callAnotherClient1, 5, 0);
-    /*test*/mainLayout->addWidget(callAnotherClient2, 5, 1);
-    mainLayout->addWidget(logoutButton, 6, 0);
-    mainLayout->addWidget(quitButton, 6, 1);
+    mainLayout->addWidget(listHeaderlabel, 4, 0);
+    mainLayout->addWidget(myNewWidget, 5, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient1, 6, 0);
+    /*test*/mainLayout->addWidget(callAnotherClient2, 6, 1);
+    mainLayout->addWidget(logoutButton, 7, 0);
+    mainLayout->addWidget(quitButton, 7, 1);
 
     setLayout(mainLayout);
 
@@ -102,8 +107,9 @@ void ClientBackgroundManager::init() {
     QString adress = serverIpEdit->text();
     quint16 port = SERVER_VIETNAM_WAR_PORT;
     login = loginEdit->text();
+    QString passwd = passwdEdit->text();
 
-    myClient2ServerThread.initThread(adress, port, login);
+    myClient2ServerThread.initThread(adress, port, login, passwd);
 
     //maybe wait for reply from server, but not for testing
     /*test*/listHeaderlabel->setEnabled(true);

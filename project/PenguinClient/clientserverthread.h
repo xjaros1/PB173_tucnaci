@@ -19,8 +19,15 @@ class ClientServerThread : public QThread
 public:
     ClientServerThread(QObject *parent = 0);
     ~ClientServerThread();
-    void initThread(const QString &serverIPAdress, quint16 serverListenPort,
-                    QString login);
+    /**
+     * @brief initThread
+     * @param[in] serverIPAdress
+     * @param[in] serverListenPort
+     * @param[in] login
+     * @param[in] passwd
+     */
+    void initThread(const QString &serverIPAdress, const quint16 serverListenPort,
+                    const QString login, const QString passwd);
     void run();
 
 private:
@@ -28,6 +35,7 @@ private:
     QString serverIPAdress;
     quint16 serverListenPort;
     QString login;
+    QString passwd;
     bool quit;
 
     /**
