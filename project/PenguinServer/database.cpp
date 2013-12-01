@@ -90,6 +90,7 @@ SqlConnection::SqlConnection()
 bool SqlConnection::existsUser(const QString &name)
 {
     QMutexLocker l(&mutex);
+    qDebug("");
     sqlite3_bind_text(getByName, 1, name.toStdString().c_str(), name.toStdString().length(), NULL);
     if(sqlite3_step(getByName) != SQLITE_ROW)
     {
@@ -124,9 +125,9 @@ SqlConnection::ContainedData SqlConnection::getUserByName(const QString &usernam
     t.name = name;
     t.password = pass;
     t.salt = salt;
-    free(t1);
-    free(t2);
-    free(t3);
+    //free(t1);
+    //free(t2);
+    //free(t3);
     sqlite3_finalize(getByName);
 
     return t;
@@ -142,7 +143,7 @@ bool SqlConnection::insertUser(const QString &name, const QString &password, con
 
     sqlite3_step(include);
     sqlite3_finalize(include);
-    sqlite3_reset(include);
+    //sqlite3_reset(include);
     return true;
 }
 
