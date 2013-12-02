@@ -10,17 +10,18 @@ namespace PenguinClient
 C2CListenThread::C2CListenThread(QObject *parent) :
     QThread(parent), quit(false)
 {
+    port = CLIENT_PEARL_HARBOR_PORT;
 }
 
 C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QHostAddress &hostName, const quint16 port){
+void C2CListenThread::startListener(const QHostAddress &hostName, QString key){
     qDebug() << "Listener started";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
-    this->port = port;
+
     if (!isRunning()){
         start();
     } else {
@@ -31,23 +32,13 @@ void C2CListenThread::startListener(const QHostAddress &hostName, const quint16 
 void C2CListenThread::run(){
 
     server.startServer(hostName, port);
-    qDebug() <<  (server.errorString());
-    qDebug() << "TcpServer started";
+    qDebug() <<  (server.errorString());    
     exec();
-}
-
-int C2CListenThread::decryptDatagram(char* in, char* out, int length){
-    for(int i = 0; i < length; i++){
-        out[i] = in[i];
-    }
-    return 0;
 }
 
 void C2CListenThread::endConnection(){
     server.deleteLater();
 }
-
-
 
 void ListenServer::incomingConnection(qintptr socketDescriptor){
     C2CTcpListen *thread = new C2CTcpListen(socketDescriptor, this);

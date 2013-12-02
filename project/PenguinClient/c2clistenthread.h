@@ -60,7 +60,7 @@ public:
      * @param hostName
      * @param port
      */
-    void startListener(const QHostAddress &hostName, const quint16 port);
+    void startListener(const QHostAddress &hostName, QString key);
     void run();
 
 
