@@ -25,7 +25,7 @@ void ServerListener::incomingConnection(qintptr handle)
 {
     ServerThread * thread = new ServerThread(handle, list, database);
 
-    connect(thread, SIGNAL(finished()), thread, SLOT(deletelater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     thread->start();
 

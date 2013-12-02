@@ -41,6 +41,7 @@ void ServerThread::run()
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
     connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
     connect(s, SIGNAL(encrypted()), this, SLOT(ready()),Qt::QueuedConnection);
+    connect(s, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(errorm(QList<QSslError>)),Qt::DirectConnection);
     s->startServerEncryption();
 
 
@@ -57,7 +58,7 @@ void ServerThread::ready()
 
 void ServerThread::registerNewClient(MessageEnvelop &e)
 {
-    if(database->existsUser(e.getName()))
+    if(database->existsUser(e.getName().toStdString()))
     {
         sendError("The Username already exists M'kay, pick another one M'kay");
         emit error(this->s->error());
@@ -81,8 +82,18 @@ void ServerThread::registerNewClient(MessageEnvelop &e)
     sha2((unsigned char *) s.c_str(), s.length(), hash, 0);
     printableHash = getAscii85((char*) hash, 32);
     QString pass(printableHash), Qsalt(qCorrSalt.c_str());
+    try
+    {
+        database->insertUser(e.getName().toStdString(), pass.toStdString(),
+                         Qsalt.toStdString());
+    }
+    catch(SqlConnection::SqlException e)
+    {
+        sendError("The user was not added");
+        emit error(this->s->error());
+        return;
+    }
 
-    database->insertUser(e.getName(), pass,Qsalt);
     QByteArray b;
     QDataStream outStr(&b, QIODevice::WriteOnly);
     MessageEnvelop ret(REGISTER_APROOVED);
@@ -94,11 +105,17 @@ void ServerThread::registerNewClient(MessageEnvelop &e)
 
 
 
+
+
 }
 
 bool ServerThread::verify(const QString & name, const QString & password)
 {
-    auto info = database->getUserByName(name);
+    if(!database->existsUser(name.toStdString()))
+    {
+        return false;
+    }
+    auto info = database->getUserByName(name.toStdString());
 
     QString s(password);
     s = s + info.getSalt();
@@ -130,8 +147,8 @@ void ServerThread::sendError(QString str)
     s->write(bl);
     s->disconnectFromHost();
     //s->waitForDisconnected();
-    emit deleteLater();
-    exit(0);
+
+
 
 
 
@@ -251,7 +268,7 @@ void ServerThread::readyRead()
     }
 
     QDataStream input(s);
-
+    s->waitForReadyRead();
     MessageEnvelop e;
     try
     {
@@ -300,7 +317,10 @@ void ServerThread::readyRead()
 void ServerThread::disconnected()
 {
     qDebug() << "Disconnected" << name;
-    list->removeClient(name);
+    if(isInitialized)
+    {
+        list->removeClient(name);
+    }
     emit s->deleteLater();
     //emit deleteLater();
     exit(0);
@@ -319,11 +339,14 @@ void ServerThread::connectionDenied(ConnectedClient *cli)
     str << e;
 
     s->write(block);
+
+
 }
 
 void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
 {
 
+    QMutexLocker l(&m);
 //    QString name = cli->getName();
 //    QHostAddress address = cli->getIpAddr();
 //    qint16 port = cli->getPort();
@@ -346,6 +369,13 @@ void ServerThread::sendAClient(qint16 reason, ConnectedClient * cli)
     str << e;
 
     s->write(block);
+
+
+}
+
+void ServerThread::errorm(const QList<QSslError> & errors)
+{
+    qDebug("someError");
 }
 
 void ServerThread::askNewConnection(ConnectedClient * cli)
@@ -369,7 +399,7 @@ void ServerThread::distributeClients(QList<QString> list)
 
     qDebug() << " sending clients to " << name;
     QByteArray block;
-    QDataStream str(&block, QIODevice::WriteOnly);
+    QDataStream str(&block, QIODevice::Append);
 //    str << (qint16) 0;
 //    for(it = list.begin(); it != list.end(); it++)
 //    {
@@ -386,6 +416,12 @@ void ServerThread::distributeClients(QList<QString> list)
     str << e;
 
     s->write(block);
+
+    while(s->encryptedBytesToWrite() != 0)
+    {
+        msleep(100);
+    }
+
 }
 
 }// namespace PenguinServer
