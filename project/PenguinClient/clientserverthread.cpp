@@ -118,53 +118,60 @@ void ClientServerThread::readyRead() {
     readData(readedData);
     mutex.unlock();
 
-    switch (readedData.getRequestType()) {
-        case ERROR_SERVER_RESPONSE: {
-            emit error(clientEncryptedSocket->error(),
-                       clientEncryptedSocket->errorString());
-            break;
+    try {
+        unsigned int type = readedData.getRequestType();
+
+        switch (type) {
+            case ERROR_SERVER_RESPONSE: {
+                emit error(clientEncryptedSocket->error(),
+                           clientEncryptedSocket->errorString());
+                break;
+            }
+            case PING: {
+                qDebug() << "clientserver thread get request for ping";
+                break;
+            }
+            case REGISTER_APROOVED: {
+                qDebug() << "clientserver thread get REGISTER_APROOVED";
+                loginToServer();
+                break;
+            }
+            case REGISTER_DENIED: {
+                qDebug() << "clientserver thread get REGISTER_DENIED";
+                disconnected();
+                break;
+            }
+            case SEND_CLIENT_LIST_TO_CLIENT: {
+                qDebug() << "clientserver thread get request client list";
+                emit clientList(readedData.getList());
+                break;
+            }
+            case SEND_INCOMMING_CALL_TO_CLIENT: {
+                qDebug() << "clientserver thread get request client list";
+                emit incommingCall(readedData.getName(), readedData.getAddr(),
+                                   readedData.getPort(), clientEncryptedSocket->localPort());
+                break;
+            }
+            case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
+                qDebug() << "clientserver thread get request client list";
+                emit successResponseCall(readedData.getName(), readedData.getAddr(),
+                                   readedData.getPort(), clientEncryptedSocket->localPort());
+                break;
+            }
+            case SEND_LOGOUT_RESPONSE: {
+                qDebug() << "clientserver thread get LOGOUT_RESPONSE";
+                disconnected();
+                break;
+            }
+            default: {
+                qDebug() << "clientserver thread get request: " << readedData.getRequestType();
+                //emit signalToClient(readedData);
+                break;
+            }
         }
-        case PING: {
-            qDebug() << "clientserver thread get request for ping";
-            break;
-        }
-        case REGISTER_APROOVED: {
-            qDebug() << "clientserver thread get REGISTER_APROOVED";
-            loginToServer();
-            break;
-        }
-        case REGISTER_DENIED: {
-            qDebug() << "clientserver thread get REGISTER_DENIED";
-            disconnected();
-            break;
-        }
-        case SEND_CLIENT_LIST_TO_CLIENT: {
-            qDebug() << "clientserver thread get request client list";
-            emit clientList(readedData.getList());
-            break;
-        }
-        case SEND_INCOMMING_CALL_TO_CLIENT: {
-            qDebug() << "clientserver thread get request client list";
-            emit incommingCall(readedData.getName(), readedData.getAddr(),
-                               readedData.getPort(), clientEncryptedSocket->localPort());
-            break;
-        }
-        case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
-            qDebug() << "clientserver thread get request client list";
-            emit successResponseCall(readedData.getName(), readedData.getAddr(),
-                               readedData.getPort(), clientEncryptedSocket->localPort());
-            break;
-        }
-        case SEND_LOGOUT_RESPONSE: {
-            qDebug() << "clientserver thread get LOGOUT_RESPONSE";
-            disconnected();
-            break;
-        }
-        default: {
-            qDebug() << "clientserver thread get request: " << readedData.getRequestType();
-            //emit signalToClient(readedData);
-            break;
-        }
+    }
+    catch(MessageException e) {
+        qDebug() << "uncompatible message" << e.what();
     }
 }
 
