@@ -45,7 +45,7 @@ void ClientServerThread::initCommunication() {
     qDebug() << "Initializing communication with server with login " << login;
 
     //certificates and key
-    QFile  fileKey("../cert/" + login + ".key");
+    QFile fileKey("../cert/" + login + ".key");
     if(fileKey.open(QIODevice ::ReadOnly))
     {
         qDebug() << "key loaded OK";
@@ -71,15 +71,15 @@ void ClientServerThread::initCommunication() {
     qDebug() << "I'm after waitForEncrypted";
 
     //qDebug() << "Socket to sever has port " << clientEncryptedSocket.localPort();
-    if(isRegistered) loginToServer();
-    else {
-        MessageEnvelop dataToSend(REGISTER_TO_SERVER);
-        dataToSend.setName(login);
-        dataToSend.setPassword(passwd);
+}
 
-        sendMessageToServer(dataToSend);
-        isRegistered = true;
-    }
+void ClientServerThread::registerToServer() {
+    MessageEnvelop dataToSend(REGISTER_TO_SERVER);
+    dataToSend.setName(login);
+    dataToSend.setPassword(passwd);
+
+    sendMessageToServer(dataToSend);
+    isRegistered = true;
 }
 
 void ClientServerThread::loginToServer() {
@@ -148,14 +148,13 @@ void ClientServerThread::readyRead() {
             }
             case SEND_INCOMMING_CALL_TO_CLIENT: {
                 qDebug() << "clientserver thread get request client list";
-                emit incommingCall(readedData.getName(), readedData.getAddr(),
-                                   readedData.getPort(), clientEncryptedSocket->localPort());
+                emit incommingCall(readedData.getName(), readedData.getAddr());
                 break;
             }
             case SEND_SUCCESS_RESPONSE_TO_COMMUNICATION: {
                 qDebug() << "clientserver thread get request client list";
                 emit successResponseCall(readedData.getName(), readedData.getAddr(),
-                                   readedData.getPort(), clientEncryptedSocket->localPort());
+                                        readedData.getPassword());
                 break;
             }
             case SEND_LOGOUT_RESPONSE: {
@@ -184,6 +183,9 @@ void ClientServerThread::disconnected() {
 
 void ClientServerThread::run() {
     initCommunication();
+    if(!isRegistered) registerToServer();
+    loginToServer();
+
     qDebug() << "I'm in run";
 
     connect(clientEncryptedSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
