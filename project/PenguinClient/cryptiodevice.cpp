@@ -99,6 +99,41 @@ int CryptIODevice::writeBlock(const QByteArray &bytesToWrite){
 }
 
 qint64 CryptIODevice::readData(char *data, qint64 maxSize){
+    int bytesRead = 0;
+    if(!m_byteBuffer.isEmpty())
+    {
+        for(int copyByte = 0; copyByte < qMin(m_byteBuffer.size(), (int)maxSize); ++copyByte, ++bytesRead)
+        {
+            data[bytesRead] = m_byteBuffer[copyByte];
+        }
 
+        m_byteBuffer.remove(0, bytesRead);
+    }
+    while(m_byteBuffer.isEmpty() && (bytesRead < maxSize) && !m_underlyingDevice->atEnd())
+    {
+        int sizeOfCipher = 0;
+        int bytesReallyRead = m_underlyingDevice->read((char*)&sizeOfCipher, sizeof(sizeOfCipher));
+
+        if(bytesReallyRead != sizeof(sizeOfCipher))
+            return -1;
+
+        QByteArray myCipherText;
+        myCipherText.resize(sizeOfCipher);
+        bytesReallyRead = m_underlyingDevice->read(myCipherText.data(), sizeOfCipher);
+
+        if(bytesReallyRead != bytesRead)
+        {
+            m_byteBuffer = m_crypto.decryptToByteArray(myCypherText);
+
+            int copyByte = 0;
+            for(copyByte = 0; (copyByte < m_byteBuffer.size()) && (bytesRead < (int)maxSize); ++copyByte, ++bytesRead)
+            {
+                data[bytesRead] = m_byteBuffer[copyByte];
+            }
+            m_byteBuffer.remove(0, copyByte);
+
+        }
+    }
+    return bytesRead;
 }
 
