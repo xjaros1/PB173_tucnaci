@@ -25,7 +25,7 @@ public:
      * @param hostName
      * @param port
      */
-    void startOutput(const QHostAddress &hostName, const quint16 port);
+    void startOutput(const QHostAddress &hostName, QString key);
     void run();
 
 signals:
