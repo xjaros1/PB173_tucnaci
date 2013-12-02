@@ -6,6 +6,9 @@
 #include <QMutex>
 #include <QString>
 
+#define PREPARE_INSERT_STATEMENT 1
+#define PREPARE_SELECT_USER_STATEMENT 2
+
 namespace PenguinServer
 {
 char * getAscii85(const char * data, size_t len);
@@ -14,6 +17,9 @@ char * getPlainfrom85(const char * data, int len);
 
 class SqlConnection
 {
+
+    void prepareStatement(sqlite3_stmt ** stmt, int dataType);
+
 public:
 
     class ContainedData;
@@ -22,11 +28,11 @@ public:
     SqlConnection();
 
 
-    ContainedData getUserByName(const QString & username);
+    ContainedData getUserByName(const std::string & username);
 
-    bool insertUser(const QString &name, const QString &password, const QString &salt);
+    bool insertUser(const std::string &name, const std::string &password, const std::string &salt);
 
-    bool existsUser(const QString & name);
+    bool existsUser(const std::string &name);
 
 
     class ContainedData
@@ -80,11 +86,6 @@ private:
 
     sqlite3 * connection;
 
-    sqlite3_stmt * include;
-
-    sqlite3_stmt * getByName;
-
-    sqlite3_stmt * getAllInfo;
 
 };
 

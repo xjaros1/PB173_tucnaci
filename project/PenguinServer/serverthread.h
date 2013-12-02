@@ -116,6 +116,8 @@ public slots:
 
     void ready();
 
+    void errorm(const QList<QSslError> &errors);
+
 
 
 
@@ -127,6 +129,8 @@ private:
     SharedList * list;
 
     SqlConnection * database;
+
+    QMutex m;
 
     
     

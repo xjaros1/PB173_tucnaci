@@ -93,6 +93,8 @@ QDataStream& operator >>(QDataStream& in, MessageEnvelop & out) throw (MessageEx
         throw MessageException("The end of message is not allright");
     }
 
+
+
     return in;
 }
 
