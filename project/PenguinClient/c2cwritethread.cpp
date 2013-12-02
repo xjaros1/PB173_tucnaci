@@ -6,6 +6,7 @@ namespace PenguinClient
 C2CWriteThread::C2CWriteThread(QObject *parent) :
     QThread(parent), quit(false)
 {
+    port = CLIENT_PEARL_HARBOR_PORT;
 }
 
 C2CWriteThread::~C2CWriteThread(){
@@ -15,8 +16,7 @@ C2CWriteThread::~C2CWriteThread(){
 void C2CWriteThread::startOutput(const QHostAddress &hostName, QString key){
     qDebug() << "Write init";
     QMutexLocker locker(&mutex);
-    this->hostName = hostName;
-    this->port = key;
+    this->hostName = hostName;    
     if (!isRunning()){
         start();
     }
@@ -37,13 +37,6 @@ void C2CWriteThread::run(){
     e.setClients(list);
     stream << e;
     qDebug() << "data sent";
-}
-
-int C2CWriteThread::encryptDatagram(char* in, char* out, int length){
-    for(int i = 0; i < length; i++){
-        out[i] = in[i];
-    }
-    return 0;
 }
 
 std::string C2CWriteThread::random_string( size_t length )
