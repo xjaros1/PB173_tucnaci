@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     c2cudp.cpp \
     c2ctcp.cpp \
     clientbackgroundmanager.cpp \
-    ../messageenvelop.cpp
+    ../messageenvelop.cpp \
+    cryptiodevice.cpp \
+    cryptothreads.cpp
 
 HEADERS += \
     c2clistenthread.h \
@@ -32,4 +34,13 @@ HEADERS += \
     c2cudp.h \
     c2ctcp.h \
     clientbackgroundmanager.h \
-    ../messageenvelop.h
+    ../messageenvelop.h \
+    cryptiodevice.h \
+    cryptothreads.h
+
+unix:!macx: LIBS += -L$$PWD/../../../../polarssl-1.2.8/library/ -lpolarssl
+
+INCLUDEPATH += $$PWD/../../../../polarssl-1.2.8/library
+DEPENDPATH += $$PWD/../../../../polarssl-1.2.8/library
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../polarssl-1.2.8/library/libpolarssl.a
