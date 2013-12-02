@@ -98,7 +98,7 @@ int CryptIODevice::writeBlock(const QByteArray &bytesToWrite){
     return m_underlyingDevice->write(xored);
 }
 
-int CryptIODevice::readData(char *data, qint64 maxSize){
+qint64 CryptIODevice::readData(char *data, qint64 maxSize){
 
 }
 
