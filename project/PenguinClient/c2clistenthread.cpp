@@ -16,7 +16,7 @@ C2CListenThread::~C2CListenThread(){
 
 }
 
-void C2CListenThread::startListener(const QHostAddress &hostName, const quint16 port){
+void C2CListenThread::startListener(const QHostAddress &hostName, QString key){
     qDebug() << "Listener started";
     QMutexLocker locker(&mutex);
     this->hostName = hostName;
