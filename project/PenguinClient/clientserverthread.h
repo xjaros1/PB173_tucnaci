@@ -19,21 +19,37 @@ class ClientServerThread : public QThread
 public:
     ClientServerThread(QObject *parent = 0);
     ~ClientServerThread();
-    void initThread(const QString &serverIPAdress, quint16 serverListenPort,
-                    QString login);
+    /**
+     * @brief initThread prepare data for thread
+     * @param[in] serverIPAdress
+     * @param[in] serverListenPort
+     * @param[in] login
+     * @param[in] passwd
+     */
+    void initThread(const QString &serverIPAdress, const quint16 serverListenPort,
+                    const QString login, const QString passwd, bool haveToRegister);
+    /**
+     * @brief run inhireted method, which starts the thread
+     */
     void run();
 
 private:
-    QTcpSocket clientSocket;
+    QSslSocket* clientEncryptedSocket;
     QString serverIPAdress;
     quint16 serverListenPort;
     QString login;
+    QString passwd;
+    bool isRegistered;
     bool quit;
 
     /**
      * @brief initCommunication starts TcpSocket and connect to server
      */
     void initCommunication();
+    /**
+     * @brief loginToServer sends login and password to server
+     */
+    void loginToServer();
     /**
      * @brief encyptData prepared method for encryption, not in use now
      * @param[out] output

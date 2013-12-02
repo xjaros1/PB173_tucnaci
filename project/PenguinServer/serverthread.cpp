@@ -19,30 +19,40 @@ ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, SqlConnec
 
 void ServerThread::run()
 {
-    QFile cert("./server.key");
+    QFile keyFile("./server.key");
     s = new QSslSocket();
+
     if(!s->setSocketDescriptor(socketDescriptor))
     {
         emit error(s->error());
     }
 
-    cert.open(QIODevice::ReadOnly);
+    if(!keyFile.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "File was not opened";
+    }
 
-    QSslKey key(&cert, QSsl::Rsa, QSsl::Pem,QSsl::PrivateKey, "server");
+    QSslKey key(&keyFile, QSsl::Rsa, QSsl::Pem ,QSsl::PrivateKey);
 
     s->setPrivateKey(key);
     s->setLocalCertificate("./server.crt",QSsl::Pem);
-    s->addCaCertificates("./ca.crt");
-
+    s->addCaCertificates("./ca.crt", QSsl::Pem);
+    //s->addCaCertificates("./server.crt",QSsl::Pem);
     connect(s, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::QueuedConnection);
     connect(s, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
-
+    connect(s, SIGNAL(encrypted()), this, SLOT(ready()),Qt::QueuedConnection);
     s->startServerEncryption();
+
 
     qDebug() << "started listening";
 
     exec();
 
+}
+
+void ServerThread::ready()
+{
+    qDebug() << "ok";
 }
 
 void ServerThread::registerNewClient(MessageEnvelop &e)
@@ -73,6 +83,15 @@ void ServerThread::registerNewClient(MessageEnvelop &e)
     QString pass(printableHash);
 
     database->insertUser(e.getName(), pass, qCorrSalt);
+    QByteArray b;
+    QDataStream outStr(&b, QIODevice::WriteOnly);
+    MessageEnvelop ret(REGISTER_APROOVED);
+
+    isInitialized = false;
+    outStr << ret;
+
+    this->s->write(b);
+
 }
 
 bool ServerThread::verify(const QString & name, const QString & password)
@@ -80,7 +99,7 @@ bool ServerThread::verify(const QString & name, const QString & password)
     auto info = database->getUserByName(name);
 
     QString s(password);
-    s = s + info.getPass();
+    s = s + info.getSalt();
     unsigned char hash[32];
     sha2((unsigned char*) s.toUtf8().constData(), s.length(), hash, 0);
     char * base = getAscii85((char*) hash, 32);
@@ -108,7 +127,7 @@ void ServerThread::sendError(QString str)
 
     s->write(bl);
     s->disconnectFromHost();
-    s->waitForDisconnected();
+    //s->waitForDisconnected();
     emit deleteLater();
 
 
@@ -123,9 +142,10 @@ void ServerThread::initialize()
     {
         str >> e;
     }
-    catch(...)
+    catch(MessageException e)
     {
-
+        sendError(e.what());
+        return;
     }
 
     qDebug() << e.getRequestType() << " initialize on data " << e.getName();
@@ -277,7 +297,7 @@ void ServerThread::disconnected()
     qDebug() << "Disconnected" << name;
     list->removeClient(name);
     emit s->deleteLater();
-    emit deleteLater();
+    //emit deleteLater();
     exit(0);
 
 }
