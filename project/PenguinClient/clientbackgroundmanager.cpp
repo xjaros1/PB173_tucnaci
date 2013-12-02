@@ -186,22 +186,36 @@ void ClientBackgroundManager::callClient() {
 }
 
 void ClientBackgroundManager::incommingCall(const QString name,
-             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+                                            const QHostAddress IP) {
 
-    qDebug() << "Called incommingCall " << name << IP
-             << "with port " << hisPort << "myPort " << myPort;
+    //info about incomming call
+    qDebug() << "Called incommingCall " << name << " IP " << IP;
     //QStringList list = from.split(" ");
 
+    //generating keys for threads
+    std::ifstream rand("/dev/urandom",std::ios::binary);
+    char *keyCharArray = new char[256];
+    rand.read(keyCharArray, 256);
+    rand.close();
+    QString keyString(keyCharArray);
+    delete[] keyCharArray;
+    QString firstHalf = keyString.mid(0, 128);
+    QString secondHalf = keyString.mid(128, 128);
 
-    /*test*/MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
-    /*test*/emit sendDataToServer(sendData);
+
+    MessageEnvelop sendData(SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+    sendData.setPassword(keyString);
+    emit sendDataToServer(sendData);
+
+    //listen thread
     /*test*/myClient2ClientListenThread = new C2CListenThread();
-    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
+    /*test*/myClient2ClientListenThread->startListener(IP, firstHalf);
 
-    sleep(1);
+    sleep(1); //wait for startListener init all right
+    //write thread
     qDebug() << "write start";
     /*test*/myClient2ClientWriteThread = new C2CWriteThread();
-    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
+    /*test*/myClient2ClientWriteThread->startOutput(IP, secondHalf);
 
     //GUI
     /*QMessageBox::StandardButton reply;
@@ -241,21 +255,22 @@ void ClientBackgroundManager::incommingCall(const QString name,
 }
 
 void ClientBackgroundManager::successResponseCall(const QString name,
-             const QHostAddress IP, const quint16 hisPort, const quint16 myPort) {
+             const QHostAddress IP, QString aesKey) {
 
-    qDebug() << "Called successResponseCall " << name << IP
-             << "with port " << hisPort << "myPort " << myPort;
+    qDebug() << "Called successResponseCall " << name << " IP " << IP;
     ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
+    QString firstHalf = aesKey.mid(0, 128);
+    QString secondHalf = aesKey.mid(128, 256);
 
     /*test*/myClient2ClientListenThread = new C2CListenThread();
-    /*test*/myClient2ClientListenThread->startListener(IP, myPort);
+    /*test*/myClient2ClientListenThread->startListener(IP, firstHalf);
 
     sleep(1);
     qDebug() << "write start";
     /*test*/myClient2ClientWriteThread = new C2CWriteThread();
-    /*test*/myClient2ClientWriteThread->startOutput(IP, hisPort);
+    /*test*/myClient2ClientWriteThread->startOutput(IP, secondHalf);
 }
 
 void ClientBackgroundManager::incomingEndOfCall() {

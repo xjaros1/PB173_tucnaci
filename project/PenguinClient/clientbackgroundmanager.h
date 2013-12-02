@@ -10,6 +10,7 @@
 #include <QtWidgets>
 #include <QScrollArea>
 #include <unistd.h>
+#include <fstream>
 
 class QDialogButtonBox;
 class QLabel;
@@ -123,8 +124,7 @@ public slots:
      * @param[in] hisPort port of client, which initialize call
      * @param[in] myPort port of this user, got from socket for communication to server
      */
-    void incommingCall(const QString name, const QHostAddress IP,
-                       const quint16 hisPort, const quint16 myPort);
+    void incommingCall(const QString name, const QHostAddress IP);
     /**
      * @brief successResponseCall 2. part of initialazing communication between 2 clients
      * @param[in] name login of client, which initialize call
@@ -133,7 +133,7 @@ public slots:
      * @param[in] myPort port of this user, got from socket for communication to server
      */
     void successResponseCall(const QString name, const QHostAddress IP,
-                       const quint16 hisPort, const quint16 myPort);
+                       QString aesKey);
     /**
      * @brief incomingEndOfCall call ended, I terminate threads between clients
      */
