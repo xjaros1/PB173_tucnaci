@@ -49,6 +49,10 @@ private:
     /**
      * @brief loginToServer sends login and password to server
      */
+    void registerToServer();
+    /**
+     * @brief loginToServer sends login and password to server
+     */
     void loginToServer();
     /**
      * @brief encyptData prepared method for encryption, not in use now
@@ -86,20 +90,16 @@ signals:
      * @brief incommingCall 1. part of initializitiaon of call
      * @param[out] name login of person, who calls us
      * @param[out] IP of person, who calls us
-     * @param[out] hisPort port of person, who calls us
-     * @param[out] myPort port, which this client uses for communication with server
      */
-    void incommingCall(const QString name, const QHostAddress IP,
-                       const quint16 hisPort, const quint16 myPort);
+    void incommingCall(const QString name, const QHostAddress IP);
     /**
      * @brief successResponseCall 2. part of initializitiaon of call
      * @param[out] name login of person, who calls us
      * @param[out] IP of person, who calls us
-     * @param[out] hisPort port of person, who calls us
-     * @param[out] myPort port, which this client uses for communication with server
+     * @param[out] aesKey for listen and write threads
      */
     void successResponseCall(const QString name, const QHostAddress IP,
-                       const quint16 hisPort, const quint16 myPort);
+                       QString aesKey);
     /**
      * @brief endOfCall signal of ending call from other side
      */
