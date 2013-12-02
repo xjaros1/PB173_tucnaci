@@ -49,6 +49,10 @@ private:
     /**
      * @brief loginToServer sends login and password to server
      */
+    void registerToServer();
+    /**
+     * @brief loginToServer sends login and password to server
+     */
     void loginToServer();
     /**
      * @brief encyptData prepared method for encryption, not in use now

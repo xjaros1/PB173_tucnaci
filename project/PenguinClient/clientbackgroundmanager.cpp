@@ -190,7 +190,6 @@ void ClientBackgroundManager::incommingCall(const QString name,
 
     qDebug() << "Called incommingCall " << name << IP
              << "with port " << hisPort << "myPort " << myPort;
-    ///*test*/QString notParsedClientData = "karlos 127.0.0.1 1234";
     //QStringList list = from.split(" ");
 
 

@@ -71,15 +71,15 @@ void ClientServerThread::initCommunication() {
     qDebug() << "I'm after waitForEncrypted";
 
     //qDebug() << "Socket to sever has port " << clientEncryptedSocket.localPort();
-    if(isRegistered) loginToServer();
-    else {
-        MessageEnvelop dataToSend(REGISTER_TO_SERVER);
-        dataToSend.setName(login);
-        dataToSend.setPassword(passwd);
+}
 
-        sendMessageToServer(dataToSend);
-        isRegistered = true;
-    }
+void ClientServerThread::registerToServer() {
+    MessageEnvelop dataToSend(REGISTER_TO_SERVER);
+    dataToSend.setName(login);
+    dataToSend.setPassword(passwd);
+
+    sendMessageToServer(dataToSend);
+    isRegistered = true;
 }
 
 void ClientServerThread::loginToServer() {
@@ -184,6 +184,9 @@ void ClientServerThread::disconnected() {
 
 void ClientServerThread::run() {
     initCommunication();
+    if(!isRegistered) registerToServer();
+    loginToServer();
+
     qDebug() << "I'm in run";
 
     connect(clientEncryptedSocket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
