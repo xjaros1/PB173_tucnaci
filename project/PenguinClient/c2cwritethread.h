@@ -34,15 +34,7 @@ signals:
 public slots:
     
 private:
-    /**
-     * @brief encryptDatagram
-     * encrypts single datagram
-     * @param in
-     * @param out
-     * @param length
-     * @return errno
-     */
-    int encryptDatagram(char* in, char* out, int length);
+
 
     /**
      * @brief random_string
