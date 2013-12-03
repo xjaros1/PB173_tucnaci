@@ -123,7 +123,7 @@ qint64 CryptIODevice::readData(char *data, qint64 maxSize){
 
         if(bytesReallyRead != bytesRead)
         {
-            m_byteBuffer = m_crypto.decryptToByteArray(myCypherText);
+            m_byteBuffer = decryptToByteArray(myCipherText);
 
             int copyByte = 0;
             for(copyByte = 0; (copyByte < m_byteBuffer.size()) && (bytesRead < (int)maxSize); ++copyByte, ++bytesRead)
@@ -136,4 +136,37 @@ qint64 CryptIODevice::readData(char *data, qint64 maxSize){
     }
     return bytesRead;
 }
+
+QByteArray CryptIODevice::decryptToByteArray(QByteArray in){
+    QByteArray out;
+    QVector<unsigned char> toXor;
+    while(in.size() > m_blockSize)
+    {
+        QByteArray byteBlock = in.left(m_blockSize);
+        in.remove(0, m_blockSize);
+
+        toXor = resource->readData();
+        QByteArray xored;
+        xored.resize(byteBlock.size());
+        for (int i = 0; i < byteBlock.size(); ++i){
+            xored[i] = byteBlock[i] ^ toXor.at(i);
+        }
+        out.append(xored);
+    }
+    return out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

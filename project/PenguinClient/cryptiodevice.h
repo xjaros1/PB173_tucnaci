@@ -48,6 +48,7 @@ private:
      */
     void flushEnd();
 
+    QByteArray decryptToByteArray(QByteArray in);
     /**
      *  writes the given block of raw data to the device. while writing, the data is encrypted.
      */
