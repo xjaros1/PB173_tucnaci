@@ -66,6 +66,31 @@ char * getPlainfrom85(const char * data, int len)
     return ret;
 }
 
+void SqlConnection::prepareStatement(sqlite3_stmt **stmt, int dataType)
+{
+    std::string statement1("select * from Users where UserName= ?");
+    std::string statement2("insert into Users (UserName, PasswordSHA2, Salt) VALUES(?,?,?)");
+    std::string * statement = 0;
+    switch(dataType)
+    {
+    case PREPARE_INSERT_STATEMENT:
+        statement = &statement2;
+        break;
+    case PREPARE_SELECT_USER_STATEMENT:
+        statement = &statement1;
+        break;
+    default:
+        throw SqlException("Unrecognized data type");
+    }
+
+    int res = sqlite3_prepare_v2(connection, statement->c_str(), statement->length()+1,
+                                 stmt, NULL);
+    if(res != SQLITE_OK)
+    {
+        throw SqlException("Unknown error in sqlite");
+    }
+
+}
 
 SqlConnection::SqlConnection()
 {
@@ -73,51 +98,50 @@ SqlConnection::SqlConnection()
     {
         throw SqlException("Unable to open database");
     }
-    std::string statement1("select * from Users where UserName= ?");
-    std::string statement2("insert into Users (UserName, PasswordSHA2, Salt) VALUES(?,?,?)");
-    int res = sqlite3_prepare_v2(connection, statement1.c_str(), statement1.length()+1, &getByName, NULL );
-    if(res != SQLITE_OK)
-    {
-        throw SqlException("The statement1 was not created");
-    }
-    res = sqlite3_prepare_v2(connection, statement2.c_str(), statement2.length()+1, &include, NULL);
-    if(res != SQLITE_OK)
-    {
-        throw SqlException("The statement2 was not created");
-    }
+
 }
 
-bool SqlConnection::existsUser(const QString &name)
+bool SqlConnection::existsUser(const std::string &name)
 {
+    sqlite3_stmt * stat;
+    prepareStatement(&stat, PREPARE_SELECT_USER_STATEMENT);
+
+    sqlite3_bind_text(stat, 1, name.c_str(), name.length() +1, NULL);
     QMutexLocker l(&mutex);
-    qDebug("");
-    sqlite3_bind_text(getByName, 1, name.toStdString().c_str(), name.toStdString().length(), NULL);
-    if(sqlite3_step(getByName) != SQLITE_ROW)
+    qDebug("The locked searching");
+
+    if(sqlite3_step(stat) != SQLITE_ROW)
     {
-        sqlite3_finalize(getByName);
+        sqlite3_finalize(stat);
         return false;
     }
-    sqlite3_finalize(getByName);
+    //sqlite3_finalize(getByName);
+    sqlite3_finalize(stat);
     return true;
 }
 
-SqlConnection::ContainedData SqlConnection::getUserByName(const QString &username)
+SqlConnection::ContainedData SqlConnection::getUserByName(const std::string &username)
 {
+
+    sqlite3_stmt * stat;
+    prepareStatement(&stat, PREPARE_SELECT_USER_STATEMENT);
+
+    sqlite3_bind_text(stat, 1, username.c_str(), username.length() +1, NULL);
     QMutexLocker l(&mutex);
 
-    sqlite3_bind_text(getByName, 1, username.toUtf8().constData(), username.length(), NULL);
-    if(sqlite3_step(getByName) !=SQLITE_ROW)
+
+    if(sqlite3_step(stat) !=SQLITE_ROW)
     {
-        sqlite3_reset(getByName);
+        sqlite3_finalize(stat);
         throw SqlException("The user is not in the db");
     }
     ContainedData t;
-    t.id = sqlite3_column_int(getByName, 0);
+    t.id = sqlite3_column_int(stat, 0);
 
     char * t1, *t2, *t3;
-    t1 = (char*)sqlite3_column_text(getByName,1);
-    t2 = (char*)sqlite3_column_text(getByName,2);
-    t3 = (char*)sqlite3_column_text(getByName,3);
+    t1 = (char*)sqlite3_column_text(stat,1);
+    t2 = (char*)sqlite3_column_text(stat,2);
+    t3 = (char*)sqlite3_column_text(stat,3);
 
 
     QString name(t1), pass(t2), salt(t3);
@@ -128,21 +152,32 @@ SqlConnection::ContainedData SqlConnection::getUserByName(const QString &usernam
     //free(t1);
     //free(t2);
     //free(t3);
-    sqlite3_finalize(getByName);
+    sqlite3_finalize(stat);
+
 
     return t;
 
 }
 
-bool SqlConnection::insertUser(const QString &name, const QString &password, const QString &salt)
+bool SqlConnection::insertUser(const std::string &name, const std::string &password, const std::string &salt)
 {
-    QMutexLocker  lock(&mutex);
-    sqlite3_bind_text(include, 1, name.toUtf8().constData(), name.length(), NULL);
-    sqlite3_bind_text(include, 2, password.toUtf8().constData(), password.length(), NULL);
-    sqlite3_bind_text(include, 3, salt.toUtf8().constData(), salt.length(), NULL);
 
-    sqlite3_step(include);
-    sqlite3_finalize(include);
+    sqlite3_stmt * stat;
+    prepareStatement(&stat, PREPARE_INSERT_STATEMENT);
+
+    sqlite3_bind_text(stat, 1, name.c_str(), name.length()+1, NULL);
+    sqlite3_bind_text(stat, 2, password.c_str(), password.length()+1, NULL);
+    sqlite3_bind_text(stat, 3, salt.c_str(), salt.length()+1, NULL);
+
+    QMutexLocker  lock(&mutex);
+
+    if(sqlite3_step(stat) != SQLITE_DONE)
+    {
+        sqlite3_finalize(stat);
+        throw SqlException("The statement was not executed");
+    }
+    sqlite3_finalize(stat);
+
     //sqlite3_reset(include);
     return true;
 }
