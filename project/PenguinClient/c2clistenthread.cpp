@@ -31,7 +31,7 @@ void C2CListenThread::startListener(const QHostAddress &hostName, QString key){
 
 void C2CListenThread::run(){
 
-    server.startServer(hostName, port);
+    server.startServer(key, hostName, port);
     qDebug() <<  (server.errorString());    
     exec();
 }
@@ -41,7 +41,7 @@ void C2CListenThread::endConnection(){
 }
 
 void ListenServer::incomingConnection(qintptr socketDescriptor){
-    C2CTcpListen *thread = new C2CTcpListen(socketDescriptor, this);
+    C2CTcpListen *thread = new C2CTcpListen(key, socketDescriptor, this);
 
     // connect signal/slot
     // once a thread is not needed, it will be beleted later
@@ -50,9 +50,9 @@ void ListenServer::incomingConnection(qintptr socketDescriptor){
     thread->start();
 }
 
-void ListenServer::startServer(const QHostAddress hostName, const quint16 port)
+void ListenServer::startServer(QString key, const QHostAddress hostName, const quint16 port)
 {
-
+    this->key = key;
     if(!this->listen(hostName, port))
     {
         std::cerr << "Could not start server";

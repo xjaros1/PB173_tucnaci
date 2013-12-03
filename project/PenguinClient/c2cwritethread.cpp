@@ -16,7 +16,8 @@ C2CWriteThread::~C2CWriteThread(){
 void C2CWriteThread::startOutput(const QHostAddress &hostName, QString key){
     qDebug() << "Write init";
     QMutexLocker locker(&mutex);
-    this->hostName = hostName;    
+    this->hostName = hostName;
+    this->key = key;
     if (!isRunning()){
         start();
     }
@@ -27,6 +28,7 @@ void C2CWriteThread::run(){
     tcpSocket->connectToHost(hostName, port);
     CryptIODevice crypt(tcpSocket);
     crypt.open(QIODevice::WriteOnly);
+    crypt.setkey(key);
     QDataStream stream(&crypt);
     MessageEnvelop e;
     QList<QString> list;

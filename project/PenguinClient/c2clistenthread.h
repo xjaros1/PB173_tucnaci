@@ -26,7 +26,7 @@ public:
      * @param hostName
      * @param port
      */
-    void startServer(const QHostAddress hostName, const quint16 port);
+    void startServer(QString key, const QHostAddress hostName, const quint16 port);
 signals:
     void endConnection();
 public slots:
@@ -39,7 +39,8 @@ protected:
      * @param socketDescriptor
      */
     void incomingConnection(qintptr socketDescriptor);
-
+private:
+    QString key;
 };
 
 /**
@@ -80,16 +81,9 @@ private:
     QUdpSocket* socket;
     QWaitCondition cond;
     ListenServer server;
+    QString key;
 
-    /**
-     * @brief decryptDatagram
-     * decrypts datatagram of given length
-     * @param in
-     * @param out
-     * @param length
-     * @return errno
-     */
-    int decryptDatagram(char* in, char* out, int length);
+
 };
 
 }

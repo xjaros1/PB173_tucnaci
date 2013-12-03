@@ -4,8 +4,8 @@
 #include "cryptiodevice.h"
 namespace PenguinClient
 {
-C2CTcpListen::C2CTcpListen(qintptr , QObject *){
-
+C2CTcpListen::C2CTcpListen(QString key, qintptr , QObject *){
+    this->key = key;
 }
 
 void C2CTcpListen::run(){
@@ -29,6 +29,7 @@ void C2CTcpListen::readyRead()
     qDebug() << "incoming connection";
     CryptIODevice crypt(socket);
     crypt.open(QIODevice::ReadOnly);
+    crypt.setkey(key);
     QDataStream stream(&crypt);
     MessageEnvelop e;
     stream >> e;

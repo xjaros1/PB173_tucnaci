@@ -46,7 +46,7 @@ private:
 
     QHostAddress hostName;
     quint16 port;
-
+    QString key;
     QMutex mutex;
     bool quit;
     QUdpSocket* socket;

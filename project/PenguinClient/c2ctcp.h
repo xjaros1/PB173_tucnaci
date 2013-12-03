@@ -20,7 +20,7 @@ public:
      * @param ID socket descriptor
      * @param parent
      */
-    explicit C2CTcpListen(qintptr ID, QObject *parent = 0);
+    explicit C2CTcpListen(QString key, qintptr ID, QObject *parent = 0);
 
     void run();
 
@@ -33,6 +33,7 @@ public slots:
 
 private:
     QTcpSocket *socket;
+    QString key;
     qintptr socketDescriptor;
 };
 /*
