@@ -1,11 +1,11 @@
 #include "c2ctcp.h"
 #include <iostream>
 #include "./../messageenvelop.h"
-
+#include "cryptiodevice.h"
 namespace PenguinClient
 {
-C2CTcpListen::C2CTcpListen(qintptr , QObject *){
-
+C2CTcpListen::C2CTcpListen(QString key, qintptr , QObject *){
+    this->key = key;
 }
 
 void C2CTcpListen::run(){
@@ -27,7 +27,10 @@ void C2CTcpListen::run(){
 void C2CTcpListen::readyRead()
 {    
     qDebug() << "incoming connection";
-    QDataStream stream(socket);
+    CryptIODevice crypt(socket);
+    crypt.open(QIODevice::ReadOnly);
+    crypt.setkey(key);
+    QDataStream stream(&crypt);
     MessageEnvelop e;
     stream >> e;
     QList<QString> list = e.getList();

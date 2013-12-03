@@ -1,0 +1,48 @@
+% Tučnáci - PenguinClient komunikace se serverem
+% Tučňáčí kolektiv: Karel Kubíček
+% 3. prosince 2013
+
+# Knihovna Qt
+
+* Qt 5.1.1 a Qt Creator 2.8.1
+* signály
+* vlákna
+* grafika
+* QSslSocket a QSslServer
+
+----
+
+# Knihovna Qt
+## Signály
+
+* `Q_OBJECT`
+* `QObject::connect(&from, signal, &to, slot);`
+* přenos dat mezi vlákny `from->signal == to->slot`
+* grafika - `clicked()`
+
+----
+
+# Knihovna Qt
+## Vlákna
+
+* dědíme `QThread`
+* zděděné `void run()` a `int exec()`
+* mutexy
+* počty: server n+2, klient 2 + 3
+
+----
+
+# Knihovna Qt
+## Grafika
+
+* dědíme `QWidget` (alternativně `QMainWindow`)
+* `QLabel`
+* `QLineEdit`
+* `QPushButton`
+* `QVBoxLayout`
+* konstruktor a destruktor
+
+
+----
+
+# otázky?
