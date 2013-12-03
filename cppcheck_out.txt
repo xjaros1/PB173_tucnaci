@@ -2,11 +2,27 @@
 [project/PenguinClient/c2ctcp.cpp:7]: (warning) Member variable 'C2CTcpListen::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::socket' is not initialized in the constructor.
 [project/PenguinClient/c2cwritethread.cpp:6]: (warning) Member variable 'C2CWriteThread::tcpSocket' is not initialized in the constructor.
-[project/PenguinClient/c2clistenthread.cpp:39]: (style) The function 'decryptDatagram' is never used.
-[project/PenguinClient/c2cwritethread.cpp:42]: (style) The function 'encryptDatagram' is never used.
-[project/PenguinClient/c2clistenthread.cpp:46]: (style) The function 'endConnection' is never used.
-[project/PenguinClient/c2clistenthread.cpp:52]: (style) The function 'incomingConnection' is never used.
-[project/PenguinClient/clientbackgroundmanager.cpp:240]: (style) The function 'incomingEndOfCall' is never used.
-[project/PenguinClient/c2clistenthread.cpp:31]: (style) The function 'run' is never used.
+[project/PenguinClient/clientserverthread.cpp:6]: (warning) Member variable 'ClientServerThread::isRegistered' is not initialized in the constructor.
+[project/PenguinClient/clientserverthread.cpp:172]: (style) Exception should be caught by reference.
+[project/PenguinClient/cryptiodevice.cpp:4]: (warning) Member variable 'CryptIODevice::ctx' is not initialized in the constructor.
+[project/PenguinClient/cryptiodevice.cpp:4]: (warning) Member variable 'CryptIODevice::resource' is not initialized in the constructor.
+[project/PenguinClient/cryptiodevice.cpp:4]: (warning) Member variable 'CryptIODevice::preCalcThread' is not initialized in the constructor.
+[project/PenguinClient/cryptothreads.cpp:54] -> [project/PenguinClient/cryptothreads.cpp:60]: (performance) Variable 'cryptCounter' is reassigned a value before the old one has been used.
+[project/PenguinClient/cryptothreads.cpp:36]: (warning) Member variable 'PreCalc::ctx' is not initialized in the constructor.
+[project/PenguinClient/cryptothreads.cpp:36]: (warning) Member variable 'PreCalc::resource' is not initialized in the constructor.
+[project/PenguinClient/cryptothreads.cpp:60]: (error) Memory leak: cryptCounter
+[project/PenguinServer/database.cpp:8]: (style) Checking if unsigned variable 'len' is less than zero.
+[project/PenguinServer/serverlistener.cpp:6]: (warning) Member variable 'ServerListener::database' is not initialized in the constructor.
+[project/PenguinServer/serverthread.cpp:90]: (style) Exception should be caught by reference.
+[project/PenguinServer/serverthread.cpp:166]: (style) Exception should be caught by reference.
+[project/PenguinServer/serverthread.cpp:193]: (style) Exception should be caught by reference.
+[project/PenguinServer/serverthread.cpp:277]: (style) Exception should be caught by reference.
+[project/PenguinClient/c2clistenthread.cpp:39]: (style) The function 'endConnection' is never used.
+[project/PenguinServer/database.cpp:42]: (style) The function 'getPlainfrom85' is never used.
+[project/PenguinClient/c2clistenthread.cpp:43]: (style) The function 'incomingConnection' is never used.
+[project/PenguinClient/clientbackgroundmanager.cpp:276]: (style) The function 'incomingEndOfCall' is never used.
+[project/PenguinClient/cryptiodevice.cpp:50]: (style) The function 'isSequential' is never used.
+[project/PenguinClient/c2clistenthread.cpp:32]: (style) The function 'run' is never used.
 [project/PenguinServer/clientsmanager.cpp:16]: (style) The function 'setList' is never used.
+[project/PenguinClient/cryptiodevice.cpp:55]: (style) The function 'setkey' is never used.
 (information) Cppcheck cannot find all the include files (use --check-config for details)
