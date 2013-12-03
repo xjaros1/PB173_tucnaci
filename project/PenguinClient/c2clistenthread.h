@@ -5,6 +5,7 @@
 #include <QMutex>
 #include <QtNetwork>
 #include <QTcpServer>
+#include "cryptiodevice.h"
 
 //take socketDescriptor and
 

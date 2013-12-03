@@ -1,6 +1,6 @@
 #include "c2cwritethread.h"
 #include "./../messageenvelop.h"
-
+#include "cryptiodevice.h"
 namespace PenguinClient
 {
 C2CWriteThread::C2CWriteThread(QObject *parent) :
@@ -25,7 +25,9 @@ void C2CWriteThread::startOutput(const QHostAddress &hostName, QString key){
 void C2CWriteThread::run(){
     tcpSocket = new QTcpSocket(this);
     tcpSocket->connectToHost(hostName, port);
-    QDataStream stream(tcpSocket);
+    CryptIODevice crypt(tcpSocket);
+    crypt.open(QIODevice::WriteOnly);
+    QDataStream stream(&crypt);
     MessageEnvelop e;
     QList<QString> list;
     for (int i = 0; i < 10; i++){
