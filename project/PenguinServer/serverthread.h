@@ -19,7 +19,7 @@ namespace PenguinServer
 
 
 class ConnectedClient;
-class SharedList;
+class SharedListSingleton;
 
 class ServerThread : public QThread
 {
@@ -31,7 +31,7 @@ public:
      * @param list
      * @param parent
      */
-    explicit ServerThread(qintptr socketDescriptor, SharedList * list,SqlConnection * conn,   QObject *parent = 0);
+    explicit ServerThread(qintptr socketDescriptor, SharedListSingleton * list,SqlConnection * conn,   QObject *parent = 0);
 
     ~ServerThread() {}
 
@@ -126,7 +126,7 @@ private:
 
     qintptr socketDescriptor;
 
-    SharedList * list;
+    SharedListSingleton * list;
 
     SqlConnection * database;
 

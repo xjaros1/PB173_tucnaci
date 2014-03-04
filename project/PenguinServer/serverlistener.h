@@ -36,7 +36,7 @@ protected:
     void incomingConnection(qintptr handle);
 
 private:
-    SharedList * list;
+    SharedListSingleton * list;
     SqlConnection * database;
 
 };

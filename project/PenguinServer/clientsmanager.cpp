@@ -13,7 +13,7 @@ void ClientsManager::run()
     }
 }
 
-void ClientsManager::setList(SharedList * l)
+void ClientsManager::setList(SharedListSingleton * l)
 {
     list = l;
 }

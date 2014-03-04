@@ -3,13 +3,22 @@
 namespace PenguinServer
 {
 
-SharedList::SharedList(): QObject(), mutex()
+static SharedListSingleton * SharedListSingleton::getInstance()
+{
+    if(s == 0)
+    {
+        s = new SharedListSingleton;
+    }
+    return s;
+}
+
+SharedListSingleton::SharedListSingleton(): QObject(), mutex()
 {
     c = new ClientsManager(this);
     c->start();
 }
 
-bool SharedList::addClient(ConnectedClient * cli)
+bool SharedListSingleton::addClient(ConnectedClient * cli)
 {
     mutex.lock();
     QString q = cli->getName();
@@ -23,7 +32,7 @@ bool SharedList::addClient(ConnectedClient * cli)
     return true;
 }
 
-bool SharedList::removeClient(const QString & tR)
+bool SharedListSingleton::removeClient(const QString & tR)
 {
     mutex.lock();
     int k = clients.remove(tR);
@@ -32,7 +41,7 @@ bool SharedList::removeClient(const QString & tR)
     return true;
 }
 
-void SharedList::callAllClients()
+void SharedListSingleton::callAllClients()
 {
     mutex.lock();
 //    QList<QString> toSent = clients.keys();
@@ -56,7 +65,7 @@ void SharedList::callAllClients()
     mutex.unlock();
 }
 
-void SharedList::callClient(const QString &destName, const QString &srcName, qint16 type)
+void SharedListSingleton::callClient(const QString &destName, const QString &srcName, qint16 type)
 {
     mutex.lock();
     if(!clients.contains(destName))

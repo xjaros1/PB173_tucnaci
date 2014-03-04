@@ -11,7 +11,7 @@ ServerListener::ServerListener(QObject *parent) :
 
 void ServerListener::start()
 {
-    list = new SharedList;
+    list = new SharedListSingleton;
     database = new SqlConnection;
     if(!this->listen(QHostAddress::Any, 27173))
     {

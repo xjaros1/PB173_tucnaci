@@ -10,7 +10,7 @@
 namespace PenguinServer
 {
 
-class SharedList; //forward declaration
+class SharedListSingleton; //forward declaration
 
 
 /**
@@ -30,7 +30,7 @@ public:
        * @param l The shared list to work with
        * @param parent - The parent of object
        */
-    ClientsManager(SharedList * l, QObject * parent = 0):
+    ClientsManager(SharedListSingleton * l, QObject * parent = 0):
         QThread(parent), list(l) {}
 
 
@@ -44,12 +44,12 @@ public:
      * @brief setList
      * @param l
      */
-    void setList(SharedList * l);
+    void setList(SharedListSingleton * l);
 
 
 
 private:
-    SharedList * list;
+    SharedListSingleton * list;
 };
 
 }// namespace Penguin server

@@ -9,7 +9,7 @@
 namespace PenguinServer
 {
 
-ServerThread::ServerThread(qintptr socketDescriptor, SharedList *list, SqlConnection *conn, QObject *parent) :
+ServerThread::ServerThread(qintptr socketDescriptor, SharedListSingleton *list, SqlConnection *conn, QObject *parent) :
     QThread(parent), s(), socketDescriptor(socketDescriptor), list(list), database(conn),
     pending(), available(true), isInitialized(false), c(0)
 {
@@ -211,14 +211,14 @@ void ServerThread::initialize()
              << " on address " <<   s->peerAddress() << " on port " << s->peerPort();
     c->init(this);
     qDebug() << "opened connection to " << e.getName();
-    if(!list->addClient(c))
+    if(!SharedListSingleton.getInstance()->addClient(c))
     {
         sendError("The connection already exists M'kay");
         emit error(s->error());
     }
     this->c = c;
     this->name = e.getName();
-    list->callAllClients();
+    SharedListSingleton.getInstance()->callAllClients();
 
 
 
@@ -226,7 +226,7 @@ void ServerThread::initialize()
 
 void ServerThread::requestCall(const QString & login)
 {
-    list->callClient(login, name, SEND_INCOMMING_CALL_TO_CLIENT);
+    SharedListSingleton.getInstance()->callClient(login, name, SEND_INCOMMING_CALL_TO_CLIENT);
     pending = login;
     available = false;
 }
@@ -234,14 +234,14 @@ void ServerThread::requestCall(const QString & login)
 void ServerThread::sendConnectionDenied()
 {
 
-    list->callClient(pending, name, SEND_DENIED_RESPONSE_TO_COMMUNICATION);
+    SharedListSingleton.getInstance()->callClient(pending, name, SEND_DENIED_RESPONSE_TO_COMMUNICATION);
     available = true;
 }
 
 void ServerThread::ConnectionGranted(QString key)
 {
     this->c->SetAesKey(key);
-    list->callClient(pending, name, SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
+    SharedListSingleton.getInstance()->callClient(pending, name, SEND_SUCCESS_RESPONSE_TO_COMMUNICATION);
 }
 
 void ServerThread::logout()
@@ -321,7 +321,7 @@ void ServerThread::disconnected()
     qDebug() << "Disconnected" << name;
     if(isInitialized)
     {
-        list->removeClient(name);
+        SharedListSingleton.getInstance()->removeClient(name);
     }
     emit s->deleteLater();
     //emit deleteLater();

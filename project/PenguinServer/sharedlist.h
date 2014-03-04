@@ -19,14 +19,15 @@ class ClientsManager;
 /**
  * @brief The SharedList class
  */
-class SharedList: public QObject
+class SharedListSingleton: public QObject
 {
     Q_OBJECT
+    static SharedListSingleton * s;
 public:
     /**
      * @brief SharedList
      */
-    SharedList();
+    SharedListSingleton();
 
     /**
      * @brief addClient
@@ -52,6 +53,8 @@ public:
      * @param type of message
      */
     void callClient(const QString & destName, const QString & srcName, qint16 type);
+
+    static SharedListSingleton * getInstance();
 
 private:
     QMap<QString, ConnectedClient*> clients;
